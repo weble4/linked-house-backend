@@ -1,0 +1,13 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  jpa:
+    open-in-view: false
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  jpa:
+    open-in-view: false
