@@ -66,7 +66,7 @@ public class CustomerProfile extends AuditingFields {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof CustomerProfile that)) return false;
-        return getProfileId().equals(that.getProfileId());
+        return this.getProfileId() != null && getProfileId().equals(that.getProfileId());
     }
 
     @Override
