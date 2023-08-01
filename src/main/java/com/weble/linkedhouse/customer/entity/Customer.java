@@ -62,7 +62,7 @@ public class Customer extends AuditingFields {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Customer that)) return false;
-        return getCustomerId().equals(that.getCustomerId());
+        return this.getCustomerId() != null && getCustomerId().equals(that.getCustomerId());
     }
 
     @Override
