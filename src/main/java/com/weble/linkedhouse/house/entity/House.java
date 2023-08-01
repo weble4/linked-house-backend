@@ -1,6 +1,7 @@
 package com.weble.linkedhouse.house.entity;
 
 
+import com.weble.linkedhouse.house.entity.constant.AutoReservation;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 public class House {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "rental_id", nullable = false)
     private long rentalId;
 
@@ -44,7 +45,7 @@ public class House {
 
     @Column(name = "auto_reservation", nullable = false)
     @Enumerated(EnumType.STRING) // constant 의 ENUM AutoReservation 과 연결
-    private String autoReservation;
+    private AutoReservation autoReservation;
 
     // 방 갯수
     @Column(nullable = false)
@@ -59,9 +60,8 @@ public class House {
     private int bathRoom;
 
     @Builder
-    public House(long rentalId, long hostId, int maxCapacity, int minCapacity, int price, String location,
-                 String image, String autoReservation, int room, int bed, int bathRoom) {
-        this.rentalId = rentalId;
+    private House(long hostId, int maxCapacity, int minCapacity, int price, String location,
+                 String image, AutoReservation autoReservation, int room, int bed, int bathRoom) {
         this.hostId = hostId;
         this.maxCapacity = maxCapacity;
         this.minCapacity = minCapacity;
