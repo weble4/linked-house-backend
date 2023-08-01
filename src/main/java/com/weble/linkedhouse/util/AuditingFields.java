@@ -7,13 +7,14 @@ import lombok.Getter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
 @Getter
 @ToString
-@EntityListeners(AuditingFields.class)
+@EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 public abstract class AuditingFields {
 
