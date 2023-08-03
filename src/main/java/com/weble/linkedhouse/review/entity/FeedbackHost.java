@@ -47,4 +47,8 @@ public class FeedbackHost extends AuditingFields {
         this.attitude = attitude;
         this.damageDegree = damageDegree;
     }
+
+    public static FeedbackHost of(Customer customer, Host host, String content, int attitude, int damageDegree) {
+        return new FeedbackHost(customer, host, content, attitude, damageDegree);
+    }
 }
