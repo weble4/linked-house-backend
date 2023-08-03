@@ -33,9 +33,15 @@ public class House extends AuditingFields {
     @Column(name = "rental_id", nullable = false)
     private Long rentalId;
 
-     @ManyToOne(fetch= FetchType.LAZY)
-     @JoinColumn(name = "hostId")
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn(name = "hostId")
     private Host host;
+
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "max_capacity")
     private int maxCapacity;
@@ -68,9 +74,11 @@ public class House extends AuditingFields {
     private int bathRoom;
 
     @Builder
-    private House(Host host, int maxCapacity, int minCapacity, int price, String location,
+    private House(Host host, String title, String description, int maxCapacity, int minCapacity, int price, String location,
                  String image, AutoReservation autoReservation, int room, int bed, int bathRoom) {
-        this.host=host;
+        this.host = host;
+        this.title = title;
+        this.description = description;
         this.maxCapacity = maxCapacity;
         this.minCapacity = minCapacity;
         this.price = price;
