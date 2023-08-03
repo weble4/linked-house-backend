@@ -22,7 +22,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -63,14 +62,6 @@ public class Host {
 
     public static Host of(Customer customer, ApproveState approvestate, LockState lockState) {
         return new Host(customer, approvestate, lockState);
-    }
-
-    public void addHouse(House house) {
-        this.getHouses().add(house);
-    }
-
-    public void addHouses(Collection<House> houses) {
-        this.getHouses().addAll(houses);
     }
 
     @Override

@@ -36,4 +36,16 @@ public class CancelReservation {
 
     @Column(name = "reservation_num", nullable = false)
     private int reservationNum;
+
+
+    private CancelReservation(Reservation reservation, LocalDateTime checkinDate, LocalDateTime checkoutDate, int reservationNum) {
+        this.reservation = reservation;
+        this.checkinDate = checkinDate;
+        this.checkoutDate = checkoutDate;
+        this.reservationNum = reservationNum;
+    }
+
+    public static CancelReservation of(Reservation reservation, LocalDateTime checkinDate, LocalDateTime checkoutDate, int reservationNum) {
+        return new CancelReservation(reservation, checkinDate, checkoutDate, reservationNum);
+    }
 }

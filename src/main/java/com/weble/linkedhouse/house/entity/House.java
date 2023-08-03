@@ -33,8 +33,8 @@ public class House extends AuditingFields {
     @Column(name = "rental_id", nullable = false)
     private Long rentalId;
 
-     @ManyToOne(fetch= FetchType.LAZY)
-     @JoinColumn(name = "hostId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hostId")
     private Host host;
 
     @Column(name = "max_capacity")
@@ -70,7 +70,7 @@ public class House extends AuditingFields {
     @Builder
     private House(Host host, int maxCapacity, int minCapacity, int price, String location,
                  String image, AutoReservation autoReservation, int room, int bed, int bathRoom) {
-        this.host=host;
+        addHost(host);
         this.maxCapacity = maxCapacity;
         this.minCapacity = minCapacity;
         this.price = price;
@@ -84,18 +84,12 @@ public class House extends AuditingFields {
 
     public static House of(Host host, int maxCapacity, int minCapacity, int price, String location,
                            String image, AutoReservation autoReservation, int room, int bed, int bathRoom) {
-        return House.builder()
-                .host(host)
-                .maxCapacity(maxCapacity)
-                .minCapacity(minCapacity)
-                .price(price)
-                .location(location)
-                .image(image)
-                .autoReservation(autoReservation)
-                .room(room)
-                .bed(bed)
-                .bathRoom(bathRoom)
-                .build();
+        return new House(host, maxCapacity, minCapacity, price, location, image, autoReservation, room, bed, bathRoom);
+    }
+
+    public void addHost(Host host) {
+        this.host = host;
+        host.getHouses().add(this);
     }
 
     @Override
