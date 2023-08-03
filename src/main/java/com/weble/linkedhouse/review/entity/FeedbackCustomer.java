@@ -55,10 +55,9 @@ public class FeedbackCustomer extends AuditingFields {
     private int totalScore;
 
     @Builder
-    private FeedbackCustomer(Long feedbackcustomerId, Customer customer, House house,
+    private FeedbackCustomer(Customer customer, House house,
                              String title, String content, int scoreClean, int scoreCommunication
-                        , int scoreSatisfaction, int totalScore){
-        this.feedbackcustomerId = feedbackcustomerId;
+                             , int scoreSatisfaction, int totalScore){
         this.customer = customer;
         this.house = house;
         this.title = title;
