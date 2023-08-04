@@ -34,10 +34,10 @@ public class Report {
     @JoinColumn(name = "feedback_customer_id")
     private FeedbackCustomer feedbackCustomer;
 
-    @Column(name = "reported_customer")
+    @Column(name = "reported_customer", nullable = false)
     private String reportedCustomer;
 
-    @Column(name = "reporter")
+    @Column(name = "reporter", nullable = false)
     private String reporter;
 
     @Column(name = "report_type")
