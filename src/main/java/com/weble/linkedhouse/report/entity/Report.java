@@ -8,6 +8,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,11 +27,11 @@ public class Report {
     private Long reportId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "feedback_host_id")
+    @JoinColumn(name = "feedback_host_id")
     private FeedbackHost feedbackHost;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "feedback_customer_id")
+    @JoinColumn(name = "feedback_customer_id")
     private FeedbackCustomer feedbackCustomer;
 
     @Column(name = "reported_customer")
@@ -60,8 +61,8 @@ public class Report {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Report report)) return false;
-        return Objects.equals(getReportId(), report.getReportId());
+        if (!(o instanceof Report that)) return false;
+        return this.getReportId() != null && getReportId().equals(that.getReportId());
     }
 
     @Override
