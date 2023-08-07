@@ -1,5 +1,6 @@
 package com.weble.linkedhouse.customer.entity;
 
+import com.weble.linkedhouse.customer.entity.constant.AuthState;
 import com.weble.linkedhouse.customer.entity.constant.DeleteRequest;
 import com.weble.linkedhouse.customer.entity.constant.Role;
 import com.weble.linkedhouse.util.AuditingFields;
@@ -36,27 +37,41 @@ public class Customer extends AuditingFields {
     @Column(nullable = false, name = "customer_pw")
     private String customerPw;
 
-    @Column(name = "delete_request")
+    @Column(name = "delete_request",
+            columnDefinition = "varchar(50) default 'no'")
     @Enumerated(EnumType.STRING)
     private DeleteRequest deleteRequest;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 100, nullable = false)
     private Role role;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_state", nullable = false,
+            columnDefinition = "varchar(30) default 'non_auth'")
+    private AuthState authState;
+
 
     @ToString.Exclude
     @OneToOne(mappedBy = "customer", fetch = FetchType.LAZY)
     private CustomerProfile customerProfile;
 
-    private Customer(String customerEmail, String customerPw, DeleteRequest deleteRequest, Role role) {
+    private Customer(String customerEmail, String customerPw, Role role) {
         this.customerEmail = customerEmail;
         this.customerPw = customerPw;
-        this.deleteRequest = deleteRequest;
+        this.deleteRequest = DeleteRequest.NOT_DELETE;
         this.role = role;
+        this.authState= AuthState.NONAUTH;
     }
 
-    public static Customer of(String customerEmail, String customerPw, DeleteRequest type, Role role) {
-        return new Customer(customerEmail, customerPw, type, role);
+    public static Customer of(String customerEmail, String customerPw, Role role) {
+        return new Customer(customerEmail, customerPw, role);
     }
+
+    public void ApproveAuth(AuthState authState) {
+        this.authState= authState;
+    }
+
 
     @Override
     public boolean equals(Object o) {

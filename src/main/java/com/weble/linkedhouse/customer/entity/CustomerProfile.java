@@ -11,7 +11,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -35,19 +34,20 @@ public class CustomerProfile extends AuditingFields {
     @JoinColumn(name = "customerId")
     private Customer customer;
 
+    @Column(length = 100, nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String gender;
 
-    @Column(name="birth_date", nullable = false)
+    @Column(name="birth_date", nullable = false, length = 100)
     private String birthDate;
 
-    @Column(name="phone_num", nullable = false)
+    @Column(name="phone_num", nullable = false, length = 100)
     private String phoneNum;
 
     @Column(name="public_at", nullable = false,
-            columnDefinition = "VARCHAR(50) DEFAULT 'PUBLIC'")
+            columnDefinition = "varchar(50) default 'public'")
     @Enumerated(EnumType.STRING)
     private PublicAt publicAt;
 
@@ -57,10 +57,16 @@ public class CustomerProfile extends AuditingFields {
         this.gender = gender;
         this.birthDate = birthDate;
         this.phoneNum = phoneNum;
+        this.publicAt = PublicAt.PUBLIC;
     }
     public static CustomerProfile of(Customer customer, String nickname, String gender, String birthDate, String phoneNum) {
         return new CustomerProfile(customer, nickname, gender, birthDate, phoneNum);
     }
+
+    public void publicState(PublicAt publicAt) {
+        this.publicAt = publicAt;
+    }
+
 
     @Override
     public boolean equals(Object o) {
