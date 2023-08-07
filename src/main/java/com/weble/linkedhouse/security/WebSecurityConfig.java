@@ -1,6 +1,7 @@
 package com.weble.linkedhouse.security;
 
 
+import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,28 +23,31 @@ public class WebSecurityConfig {
     @Bean
     public WebSecurityCustomizer configure() {
         return (web) -> web.ignoring()
-                .requestMatchers(toH2Console())
-                .requestMatchers("/static/**");
-}
+                .requestMatchers("/static/**")
+                .dispatcherTypeMatchers(DispatcherType.FORWARD);
+    }
 
 
     // 특정 HTTP 요청에 대한 웹 기반 보안 구성
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    return http
-            .authorizeRequests(authorizationConfig -> authorizationConfig
-                    .requestMatchers("/login", "/signup", "/user")
-                    .permitAll()
-                    .anyRequest()
-                    .authenticated();
-            })
+        return http
+                .authorizeRequests(authorizationConfig -> {
+                    authorizationConfig
+                            .requestMatchers("/login", "/signup", "/customer")
+                            .permitAll()
+                            .anyRequest()
+                            .authenticated();
+                })
+                .build();
+    }
 
     
     // 인증 관리자 관련 설정
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http,
-                                                       BCryptPasswordEncoder bCryptPasswordEncoder) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
+                                                       PasswordEncoder PasswordEncoder) throws Exception {
+        return http.getSharedObject(AuthenticationManagerBuilder.class);
 
     }
 
