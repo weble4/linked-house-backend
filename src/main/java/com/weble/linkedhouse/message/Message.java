@@ -32,13 +32,11 @@ public class Message {
     private int messageRoom;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "recieve_customer")
-    @JoinColumn(name = "customerId")
+    @JoinColumn
     private Customer recieveCustomer;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "send_customer")
-    @JoinColumn(name = "customerId")
+    @JoinColumn
     private Customer sendCustomer;
 
     @Column(nullable = false)
