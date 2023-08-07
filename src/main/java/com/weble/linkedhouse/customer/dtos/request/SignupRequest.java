@@ -4,32 +4,33 @@ import com.weble.linkedhouse.customer.entity.Customer;
 import com.weble.linkedhouse.customer.entity.CustomerProfile;
 import com.weble.linkedhouse.customer.entity.constant.Role;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
 public class SignupRequest {
 
-    @NotNull
-    @Email
+    @Email(message = "올바른 Email 형식으로 입력해 주세요")
+    @NotBlank(message = "Email 입력은 필수입니다.")
     private String customerEmail;
 
-    @NotNull
+    @NotBlank(message = "패스워드 입력은 필수입니다.")
     private String customerPw;
 
     @NotNull
     private Role role;
 
-    @NotNull
+    @NotBlank(message = "닉네임 입력은 필수입니다.")
     private String nickname;
 
     @NotNull
     private String gender;
 
-    @NotNull
+    @NotBlank(message = "휴대폰 번호 입력은 필수입니다.")
     private String phoneNum;
 
-    @NotNull
+    @NotBlank(message = "생년월일 입력은 필수입니다.")
     private String birthDate;
 
     private SignupRequest(String customerEmail, String customerPw, Role role, String nickname, String gender, String phoneNum, String birthDate) {

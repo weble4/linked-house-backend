@@ -7,6 +7,8 @@ import com.weble.linkedhouse.customer.entity.CustomerProfile;
 import com.weble.linkedhouse.customer.entity.constant.AuthState;
 import com.weble.linkedhouse.customer.repository.CustomerRepository;
 import com.weble.linkedhouse.customer.repository.ProfileRepository;
+import com.weble.linkedhouse.exception.AlreadyExistEmailException;
+import com.weble.linkedhouse.exception.NotExistCustomer;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +36,9 @@ public class CustomerService {
     public SignupResponse saveUser(SignupRequest signupRequest) {
 
          if(customerRepository.findByCustomerEmail(signupRequest.getCustomerEmail()).isPresent()){
-             //TODO: Exception 클래스들 만들고 수정 예정
-             throw new IllegalArgumentException();
+             throw new AlreadyExistEmailException();
          }
+
         Customer customer = customerRepository.save(signupRequest.convertCustomer());
         CustomerProfile profile = profileRepository.save(signupRequest.convertProfile(customer));
 
@@ -48,9 +50,7 @@ public class CustomerService {
     @Transactional
     public void activateAccount(Long customerId) {
         Customer customer = customerRepository.findById(customerId)
-                //TODO: Exception 클래스들 만들고 수정 예정
-                .orElseThrow(NullPointerException::new);
-
+                .orElseThrow(NotExistCustomer::new);
         customer.ApproveAuth(AuthState.AUTH);
     }
 
