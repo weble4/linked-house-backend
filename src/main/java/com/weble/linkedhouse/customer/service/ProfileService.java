@@ -14,6 +14,7 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
 
     public ProfileDtos getCustomerProfile() {
+        return null;
     }
 
     public void updateProfile() {
