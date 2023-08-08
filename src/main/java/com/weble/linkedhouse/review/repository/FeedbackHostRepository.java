@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface FeedbackHostRepository extends JpaRepository<FeedbackHost, Long> {
 
-    Optional<FeedbackHost> findByHostId(String HostId);
+    Optional<FeedbackHost> findByHostHostId(String HostId);
 
 }

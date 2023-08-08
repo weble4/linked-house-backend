@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface FeedbackCustomerRepository extends JpaRepository<FeedbackCustomer, Long> {
 
-    Optional<FeedbackCustomer> findByCustomerId(String CustomerId);
+    Optional<FeedbackCustomer> findByCustomerCustomerId(String CustomerId);
 
 }
