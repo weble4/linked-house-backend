@@ -80,19 +80,6 @@ public class ReviewController {
     }
 
 
-
-
-
-    /*
-    @GetMapping("/{feedback_customer_id")
-    public ResponseEntity<FeedbackResponse> getUser(@PathVariable Long customerId) {
-        HouseResponse houseResponse = feedbackCustomerService.getHouse(customerId);
-
-        return HouseResponse.ok().body(Response);
-    }
-
-     */
-
 }
 
 
