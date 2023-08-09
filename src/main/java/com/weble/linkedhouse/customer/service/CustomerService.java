@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class CustomerService {
 
+    private final PasswordEncoder passwordEncoder;
     private final JavaMailSender javaMailsender;
     private final CustomerRepository customerRepository;
     private final ProfileRepository profileRepository;
@@ -38,6 +40,9 @@ public class CustomerService {
          if(customerRepository.findByCustomerEmail(signupRequest.getCustomerEmail()).isPresent()){
              throw new AlreadyExistEmailException();
          }
+         // 비밀번호 인코딩후 저장
+        String pw = passwordEncoder.encode(signupRequest.getCustomerPw());
+        signupRequest.pwEncoding(pw);
 
         Customer customer = customerRepository.save(signupRequest.convertCustomer());
         CustomerProfile profile = profileRepository.save(signupRequest.convertProfile(customer));
