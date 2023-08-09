@@ -1,11 +1,11 @@
 package com.weble.linkedhouse.exception;
 
+import com.weble.linkedhouse.exception.response.ErrorMessage;
+
 public class AlreadyExistEmailException extends LinkedHouseException{
 
-    public static final String MESSAGE = "이미 가입된 이메일입니다";
-
     public AlreadyExistEmailException() {
-        super(MESSAGE);
+        super(ErrorMessage.DUPLICATED_CUSTOMER);
     }
 
     @Override

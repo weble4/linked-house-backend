@@ -1,6 +1,8 @@
 package com.weble.linkedhouse.customer.service;
 
+import com.weble.linkedhouse.customer.dtos.request.LoginRequest;
 import com.weble.linkedhouse.customer.dtos.request.SignupRequest;
+import com.weble.linkedhouse.customer.dtos.response.LoginResponse;
 import com.weble.linkedhouse.customer.dtos.response.SignupResponse;
 import com.weble.linkedhouse.customer.entity.Customer;
 import com.weble.linkedhouse.customer.entity.CustomerProfile;
@@ -8,17 +10,27 @@ import com.weble.linkedhouse.customer.entity.constant.AuthState;
 import com.weble.linkedhouse.customer.repository.CustomerRepository;
 import com.weble.linkedhouse.customer.repository.ProfileRepository;
 import com.weble.linkedhouse.exception.AlreadyExistEmailException;
+import com.weble.linkedhouse.exception.InvalidSignInInformation;
 import com.weble.linkedhouse.exception.NotExistCustomer;
+import com.weble.linkedhouse.exception.Unauthorized;
+import com.weble.linkedhouse.security.jwt.JwtTokenProvider;
+import com.weble.linkedhouse.security.jwt.token.RefreshToken;
+import com.weble.linkedhouse.security.jwt.token.RefreshTokenRepository;
+import com.weble.linkedhouse.security.jwt.token.TokenDto;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -30,6 +42,9 @@ public class CustomerService {
     private final JavaMailSender javaMailsender;
     private final CustomerRepository customerRepository;
     private final ProfileRepository profileRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final RedisTemplate<String, Object> redisTemplate;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Value("${spring.mail.username}")
     private String emailSender;
@@ -37,10 +52,10 @@ public class CustomerService {
     @Transactional
     public SignupResponse saveUser(SignupRequest signupRequest) {
 
-         if(customerRepository.findByCustomerEmail(signupRequest.getCustomerEmail()).isPresent()){
-             throw new AlreadyExistEmailException();
-         }
-         // 비밀번호 인코딩후 저장
+        if (customerRepository.findByCustomerEmail(signupRequest.getCustomerEmail()).isPresent()) {
+            throw new AlreadyExistEmailException();
+        }
+        // 비밀번호 인코딩후 저장
         String pw = passwordEncoder.encode(signupRequest.getCustomerPw());
         signupRequest.pwEncoding(pw);
 
@@ -59,6 +74,29 @@ public class CustomerService {
         customer.ApproveAuth(AuthState.AUTH);
     }
 
+    @Transactional
+    public LoginResponse login(LoginRequest request) {
+        Customer customer = customerRepository.findByCustomerEmail(request.getCustomerEmail())
+                .orElseThrow(InvalidSignInInformation::new);
+
+        if (customer.getAuthState() != AuthState.AUTH) {
+            throw new Unauthorized();
+        }
+
+        CustomerProfile profile = profileRepository.findByCustomerCustomerId(customer.getCustomerId())
+                .orElseThrow(NotExistCustomer::new);
+
+        if (!passwordEncoder.matches(request.getCustomerPw(), customer.getCustomerPw())) {
+            throw new InvalidSignInInformation();
+        }
+
+        TokenDto tokenDto = jwtTokenProvider.generateToken(request.getCustomerEmail());
+
+        saveRefreshToken(request, tokenDto);
+
+        return LoginResponse.of(customer, profile, tokenDto);
+    }
+
 
     public void withdrawl() {
         // 동적 SQL로 테이블 생성 후 해야됨.
@@ -69,7 +107,7 @@ public class CustomerService {
 
         MimeMessage message = javaMailsender.createMimeMessage();
 
-        try{
+        try {
             MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
             messageHelper.setTo(customer.getCustomerEmail());
             messageHelper.setFrom(emailSender);
@@ -89,4 +127,16 @@ public class CustomerService {
         }
     }
 
+    private void saveRefreshToken(LoginRequest request, TokenDto tokenDto) {
+        RefreshToken refreshToken = RefreshToken.create(request.getCustomerEmail(),
+                tokenDto.getRefreshToken());
+        authRedisSave(refreshToken.getKey(), refreshToken.getValue());
+        refreshTokenRepository.save(refreshToken);
+    }
+
+    private void authRedisSave(String customerEmail, String refreshToken) {
+        final ValueOperations<String, Object> stringStringValueOperations = redisTemplate.opsForValue();
+        stringStringValueOperations.set(customerEmail, refreshToken);
+        redisTemplate.expire(customerEmail, 1209600, TimeUnit.SECONDS);//2주
+    }
 }

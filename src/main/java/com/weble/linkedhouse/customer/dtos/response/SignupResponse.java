@@ -11,6 +11,6 @@ public class SignupResponse {
 
     public SignupResponse(String customerEmail) {
         this.customerEmail = customerEmail;
-        this.response = "Email 인증을 완료해야 사용 가능 합니다.";
+        this.response = "인증 Email 발송 하였습니다. Email 인증 후 사용이 가능합니다.";
     }
 }

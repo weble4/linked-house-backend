@@ -3,7 +3,6 @@ package com.weble.linkedhouse.security.jwt;
 import com.weble.linkedhouse.security.jwt.token.TokenDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -14,15 +13,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.util.Collections;
 import java.util.Date;
-import java.util.Set;
 
 @Slf4j
 @Component
@@ -37,13 +33,15 @@ public class JwtTokenProvider {
 
     public TokenDto generateToken(String customerEmail) {
 
+        Claims claims = Jwts.claims().setSubject(customerEmail);
+        claims.put("customerEmail", customerEmail);
+
         Date now = new Date();
 
         String accessToken = Jwts.builder()
-                .setIssuer(properties.getIssuer())
+                .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + accessTokenValidTime))
-                .claim("customerEmail", customerEmail)
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
 
@@ -56,16 +54,23 @@ public class JwtTokenProvider {
         return TokenDto.of(accessToken, refreshToken, accessTokenValidTime);
     }
 
+    // 토큰에서 회원 정보 추출
+    public String getCustomerEmail(String token) {
+        return Jwts.parserBuilder().
+                setSigningKey(getKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+    // JWT 토큰에서 인증정보 조회
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(getCustomerEmail(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
     }
 
-    public String getCustomerEmail(String token) {
-        Claims claims= getClaims(token);
-        return claims.get("customerEmail", String.class);
-    }
-
+    // 토큰 유효성 검사
     public JwtReturn validToken(String token) {
         log.info("valid jwt token : {}", token);
         try {
@@ -92,14 +97,7 @@ public class JwtTokenProvider {
         return JwtReturn.FAIL;
     }
 
-    private Claims getClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
+    // secret을
     private Key getKey() {
         byte[] keyBytes = Decoders.BASE64URL.decode(properties.getSecretKey());
         return Keys.hmacShaKeyFor(keyBytes);

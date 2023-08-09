@@ -1,15 +1,16 @@
 package com.weble.linkedhouse.exception;
 
+import com.weble.linkedhouse.exception.response.ErrorMessage;
+
 public class Unauthorized extends LinkedHouseException{
 
-    private static final String MESSAGE = "인증이 필요합니다";
 
     public Unauthorized() {
-        super(MESSAGE);
+        super(ErrorMessage.NO_AUTHORIZATION);
     }
 
     public Unauthorized(Throwable cause) {
-        super(MESSAGE, cause);
+        super(ErrorMessage.NO_AUTHORIZATION, cause);
     }
 
     @Override
