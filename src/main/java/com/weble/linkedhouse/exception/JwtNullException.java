@@ -2,10 +2,11 @@ package com.weble.linkedhouse.exception;
 
 import com.weble.linkedhouse.exception.response.ErrorMessage;
 
-public class NotExistCustomer extends LinkedHouseException {
+public class JwtNullException extends LinkedHouseException {
 
-    public NotExistCustomer() {
-        super(ErrorMessage.NOT_FOUND_CUSTOMER);
+
+    public JwtNullException() {
+        super(ErrorMessage.JWT_NOT_NULL);
     }
 
     @Override

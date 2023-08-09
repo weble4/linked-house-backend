@@ -1,6 +1,8 @@
 package com.weble.linkedhouse.customer.controller;
 
+import com.weble.linkedhouse.customer.dtos.request.LoginRequest;
 import com.weble.linkedhouse.customer.dtos.request.SignupRequest;
+import com.weble.linkedhouse.customer.dtos.response.LoginResponse;
 import com.weble.linkedhouse.customer.dtos.response.SignupResponse;
 import com.weble.linkedhouse.customer.service.CustomerService;
 import jakarta.validation.Valid;
@@ -15,22 +17,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/customer")
+@RequestMapping("/api/customer")
 public class CustomerController {
 
     private final CustomerService customerService;
 
     @PostMapping("/signup")
-    public ResponseEntity<SignupResponse> signup(@RequestBody @Valid SignupRequest singupRequest) {
-        SignupResponse signupResponse = customerService.saveUser(singupRequest);
+    public ResponseEntity<SignupResponse> signup(@RequestBody @Valid SignupRequest signupRequest) {
+        SignupResponse signupResponse = customerService.saveUser(signupRequest);
         return ResponseEntity.ok().body(signupResponse);
     }
 
-    //TODO : security 적용 필요.
-//    @PostMapping("/login")
-//    public String login() {
-//
-//    }
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest request) {
+        LoginResponse login = customerService.login(request);
+        return ResponseEntity.ok().body(login);
+    }
 
     @GetMapping("/activate-state")
     public ResponseEntity<String> activate(@RequestParam Long customerId) {
