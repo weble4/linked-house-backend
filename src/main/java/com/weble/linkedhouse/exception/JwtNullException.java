@@ -1,11 +1,12 @@
 package com.weble.linkedhouse.exception;
 
+import com.weble.linkedhouse.exception.response.ErrorMessage;
+
 public class JwtNullException extends LinkedHouseException {
 
-    public static final String MESSAGE = "JWT Token can't be Null or Empty";
 
     public JwtNullException() {
-        super(MESSAGE);
+        super(ErrorMessage.JWT_NOT_NULL);
     }
 
     @Override

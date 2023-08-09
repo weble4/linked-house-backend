@@ -1,11 +1,11 @@
 package com.weble.linkedhouse.exception;
 
+import com.weble.linkedhouse.exception.response.ErrorMessage;
+
 public class NotExistCustomer extends LinkedHouseException {
 
-    public static final String MESSAGE = "존재하지 않는 회원입니다.";
-
     public NotExistCustomer() {
-        super(MESSAGE);
+        super(ErrorMessage.NOT_FOUND_CUSTOMER);
     }
 
     @Override

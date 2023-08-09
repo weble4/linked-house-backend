@@ -30,16 +30,18 @@ public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    private final String[] PERMIT_URL = {
-            "/actuator/**",
-            "/customer/signup",
-            "/customer/activate-state",
-    };
     private final String[] docsUrl = {
+            "/actuator/**",
             "/swagger-ui.html",
             "/swagger-ui/**",
             "/swagger-resources/**",
             "/api-docs/**",
+    };
+
+    private final String[] permitUrl = {
+            "/api/customer/login",
+            "/api/customer/signup",
+            "/api/customer/activate-state"
     };
 
     @Bean
@@ -48,35 +50,16 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions().sameOrigin())    // H2 콘솔 사용을 위한 설정
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers( mvc.matchers(docsUrl)).permitAll()
-                        .requestMatchers( mvc.matchers(PERMIT_URL)).permitAll()
+                        .requestMatchers(mvc.matchers(permitUrl)).permitAll()
+                        .requestMatchers(mvc.matchers(docsUrl)).permitAll()
                         .requestMatchers(toStaticResources().atCommonLocations(), toH2Console()).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionConfig -> sessionConfig
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .formLogin(AbstractHttpConfigurer::disable)
-                .logout(logoutConfig -> logoutConfig
-                        .invalidateHttpSession(true)
-                )
                 .addFilterBefore(tokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity httpSecurity,
-                                                       PasswordEncoder passwordEncoder,
-                                                       UserDetailsService userDetailsService) throws Exception{
-
-        AuthenticationManagerBuilder authManagerBuilder =
-                httpSecurity.getSharedObject(AuthenticationManagerBuilder.class);
-
-        authManagerBuilder
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder);
-
-        return authManagerBuilder.build();
     }
 
     // 패스워드 인코더로 사용할 빈 등록

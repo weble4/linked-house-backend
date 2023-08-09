@@ -1,11 +1,11 @@
 package com.weble.linkedhouse.exception;
 
+import com.weble.linkedhouse.exception.response.ErrorMessage;
+
 public class InvalidSignInInformation extends LinkedHouseException{
 
-    private static final String MESSAGE = "아이디/비밀번호가 올바르지 않습니다.";
-
     public InvalidSignInInformation() {
-        super(MESSAGE);
+        super(ErrorMessage.CUSTOMER_NOT_FOUND);
     }
 
     @Override
