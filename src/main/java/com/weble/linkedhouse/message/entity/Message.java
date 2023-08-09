@@ -1,7 +1,7 @@
-package com.weble.linkedhouse.message;
+package com.weble.linkedhouse.message.entity;
 
 import com.weble.linkedhouse.customer.entity.Customer;
-import com.weble.linkedhouse.message.constant.ReadCheck;
+import com.weble.linkedhouse.message.entity.constant.ReadCheck;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

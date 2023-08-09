@@ -1,4 +1,4 @@
-package com.weble.linkedhouse.message.constant;
+package com.weble.linkedhouse.message.entity.constant;
 
 import lombok.Getter;
 

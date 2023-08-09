@@ -1,19 +1,15 @@
 package com.weble.linkedhouse.house.entity;
 
 
-import com.weble.linkedhouse.host.entity.Host;
 import com.weble.linkedhouse.house.entity.constant.AutoReservation;
 import com.weble.linkedhouse.util.AuditingFields;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,10 +28,6 @@ public class House extends AuditingFields {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "rental_id", nullable = false)
     private Long rentalId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hostId")
-    private Host host;
 
     @Column(name = "max_capacity")
     private int maxCapacity;
@@ -68,9 +60,8 @@ public class House extends AuditingFields {
     private int bathRoom;
 
     @Builder
-    private House(Host host, int maxCapacity, int minCapacity, int price, String location,
+    private House(int maxCapacity, int minCapacity, int price, String location,
                  String image, AutoReservation autoReservation, int room, int bed, int bathRoom) {
-        addHost(host);
         this.maxCapacity = maxCapacity;
         this.minCapacity = minCapacity;
         this.price = price;
@@ -82,14 +73,9 @@ public class House extends AuditingFields {
         this.bathRoom = bathRoom;
     }
 
-    public static House of(Host host, int maxCapacity, int minCapacity, int price, String location,
+    public static House of(int maxCapacity, int minCapacity, int price, String location,
                            String image, AutoReservation autoReservation, int room, int bed, int bathRoom) {
-        return new House(host, maxCapacity, minCapacity, price, location, image, autoReservation, room, bed, bathRoom);
-    }
-
-    public void addHost(Host host) {
-        this.host = host;
-        host.getHouses().add(this);
+        return new House(maxCapacity, minCapacity, price, location, image, autoReservation, room, bed, bathRoom);
     }
 
     @Override
