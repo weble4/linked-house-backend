@@ -1,6 +1,6 @@
 package com.weble.linkedhouse.security;
 
-import com.weble.linkedhouse.customer.dtos.ProfileDtos;
+import com.weble.linkedhouse.customer.dtos.ProfileDto;
 import com.weble.linkedhouse.customer.repository.ProfileRepository;
 import com.weble.linkedhouse.exception.NotExistCustomer;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +18,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String customerEmail) throws UsernameNotFoundException {
 
-        ProfileDtos profileDtos = profileRepository.findByCustomerCustomerEmail(customerEmail).map(ProfileDtos::from)
+        ProfileDto profileDto = profileRepository.findByCustomerCustomerEmail(customerEmail).map(ProfileDto::from)
                 .orElseThrow(NotExistCustomer::new);
 
-        return new UserDetailsImpl(profileDtos);
+        return new UserDetailsImpl(profileDto);
     }
 }

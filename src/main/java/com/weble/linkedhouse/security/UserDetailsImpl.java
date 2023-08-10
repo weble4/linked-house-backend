@@ -1,26 +1,27 @@
 package com.weble.linkedhouse.security;
 
-import com.weble.linkedhouse.customer.dtos.ProfileDtos;
+import com.weble.linkedhouse.customer.dtos.ProfileDto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
 
-    private ProfileDtos customer;
+    private ProfileDto customer;
 
-    public UserDetailsImpl(ProfileDtos profile) {
+    public UserDetailsImpl(ProfileDto profile) {
         this.customer = profile;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Set.of(new SimpleGrantedAuthority(customer.getCustomerDto().getRole().getReason()));
+        return customer.getCustomerDto().getRole().stream()
+                .map(role -> new SimpleGrantedAuthority(role.name()))
+                .collect(Collectors.toSet());
     }
-
     @Override
     public String getPassword() {
         return customer.getCustomerDto().getCustomerPw();

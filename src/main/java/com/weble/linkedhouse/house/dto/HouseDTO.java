@@ -1,6 +1,5 @@
 package com.weble.linkedhouse.house.dto;
 
-import com.weble.linkedhouse.host.entity.Host;
 import com.weble.linkedhouse.house.entity.House;
 import com.weble.linkedhouse.house.entity.constant.AutoReservation;
 import lombok.Getter;
@@ -9,7 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class HouseDTO {
-    private Host host;
 
     private int maxCapacity;
 
@@ -29,8 +27,7 @@ public class HouseDTO {
 
     private int bathRoom;
 
-    public HouseDTO(Host host, int maxCapacity, int minCapacity, int price, String location, String image, AutoReservation autoReservation, int room, int bed, int bathRoom) {
-        this.host = host;
+    public HouseDTO(int maxCapacity, int minCapacity, int price, String location, String image, AutoReservation autoReservation, int room, int bed, int bathRoom) {
         this.maxCapacity = maxCapacity;
         this.minCapacity = minCapacity;
         this.price = price;
@@ -43,13 +40,12 @@ public class HouseDTO {
     }
 
 
-    public static HouseDTO of(Host host, int maxCapacity, int minCapacity, int price, String location, String image, AutoReservation autoReservation, int room, int bed, int bathRoom) {
-        return new HouseDTO(host, maxCapacity, minCapacity, price, location, image, autoReservation, room, bed, bathRoom);
+    public static HouseDTO of(int maxCapacity, int minCapacity, int price, String location, String image, AutoReservation autoReservation, int room, int bed, int bathRoom) {
+        return new HouseDTO(maxCapacity, minCapacity, price, location, image, autoReservation, room, bed, bathRoom);
     }
 
     public static HouseDTO from(House entity) {
         return new HouseDTO(
-                entity.getHost(),
                 entity.getMaxCapacity(),
                 entity.getMinCapacity(),
                 entity.getPrice(),
@@ -63,6 +59,6 @@ public class HouseDTO {
     }
 
     public House toEntity() {
-        return House.of(host, maxCapacity, minCapacity, price, location, image, autoReservation, room, bed, bathRoom);
+        return House.of(maxCapacity, minCapacity, price, location, image, autoReservation, room, bed, bathRoom);
     }
 }

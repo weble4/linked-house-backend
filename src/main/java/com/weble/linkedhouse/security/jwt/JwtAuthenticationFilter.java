@@ -19,14 +19,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
 
     private static final String HEADER_AUTHORIZATION = "Authorization";
-    private static final String TOKEN_PREFIX = "Bearer";
+//    private static final String TOKEN_PREFIX = "Bearer";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        String authHeader = request.getHeader(HEADER_AUTHORIZATION);
-        String token = getAccessToken(authHeader);
+        String token = request.getHeader(HEADER_AUTHORIZATION);
 
         if (token != null && jwtTokenProvider.validToken(token) == JwtReturn.EXPIRED) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -46,10 +45,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String getAccessToken(String authHeader) {
-        if (authHeader != null && authHeader.startsWith(TOKEN_PREFIX)) {
-            return authHeader.substring(TOKEN_PREFIX.length());
-        }
-        return null;
-    }
+//    private String getAccessToken(String authHeader) {
+//        if (authHeader != null && authHeader.startsWith(TOKEN_PREFIX)) {
+//            return authHeader.substring(TOKEN_PREFIX.length());
+//        }
+//        return null;
+//    }
 }
