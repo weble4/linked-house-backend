@@ -1,22 +1,34 @@
 package com.weble.linkedhouse.customer.service;
 
-import com.weble.linkedhouse.customer.dtos.ProfileDtos;
-import com.weble.linkedhouse.customer.repository.CustomerRepository;
+import com.weble.linkedhouse.customer.dtos.ProfileDto;
+import com.weble.linkedhouse.customer.dtos.request.UpdateRequest;
+import com.weble.linkedhouse.customer.entity.CustomerProfile;
 import com.weble.linkedhouse.customer.repository.ProfileRepository;
+import com.weble.linkedhouse.exception.NotExistCustomer;
+import com.weble.linkedhouse.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ProfileService {
 
-    private final CustomerRepository customerRepository;
     private final ProfileRepository profileRepository;
 
-    public ProfileDtos getCustomerProfile() {
-        return null;
+    public ProfileDto getCustomerProfile(UserDetailsImpl userDetails) {
+        CustomerProfile profile = profileRepository.findByCustomerCustomerEmail(userDetails.getUsername())
+                .orElseThrow(NotExistCustomer::new);
+        return ProfileDto.from(profile);
     }
 
-    public void updateProfile() {
+    @Transactional
+    public ProfileDto updateProfile(UserDetailsImpl userDetails, UpdateRequest updateRequest) {
+        CustomerProfile profile = profileRepository.findByCustomerCustomerEmail(userDetails.getUsername())
+                .orElseThrow(NotExistCustomer::new);
+        profile.updateProfile(updateRequest);
+
+        return ProfileDto.from(profile);
     }
 }

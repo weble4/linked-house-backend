@@ -1,18 +1,24 @@
 package com.weble.linkedhouse.customer.service;
 
 import com.weble.linkedhouse.customer.dtos.request.LoginRequest;
+import com.weble.linkedhouse.customer.dtos.request.PasswordFindRequest;
 import com.weble.linkedhouse.customer.dtos.request.SignupRequest;
 import com.weble.linkedhouse.customer.dtos.response.LoginResponse;
 import com.weble.linkedhouse.customer.dtos.response.SignupResponse;
 import com.weble.linkedhouse.customer.entity.Customer;
 import com.weble.linkedhouse.customer.entity.CustomerProfile;
 import com.weble.linkedhouse.customer.entity.constant.AuthState;
+import com.weble.linkedhouse.customer.entity.constant.DeleteRequest;
+import com.weble.linkedhouse.customer.entity.constant.Role;
 import com.weble.linkedhouse.customer.repository.CustomerRepository;
 import com.weble.linkedhouse.customer.repository.ProfileRepository;
 import com.weble.linkedhouse.exception.AlreadyExistEmailException;
+import com.weble.linkedhouse.exception.AlreadyHasRole;
+import com.weble.linkedhouse.exception.DeleteCustomerException;
 import com.weble.linkedhouse.exception.InvalidSignInInformation;
 import com.weble.linkedhouse.exception.NotExistCustomer;
 import com.weble.linkedhouse.exception.Unauthorized;
+import com.weble.linkedhouse.security.UserDetailsImpl;
 import com.weble.linkedhouse.security.jwt.JwtTokenProvider;
 import com.weble.linkedhouse.security.jwt.token.RefreshToken;
 import com.weble.linkedhouse.security.jwt.token.RefreshTokenRepository;
@@ -51,6 +57,7 @@ public class CustomerService {
 
     @Transactional
     public SignupResponse saveUser(SignupRequest signupRequest) {
+        log.info("saveUser service");
 
         if (customerRepository.findByCustomerEmail(signupRequest.getCustomerEmail()).isPresent()) {
             throw new AlreadyExistEmailException();
@@ -61,6 +68,8 @@ public class CustomerService {
 
         Customer customer = customerRepository.save(signupRequest.convertCustomer());
         CustomerProfile profile = profileRepository.save(signupRequest.convertProfile(customer));
+
+        customer.setCustomerProfile(profile);
 
         SendCheckMail(customer);
 
@@ -79,16 +88,18 @@ public class CustomerService {
         Customer customer = customerRepository.findByCustomerEmail(request.getCustomerEmail())
                 .orElseThrow(InvalidSignInInformation::new);
 
-        if (customer.getAuthState() != AuthState.AUTH) {
+        if (customer.getAuthState() == AuthState.NONAUTH) {
             throw new Unauthorized();
+        }
+        if (customer.getDeleteRequest() == DeleteRequest.DELETE) {
+            throw new DeleteCustomerException();
+        }
+        if (!passwordEncoder.matches(request.getCustomerPw(), customer.getCustomerPw())) {
+            throw new InvalidSignInInformation();
         }
 
         CustomerProfile profile = profileRepository.findByCustomerCustomerId(customer.getCustomerId())
                 .orElseThrow(NotExistCustomer::new);
-
-        if (!passwordEncoder.matches(request.getCustomerPw(), customer.getCustomerPw())) {
-            throw new InvalidSignInInformation();
-        }
 
         TokenDto tokenDto = jwtTokenProvider.generateToken(request.getCustomerEmail());
 
@@ -97,6 +108,24 @@ public class CustomerService {
         return LoginResponse.of(customer, profile, tokenDto);
     }
 
+    @Transactional
+    public void applyHost(UserDetailsImpl userDetails) {
+        Customer customer = customerRepository.findByCustomerEmail(userDetails.getUsername())
+                .orElseThrow(NotExistCustomer::new);
+
+        if (customer.getRole().contains(Role.HOST)) {
+            throw new AlreadyHasRole();
+        }
+        customer.addRole(Role.HOST);
+    }
+
+    @Transactional
+    public void findPassword(PasswordFindRequest passwordFindRequest) {
+        Customer customer = customerRepository.findByCustomerEmail(passwordFindRequest.getCustomerEmail())
+                .orElseThrow(NotExistCustomer::new);
+        String encodePw = passwordEncoder.encode(passwordFindRequest.getCustomerPw());
+        customer.changePassword(encodePw);
+    }
 
     public void withdrawl() {
         // 동적 SQL로 테이블 생성 후 해야됨.
