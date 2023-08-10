@@ -8,7 +8,6 @@ import com.weble.linkedhouse.customer.dtos.request.UpdateRequest;
 import com.weble.linkedhouse.customer.dtos.response.LoginResponse;
 import com.weble.linkedhouse.customer.dtos.response.SignupResponse;
 import com.weble.linkedhouse.customer.service.CustomerService;
-import com.weble.linkedhouse.customer.service.ProfileService;
 import com.weble.linkedhouse.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class CustomerController {
 
     private final CustomerService customerService;
-    private final ProfileService profileService;
 
     @PostMapping("/signup")
     public ResponseEntity<SignupResponse> signup(@RequestBody @Valid SignupRequest signupRequest) {
@@ -71,12 +69,11 @@ public class CustomerController {
 
     @GetMapping("/profiles")
     public ProfileDto getCustomerProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return profileService.getCustomerProfile(userDetails);
+        return customerService.getCustomerProfile(userDetails);
     }
 
     @PatchMapping("/profiles")
     public ProfileDto updateProfile(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody UpdateRequest updateRequest) {
-        ProfileDto profile = profileService.updateProfile(userDetails, updateRequest);
-        return profile;
+        return customerService.updateProfile(userDetails, updateRequest);
     }
 }

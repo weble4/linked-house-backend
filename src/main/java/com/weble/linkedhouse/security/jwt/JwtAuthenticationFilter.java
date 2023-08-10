@@ -19,7 +19,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
 
     private static final String HEADER_AUTHORIZATION = "Authorization";
-//    private static final String TOKEN_PREFIX = "Bearer";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -27,28 +26,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader(HEADER_AUTHORIZATION);
 
-        if (token != null && jwtTokenProvider.validToken(token) == JwtReturn.EXPIRED) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
+        if (token != null) {
+            JwtReturn validationResult = jwtTokenProvider.validToken(token);
 
-        if (token != null && jwtTokenProvider.validToken(token) == JwtReturn.FAIL) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
+            switch (validationResult) {
+                case EXPIRED, FAIL -> {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    return;
+                }
+                case SUCCESS -> {
+                    Authentication authentication = jwtTokenProvider.getAuthentication(token);
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+            }
         }
-
-        if (token != null && jwtTokenProvider.validToken(token) == JwtReturn.SUCCESS) {
-            Authentication authentication = jwtTokenProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        }
-
         filterChain.doFilter(request, response);
     }
-
-//    private String getAccessToken(String authHeader) {
-//        if (authHeader != null && authHeader.startsWith(TOKEN_PREFIX)) {
-//            return authHeader.substring(TOKEN_PREFIX.length());
-//        }
-//        return null;
-//    }
 }

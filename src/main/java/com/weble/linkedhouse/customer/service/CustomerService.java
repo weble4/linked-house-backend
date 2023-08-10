@@ -1,8 +1,10 @@
 package com.weble.linkedhouse.customer.service;
 
+import com.weble.linkedhouse.customer.dtos.ProfileDto;
 import com.weble.linkedhouse.customer.dtos.request.LoginRequest;
 import com.weble.linkedhouse.customer.dtos.request.PasswordFindRequest;
 import com.weble.linkedhouse.customer.dtos.request.SignupRequest;
+import com.weble.linkedhouse.customer.dtos.request.UpdateRequest;
 import com.weble.linkedhouse.customer.dtos.response.LoginResponse;
 import com.weble.linkedhouse.customer.dtos.response.SignupResponse;
 import com.weble.linkedhouse.customer.entity.Customer;
@@ -12,6 +14,7 @@ import com.weble.linkedhouse.customer.entity.constant.DeleteRequest;
 import com.weble.linkedhouse.customer.entity.constant.Role;
 import com.weble.linkedhouse.customer.repository.CustomerRepository;
 import com.weble.linkedhouse.customer.repository.ProfileRepository;
+import com.weble.linkedhouse.exception.AlreadyAuthentication;
 import com.weble.linkedhouse.exception.AlreadyExistEmailException;
 import com.weble.linkedhouse.exception.AlreadyHasRole;
 import com.weble.linkedhouse.exception.DeleteCustomerException;
@@ -80,7 +83,10 @@ public class CustomerService {
     public void activateAccount(Long customerId) {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(NotExistCustomer::new);
-        customer.ApproveAuth(AuthState.AUTH);
+        if (customer.getAuthState() == AuthState.AUTH) {
+            throw new AlreadyAuthentication();
+        }
+        customer.approveAuth(AuthState.AUTH);
     }
 
     @Transactional
@@ -98,25 +104,39 @@ public class CustomerService {
             throw new InvalidSignInInformation();
         }
 
-        CustomerProfile profile = profileRepository.findByCustomerCustomerId(customer.getCustomerId())
-                .orElseThrow(NotExistCustomer::new);
-
-        TokenDto tokenDto = jwtTokenProvider.generateToken(request.getCustomerEmail());
+        TokenDto tokenDto = jwtTokenProvider.generateToken(customer.getCustomerEmail());
 
         saveRefreshToken(request, tokenDto);
 
-        return LoginResponse.of(customer, profile, tokenDto);
+        return LoginResponse.of(customer, customer.getCustomerProfile(), tokenDto);
     }
 
     @Transactional
     public void applyHost(UserDetailsImpl userDetails) {
-        Customer customer = customerRepository.findByCustomerEmail(userDetails.getUsername())
+        Customer customer = customerRepository.findByCustomerEmailWithCustomerProfile(userDetails.getUsername())
                 .orElseThrow(NotExistCustomer::new);
 
         if (customer.getRole().contains(Role.HOST)) {
             throw new AlreadyHasRole();
         }
         customer.addRole(Role.HOST);
+    }
+
+    @Transactional(readOnly = true)
+    public ProfileDto getCustomerProfile(UserDetailsImpl userDetails) {
+        Customer customer = customerRepository.findByCustomerEmailWithCustomerProfile(userDetails.getUsername())
+                .orElseThrow(NotExistCustomer::new);
+        return ProfileDto.from(customer.getCustomerProfile());
+    }
+
+    @Transactional
+    public ProfileDto updateProfile(UserDetailsImpl userDetails, UpdateRequest updateRequest) {
+
+        Customer customer = customerRepository.findByCustomerEmailWithCustomerProfile(userDetails.getUsername())
+                .orElseThrow(NotExistCustomer::new);
+        customer.getCustomerProfile().updateProfile(updateRequest);
+
+        return ProfileDto.from(customer.getCustomerProfile());
     }
 
     @Transactional
@@ -160,7 +180,6 @@ public class CustomerService {
         RefreshToken refreshToken = RefreshToken.create(request.getCustomerEmail(),
                 tokenDto.getRefreshToken());
         authRedisSave(refreshToken.getKey(), refreshToken.getValue());
-        refreshTokenRepository.save(refreshToken);
     }
 
     private void authRedisSave(String customerEmail, String refreshToken) {

@@ -13,7 +13,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +29,9 @@ import java.util.Set;
 @Getter
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = {
+        @Index(columnList = "customer_email")
+})
 public class Customer extends AuditingFields {
 
     @Id
@@ -45,7 +50,7 @@ public class Customer extends AuditingFields {
     @Enumerated(EnumType.STRING)
     private DeleteRequest deleteRequest;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)
     @Column(length = 100, nullable = false)
     private Set<Role> role = new HashSet<>();
@@ -72,16 +77,16 @@ public class Customer extends AuditingFields {
         return new Customer(customerEmail, customerPw, role);
     }
 
-    public void ApproveAuth(AuthState authState) {
+    public void approveAuth(AuthState authState) {
         this.authState= authState;
     }
 
     public void changePassword(String customerPw) {
         this.customerPw = customerPw;
     }
-    //연관관계 편의 메서드
     public void setCustomerProfile(CustomerProfile customerProfile) {
         this.customerProfile = customerProfile;
+        customerProfile.setCustomer(this);
     }
     public void addRole(Role newRole) {
         Set<Role> updatedRoles = new HashSet<>(this.role);

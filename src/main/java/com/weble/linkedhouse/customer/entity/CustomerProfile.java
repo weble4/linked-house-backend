@@ -31,7 +31,7 @@ public class CustomerProfile extends AuditingFields {
     @Column(name="profile_id")
     private Long profileId;
 
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "customerId")
     private Customer customer;
 
@@ -68,8 +68,12 @@ public class CustomerProfile extends AuditingFields {
         return new CustomerProfile(customer, nickname, gender, birthDay, phoneNum, image);
     }
 
-    public void publicState(PublicAt publicAt) {
+    public void changePublicAt(PublicAt publicAt) {
         this.publicAt = publicAt;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     public void updateProfile(UpdateRequest updateRequest) {
