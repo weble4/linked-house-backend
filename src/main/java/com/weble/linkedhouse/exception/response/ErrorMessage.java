@@ -9,13 +9,11 @@ public enum ErrorMessage {
     NO_AUTHORIZATION("인증이 필요한 아이디입니다."),
     NOT_FOUND_CUSTOMER("존재하지 않는 회원입니다."),
     JWT_NOT_NULL("JWT Token can't be Null or Empty"),
-    DUPLICATED_CUSTOMER("이미 가입된 이메일입니다");
+    DUPLICATED_CUSTOMER("이미 가입된 이메일입니다"),
+    HOUSE_NOT_FOUND("존재하지 않는 장소입니다.");
 
-
-
-
-   @Getter
-   private final String message;
+    @Getter
+    private final String message;
 
     ErrorMessage(String message) {
         this.message = message;
