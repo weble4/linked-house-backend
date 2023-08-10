@@ -14,7 +14,7 @@ public class NotificationDto {
     public static NotificationDto fromEntity(Notification notification) {
         NotificationDto dto = new NotificationDto();
         dto.setNotificationId(notification.getNotificationId());
-        dto.setCustomerId(notification.getCustomer().getId());
+        dto.setCustomerId(notification.getCustomer().getCustomerId());
         dto.setNotificationType(notification.getNotificationType());
         dto.setNotificationContent(notification.getNotificationContent());
         return dto;
