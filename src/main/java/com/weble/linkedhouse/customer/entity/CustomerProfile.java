@@ -1,5 +1,6 @@
 package com.weble.linkedhouse.customer.entity;
 
+import com.weble.linkedhouse.customer.dtos.request.UpdateRequest;
 import com.weble.linkedhouse.customer.entity.constant.PublicAt;
 import com.weble.linkedhouse.util.AuditingFields;
 import jakarta.persistence.Column;
@@ -40,8 +41,8 @@ public class CustomerProfile extends AuditingFields {
     @Column(nullable = false, length = 50)
     private String gender;
 
-    @Column(name="birth_date", nullable = false, length = 100)
-    private String birthDate;
+    @Column(name="birth_day", nullable = false, length = 100)
+    private String birthDay;
 
     @Column(name="phone_num", nullable = false, length = 100)
     private String phoneNum;
@@ -51,22 +52,36 @@ public class CustomerProfile extends AuditingFields {
     @Enumerated(EnumType.STRING)
     private PublicAt publicAt;
 
-    private CustomerProfile(Customer customer, String nickname, String gender, String birthDate, String phoneNum) {
+    @Column(name = "profile_image")
+    private String image;
+
+    private CustomerProfile(Customer customer, String nickname, String gender, String birthDay, String phoneNum, String image) {
         this.customer = customer;
         this.nickname = nickname;
         this.gender = gender;
-        this.birthDate = birthDate;
+        this.birthDay = birthDay;
         this.phoneNum = phoneNum;
         this.publicAt = PublicAt.PUBLIC;
+        this.image = image;
     }
-    public static CustomerProfile of(Customer customer, String nickname, String gender, String birthDate, String phoneNum) {
-        return new CustomerProfile(customer, nickname, gender, birthDate, phoneNum);
+    public static CustomerProfile of(Customer customer, String nickname, String gender, String birthDay, String phoneNum, String image) {
+        return new CustomerProfile(customer, nickname, gender, birthDay, phoneNum, image);
     }
 
-    public void publicState(PublicAt publicAt) {
+    public void changePublicAt(PublicAt publicAt) {
         this.publicAt = publicAt;
     }
 
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public void updateProfile(UpdateRequest updateRequest) {
+        this.nickname = updateRequest.getNickname() !=null ? updateRequest.getNickname() : nickname;
+        this.phoneNum = updateRequest.getPhoneNum() != null ? updateRequest.getPhoneNum() : phoneNum;
+        this.image = updateRequest.getImage() != null ? updateRequest.getImage() : image;
+        this.publicAt = updateRequest.getPublicAt() != null ? updateRequest.getPublicAt() : publicAt;
+    }
 
     @Override
     public boolean equals(Object o) {

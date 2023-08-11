@@ -35,7 +35,7 @@ public class LoginResponse {
                 .customerPw(customer.getCustomerPw())
                 .nickname(customerProfile.getNickname())
                 .phoneNum(customerProfile.getPhoneNum())
-                .birthDay(customerProfile.getBirthDate())
+                .birthDay(customerProfile.getBirthDay())
                 .token(token)
                 .build();
     }

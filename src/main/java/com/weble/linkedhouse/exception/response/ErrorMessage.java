@@ -9,8 +9,10 @@ public enum ErrorMessage {
     NO_AUTHORIZATION("인증이 필요한 아이디입니다."),
     NOT_FOUND_CUSTOMER("존재하지 않는 회원입니다."),
     JWT_NOT_NULL("JWT Token can't be Null or Empty"),
-    DUPLICATED_CUSTOMER("이미 가입된 이메일입니다");
-
+    DUPLICATED_CUSTOMER("이미 가입된 이메일입니다"),
+    ALREADY_HAS_ROLE("이미 호스트 자격이 있습니다."),
+    DELETE_CUSTOMER("삭제 신청한 아이디입니다."),
+    ALREADY_AUTHORIZATION("이미 인증된 이메일입니다.");
 
 
 
