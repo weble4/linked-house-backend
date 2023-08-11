@@ -1,4 +1,4 @@
-package com.weble.linkedhouse.review.entity;
+package com.weble.linkedhouse.review.domain.entity;
 
 import com.weble.linkedhouse.customer.entity.Customer;
 import com.weble.linkedhouse.house.entity.House;
