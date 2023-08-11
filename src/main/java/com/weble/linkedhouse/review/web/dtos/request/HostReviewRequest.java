@@ -1,4 +1,4 @@
-package com.weble.linkedhouse.review.dtos.request;
+package com.weble.linkedhouse.review.web.dtos.request;
 
 import com.weble.linkedhouse.customer.dtos.CustomerDto;
 import com.weble.linkedhouse.review.domain.entity.FeedbackHost;
@@ -16,7 +16,8 @@ public class HostReviewRequest {
     private int damageDegree;
 
     @Builder
-    private HostReviewRequest(CustomerDto writer, CustomerDto customerDto, String title, String content, int attitude, int damageDegree) {
+    private HostReviewRequest(CustomerDto writer, CustomerDto customerDto, String title,
+                              String content, int attitude, int damageDegree) {
         this.writer = writer;
         this.customerDto = customerDto;
         this.title = title;
@@ -25,7 +26,8 @@ public class HostReviewRequest {
         this.damageDegree = damageDegree;
     }
 
-    public static HostReviewRequest of(CustomerDto writer, CustomerDto customerDto, String title, String content, int attitude, int damageDegree) {
+    public static HostReviewRequest of(CustomerDto writer, CustomerDto customerDto, String title,
+                                       String content, int attitude, int damageDegree) {
         return HostReviewRequest.builder()
                 .writer(writer)
                 .customerDto(customerDto)
