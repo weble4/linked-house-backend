@@ -41,7 +41,7 @@ public class CustomerReviewResponse {
     public CustomerReviewResponse of(CustomerDto customerDto, House house, String title, String content,
                                      int scoreClean, int scoreCommunication, int scoreSatisfaction, int totalScore,
                                      LocalDateTime createdAt, LocalDateTime updatedAt) {
-        CustomerReviewResponse.builder()
+        return CustomerReviewResponse.builder()
                 .customerDto(customerDto)
                 .house(house)
                 .title(title)
@@ -53,10 +53,12 @@ public class CustomerReviewResponse {
                 .createdAt(createdAt)
                 .updatedAt(updatedAt)
                 .build();
-        }
 
-    public static CustomerReviewRequest from(FeedbackCustomer feedbackCustomer){
-        return CustomerReviewRequest.builder()
+    }
+
+
+    public static CustomerReviewResponse from(FeedbackCustomer feedbackCustomer){
+        return CustomerReviewResponse.builder()
                 .customerDto(CustomerDto.from(feedbackCustomer.getCustomer()))
                 .house(feedbackCustomer.getHouse())
                 .title(feedbackCustomer.getTitle())

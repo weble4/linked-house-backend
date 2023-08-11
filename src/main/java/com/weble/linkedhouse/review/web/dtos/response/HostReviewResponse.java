@@ -7,7 +7,7 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@Getter                                  // responseDTO의 데이터를 호출하기 위해 @Getter가 필요함
+@Getter
 public class HostReviewResponse {
 
     private CustomerDto writer;
@@ -31,7 +31,8 @@ public class HostReviewResponse {
         this.updatedAt = updatedAt;
     }
 
-    public static HostReviewResponse of(CustomerDto writer, CustomerDto customerDto, String title, String content, int attitude, int damageDegree, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public static HostReviewResponse of(CustomerDto writer, CustomerDto customerDto, String title, String content,
+                                        int attitude, int damageDegree, LocalDateTime createdAt, LocalDateTime updatedAt) {
         return HostReviewResponse.builder()
                 .writer(writer)
                 .customerDto(customerDto)

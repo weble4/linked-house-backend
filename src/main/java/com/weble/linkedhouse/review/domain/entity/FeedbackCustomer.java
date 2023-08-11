@@ -2,6 +2,7 @@ package com.weble.linkedhouse.review.domain.entity;
 
 import com.weble.linkedhouse.customer.entity.Customer;
 import com.weble.linkedhouse.house.entity.House;
+import com.weble.linkedhouse.review.web.dtos.request.CustomerReviewRequest;
 import com.weble.linkedhouse.util.AuditingFields;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -68,6 +69,21 @@ public class FeedbackCustomer extends AuditingFields {
         this.totalScore = totalScore;
     }
 
+    public static FeedbackCustomer of(Customer customer, House house,
+                                      String title, String content, int scoreClean, int scoreCommunication,
+                                      int scoreSatisfaction, int totalScore) {
+        return FeedbackCustomer.builder()
+                .customer(customer)
+                .house(house)
+                .title(title)
+                .content(content)
+                .scoreClean(scoreClean)
+                .scoreCommunication(scoreCommunication)
+                .scoreSatisfaction(scoreSatisfaction)
+                .totalScore(totalScore)
+                .build();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -78,5 +94,14 @@ public class FeedbackCustomer extends AuditingFields {
     @Override
     public int hashCode() {
         return Objects.hash(getFeedbackcustomerId());
+    }
+
+    public void updateCustomerReview(CustomerReviewRequest request) {
+        this.title = request.getTitle();
+        this.content = request.getContent();
+        this.scoreClean = request.getScoreClean();
+        this.scoreCommunication = request.getScoreCommunication();
+        this.scoreSatisfaction = request.getScoreSatisfaction();
+        this.totalScore = request.getTotalScore();
     }
 }

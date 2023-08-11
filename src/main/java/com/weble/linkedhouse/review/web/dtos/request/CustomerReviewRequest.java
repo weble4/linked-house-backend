@@ -46,7 +46,7 @@ public class CustomerReviewRequest {
 
     public static CustomerReviewRequest from(FeedbackCustomer feedbackCustomer){
         return CustomerReviewRequest.builder()
-                .customerDto(CustomerDto.from(feedbackCustomer.getCustomer())
+                .customerDto(CustomerDto.from(feedbackCustomer.getCustomer()))
                 .house(feedbackCustomer.getHouse())
                 .title(feedbackCustomer.getTitle())
                 .content(feedbackCustomer.getContent())
@@ -59,7 +59,7 @@ public class CustomerReviewRequest {
     }
 
     public FeedbackCustomer toEntity() {
-        return FeedbackCustomer of(customerDto.toEntity(), house, title, content,
+        return FeedbackCustomer.of(customerDto.toEntity(), house, title, content,
         scoreClean, scoreCommunication, scoreSatisfaction, totalScore);
     }
 

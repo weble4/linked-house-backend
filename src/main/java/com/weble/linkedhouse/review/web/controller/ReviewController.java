@@ -1,5 +1,6 @@
 package com.weble.linkedhouse.review.web.controller;
 
+import com.weble.linkedhouse.review.web.dtos.request.CustomerReviewRequest;
 import com.weble.linkedhouse.review.web.dtos.request.HostReviewRequest;
 import com.weble.linkedhouse.review.web.dtos.response.CustomerReviewResponse;
 import com.weble.linkedhouse.review.web.dtos.response.HostReviewResponse;
@@ -52,15 +53,18 @@ public class ReviewController {
     }
 
     @PutMapping("/{feedbackCustomerId}")
-    public ResponseEntity<CustomerFeedbackResponse> updateCustomerReview(@PathVariable Long feedbackCustomerId) {
-        CustomerFeedbackResponse customerFeedbackResponse = feedbackCustomerService.updateCustomerReview(feedbackCustomerId);
+    public ResponseEntity<CustomerReviewResponse> updateCustomerReview(@PathVariable Long feedbackCustomerId,
+                                                                         @RequestBody CustomerReviewRequest request) {
+        CustomerReviewResponse customerFeedbackResponse =
+                feedbackCustomerService.updateCustomerReview(feedbackCustomerId, request);
 
         return ResponseEntity.ok().body(customerFeedbackResponse);
     }
 
     @GetMapping("/{feedbackCustomerId}")
-    public ResponseEntity<CustomerFeedbackResponse> findByCustomerId(@PathVariable Long feedbackCustomerId) {
-        CustomerFeedbackResponse customerFeedbackResponse = feedbackCustomerService.findByCustomerId(feedbackCustomerId);
+    public ResponseEntity<CustomerReviewResponse> findByCustomerId(@PathVariable Long feedbackCustomerId) {
+        CustomerReviewResponse customerReviewResponse =
+                feedbackCustomerService.findByCustomerId(feedbackCustomerId);
 
         return ResponseEntity.ok().body(customerFeedbackResponse);
     }
@@ -73,10 +77,10 @@ public class ReviewController {
     }
 
     @GetMapping("/{rentalId}")
-    public ResponseEntity<CustomerFeedbackResponse> findAllHouseReview(@PathVariable Long rentalId) {
-        CustomerFeedbackResponse customerFeedbackResponse = feedbackCustomerService.findAllHouseReview(rentalId);
+    public ResponseEntity<CustomerReviewResponse> findAllHouseReview(@PathVariable Long rentalId) {
+        CustomerReviewResponse customerReviewResponse = feedbackCustomerService.findAllHouseReview(rentalId);
 
-        return ResponseEntity.ok().body(customerFeedbackResponse);
+        return ResponseEntity.ok().body(customerReviewResponse);
     }
 
     @GetMapping("/{customerId}")

@@ -1,10 +1,9 @@
 package com.weble.linkedhouse.review.service;
 
+import com.weble.linkedhouse.review.domain.entity.FeedbackHost;
+import com.weble.linkedhouse.review.domain.repository.FeedbackHostRepository;
 import com.weble.linkedhouse.review.web.dtos.request.HostReviewRequest;
 import com.weble.linkedhouse.review.web.dtos.response.HostReviewResponse;
-import com.weble.linkedhouse.review.domain.entity.FeedbackHost;
-import com.weble.linkedhouse.review.domain.repository.FeedbackCustomerRepository;
-import com.weble.linkedhouse.review.domain.repository.FeedbackHostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,14 +19,20 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class FeedbackHostService {
-
-    private final FeedbackCustomerRepository feedbackCustomerRepository;
     private final FeedbackHostRepository feedbackHostRepository;
+
+    public HostFeedbackResponse findReviewByHostId(Long feedbackHostId) {
+        FeedbackHost feedbackHost = feedbackHostRepository.findById(feedbackHostId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 없습니다. id=" + feedbackHostId));
+        return new HostFeedbackResponse(feedbackHost);
+    }
 
     public List<HostReviewResponse> getAllHostReview(Long customerId) {
         return feedbackHostRepository.findAllByCustomerCustomerId(customerId)
-                .map(feedbackHosts -> feedbackHosts.stream()
-                        .map(HostReviewResponse::from).collect(Collectors.toList()))
+                .map(feedbackHosts ->
+                        feedbackHosts.stream()
+                                .map(HostReviewResponse::from)
+                                .collect(Collectors.toList()))
                 .orElse(Collections.emptyList());
     }
 
@@ -35,10 +40,5 @@ public class FeedbackHostService {
     public HostReviewResponse createHostReview(HostReviewRequest hostReviewRequest) {
         FeedbackHost review = feedbackHostRepository.save(hostReviewRequest.toEntity());
         return HostReviewResponse.from(review);
-    }
-
-    @Transactional
-    public HostFeedbackResponse findReviewByHostId(Long feedbackHostId) {
-        FeedbackHost feedbackHost = FeedbackHostRepository.findById(feedbackHostId)
     }
 }
