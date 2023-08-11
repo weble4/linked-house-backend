@@ -1,8 +1,11 @@
 package com.weble.linkedhouse.house.service;
 
+import com.weble.linkedhouse.customer.entity.Customer;
 import com.weble.linkedhouse.customer.repository.CustomerRepository;
 import com.weble.linkedhouse.exception.NotExistHouseException;
+import com.weble.linkedhouse.house.dto.request.HouseSaveRequest;
 import com.weble.linkedhouse.house.dto.response.HostHouseListResponse;
+import com.weble.linkedhouse.house.dto.response.HostHouseResponse;
 import com.weble.linkedhouse.house.entity.House;
 import com.weble.linkedhouse.house.repository.HouseRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,7 +24,7 @@ public class HouseHostService {
     private final HouseRepository houseRepository;
     private final CustomerRepository customerRepository;
 
-    public List<HostHouseListResponse> findByCustomerId(long customerId){
+    public List<HostHouseListResponse> findByCustomerId(Long customerId) {
 
         if(customerRepository.findById(customerId).isEmpty()){
             throw new NotExistHouseException();
@@ -34,9 +38,24 @@ public class HouseHostService {
             .collect(Collectors.toList());
     }
 
-    @Transactional
-    public void save(House house) {
+    public House findByRentalId(Long rentalId) {
 
+        House house = houseRepository.findByRentalId(rentalId).orElseThrow(NotExistHouseException::new);
+
+        return house;
+    }
+
+    @Transactional
+    public House save(HouseSaveRequest request) {
+        return houseRepository.save(request.toEntity());
+    }
+
+    @Transactional
+    public void delete(Long rentalId) {
+
+        House house = houseRepository.findByRentalId(rentalId).orElseThrow(NotExistHouseException::new);
+
+        houseRepository.delete(house);
     }
 
 }

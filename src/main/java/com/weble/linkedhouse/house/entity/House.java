@@ -38,13 +38,13 @@ public class House extends AuditingFields {
     private Customer customer;
 
     @Column(name = "max_capacity")
-    private int maxCapacity;
+    private Integer maxCapacity;
 
     @Column(name = "min_capacity")
-    private int minCapacity;
+    private Integer minCapacity;
 
     @Column(nullable = false)
-    private int price;
+    private Integer price;
 
     @Column(nullable = false)
     private String location;
@@ -57,15 +57,15 @@ public class House extends AuditingFields {
 
     // 방 갯수
     @Column(nullable = false)
-    private int room;
+    private Integer room;
 
     // 침대 갯수
     @Column(nullable = false)
-    private int bed;
+    private Integer bed;
 
     // 욕실 갯수
     @Column(name = "bath_room", nullable = false)
-    private int bathRoom;
+    private Integer bathRoom;
 
     @Builder
     private House(Customer customer, int maxCapacity, int minCapacity, int price, String location,

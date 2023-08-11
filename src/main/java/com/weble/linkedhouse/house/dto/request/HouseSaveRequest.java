@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public class HouseSaveRequest {
+    
+    private Customer customer;
 
     @NotNull(message = "최대 인원을 작성해주세요.")
     private Integer maxCapacity;
@@ -32,8 +34,8 @@ public class HouseSaveRequest {
     @NotNull(message = "욕실 갯수를 작성해주세요.")
     private Integer bathRoom;
 
-    private HouseSaveRequest(Integer maxCapacity, Integer minCapacity, Integer price, String location, String image,
-                             AutoReservation autoReservation, Integer room, Integer bed, Integer bathRoom) {
+    private HouseSaveRequest(Customer customer, Integer maxCapacity, Integer minCapacity, Integer price, String location, String image, AutoReservation autoReservation, Integer room, Integer bed, Integer bathRoom) {
+        this.customer = customer;
         this.maxCapacity = maxCapacity;
         this.minCapacity = minCapacity;
         this.price = price;
@@ -45,9 +47,23 @@ public class HouseSaveRequest {
         this.bathRoom = bathRoom;
     }
 
-    public House save(Customer customer) {
+    public House saveHouse() {
         return House.of(customer, maxCapacity, minCapacity, price, location, image,
                 autoReservation, room, bed, bathRoom);
     }
 
+    public House toEntity() {
+        return House.builder()
+                .customer(customer)
+                .maxCapacity(maxCapacity)
+                .minCapacity(minCapacity)
+                .price(price)
+                .location(location)
+                .image(image)
+                .autoReservation(autoReservation)
+                .room(room)
+                .bed(bed)
+                .bathRoom(bathRoom)
+                .build();
+    }
 }

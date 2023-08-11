@@ -4,9 +4,8 @@ import com.weble.linkedhouse.house.entity.House;
 import com.weble.linkedhouse.house.entity.constant.AutoReservation;
 import lombok.Getter;
 
-
 @Getter
-public class HostHouseListResponse {
+public class HostHouseResponse {
 
     private Long rentalId;
     private Long customerId;
@@ -14,8 +13,7 @@ public class HostHouseListResponse {
     private String image;
     private AutoReservation autoReservation;
 
-
-    public HostHouseListResponse(House house) {
+    public HostHouseResponse(House house) {
         this.rentalId = house.getRentalId();
         this.customerId = house.getCustomer().getCustomerId();
         this.price = house.getPrice();
