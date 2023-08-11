@@ -1,7 +1,6 @@
 package com.weble.linkedhouse.review.service;
 
-import com.weble.linkedhouse.review.dtos.response.CustomerFeedbackResponse;
-import com.weble.linkedhouse.review.dtos.response.CustomerReviewResponse;
+import com.weble.linkedhouse.review.web.dtos.response.CustomerReviewResponse;
 
 public class FeedbackCustomerService {
     public CustomerReviewResponse createCustomerReview(Long rentalId) {

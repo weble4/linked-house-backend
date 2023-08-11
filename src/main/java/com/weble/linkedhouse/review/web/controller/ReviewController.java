@@ -1,10 +1,8 @@
-package com.weble.linkedhouse.review.controller;
+package com.weble.linkedhouse.review.web.controller;
 
-import com.weble.linkedhouse.review.dtos.request.HostReviewRequest;
-import com.weble.linkedhouse.review.dtos.response.CustomerReviewResponse;
-import com.weble.linkedhouse.review.dtos.response.CustomerFeedbackResponse;
-import com.weble.linkedhouse.review.dtos.response.HostFeedbackResponse;
-import com.weble.linkedhouse.review.dtos.response.HostReviewResponse;
+import com.weble.linkedhouse.review.web.dtos.request.HostReviewRequest;
+import com.weble.linkedhouse.review.web.dtos.response.CustomerReviewResponse;
+import com.weble.linkedhouse.review.web.dtos.response.HostReviewResponse;
 import com.weble.linkedhouse.review.service.FeedbackCustomerService;
 import com.weble.linkedhouse.review.service.FeedbackHostService;
 import lombok.RequiredArgsConstructor;

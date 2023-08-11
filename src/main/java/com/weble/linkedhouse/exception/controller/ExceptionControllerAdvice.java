@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class ExceptionControllerAdvise {
+public class ExceptionControllerAdvice {
 
     @ExceptionHandler(LinkedHouseException.class)
     public ResponseEntity<ErrorResponse> customException(LinkedHouseException e) {

@@ -1,4 +1,4 @@
-package com.weble.linkedhouse.review.dtos.response;
+package com.weble.linkedhouse.review.web.dtos.response;
 
 import com.weble.linkedhouse.customer.dtos.CustomerDto;
 import com.weble.linkedhouse.review.domain.entity.FeedbackHost;

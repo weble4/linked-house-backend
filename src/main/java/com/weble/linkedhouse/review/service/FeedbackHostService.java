@@ -1,8 +1,7 @@
 package com.weble.linkedhouse.review.service;
 
-import com.weble.linkedhouse.review.dtos.request.HostReviewRequest;
-import com.weble.linkedhouse.review.dtos.response.HostFeedbackResponse;
-import com.weble.linkedhouse.review.dtos.response.HostReviewResponse;
+import com.weble.linkedhouse.review.web.dtos.request.HostReviewRequest;
+import com.weble.linkedhouse.review.web.dtos.response.HostReviewResponse;
 import com.weble.linkedhouse.review.domain.entity.FeedbackHost;
 import com.weble.linkedhouse.review.domain.repository.FeedbackCustomerRepository;
 import com.weble.linkedhouse.review.domain.repository.FeedbackHostRepository;
