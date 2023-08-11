@@ -1,5 +1,6 @@
 package com.weble.linkedhouse.review.controller;
 
+import com.weble.linkedhouse.review.dtos.request.HostReviewRequest;
 import com.weble.linkedhouse.review.dtos.response.CustomerReviewResponse;
 import com.weble.linkedhouse.review.dtos.response.CustomerFeedbackResponse;
 import com.weble.linkedhouse.review.dtos.response.HostFeedbackResponse;
@@ -13,8 +14,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,17 +29,22 @@ public class ReviewController {
     private final FeedbackHostService feedbackHostService;
 
     @PostMapping("/{customerId}")
-    public ResponseEntity<HostReviewResponse> createHostReview(@PathVariable Long customerId) {
-        HostReviewResponse hostReviewResponse = feedbackHostService.createHostReview(customerId);
+    public ResponseEntity<HostReviewResponse> createHostReview(@PathVariable Long customerId, @RequestBody HostReviewRequest hostReviewRequest) {
+        HostReviewResponse hostReviewResponse = feedbackHostService.createHostReview(hostReviewRequest);
 
         return ResponseEntity.ok().body(hostReviewResponse);
+    }
+
+    @GetMapping("/{customerId}")
+    public List<HostReviewResponse> getAllHostReview(@PathVariable Long customerId) {
+        return feedbackHostService.getAllHostReview(customerId);
     }
 
     @PostMapping("/{rentalId}")
     public ResponseEntity<CustomerReviewResponse> createCustomerReview(@PathVariable Long rentalId) {
         CustomerReviewResponse customerReviewResponse = feedbackCustomerService.createCustomerReview(rentalId);
 
-        return CustomerReviewResponse.ok().body(customerReviewResponse);
+        return ResponseEntity.ok().body(customerReviewResponse);
     }
 
     @DeleteMapping("/{feedbackCustomerId}")

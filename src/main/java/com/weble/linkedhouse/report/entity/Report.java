@@ -1,7 +1,7 @@
 package com.weble.linkedhouse.report.entity;
 
-import com.weble.linkedhouse.review.entity.FeedbackCustomer;
-import com.weble.linkedhouse.review.entity.FeedbackHost;
+import com.weble.linkedhouse.review.domain.entity.FeedbackCustomer;
+import com.weble.linkedhouse.review.domain.entity.FeedbackHost;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
