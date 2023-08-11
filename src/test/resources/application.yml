@@ -1,4 +1,9 @@
 spring:
   profiles:
     active: test
-  sql.init.mode: always
+  mail:
+    username: dummy
+    password: dummypassword
+
+jwt:
+  secret_key: testKeyNotRealKeyJustTestKeyAndKeyIsNeedToLength

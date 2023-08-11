@@ -1,5 +1,6 @@
 package com.weble.linkedhouse.customer.service;
 
+import com.weble.linkedhouse.customer.config.TestConfig;
 import com.weble.linkedhouse.customer.dtos.ProfileDto;
 import com.weble.linkedhouse.customer.dtos.request.LoginRequest;
 import com.weble.linkedhouse.customer.dtos.request.PasswordFindRequest;
@@ -23,6 +24,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
@@ -35,8 +37,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Transactional
 @SpringBootTest
+@Import(TestConfig.class)
 @TestPropertySource(properties = {
         "spring.mail.username=dummy",
+        "srping.mail.password=dummypassword",
         "jwt.secret_key=testKeyNotRealKeyJustTestKeyAndKeyIsNeedToLength"
 })
 class CustomerServiceTest {
