@@ -1,11 +1,9 @@
 package com.weble.linkedhouse.house.service;
 
-import com.weble.linkedhouse.customer.entity.Customer;
 import com.weble.linkedhouse.customer.repository.CustomerRepository;
 import com.weble.linkedhouse.exception.NotExistHouseException;
 import com.weble.linkedhouse.house.dto.request.HouseSaveRequest;
 import com.weble.linkedhouse.house.dto.response.HostHouseListResponse;
-import com.weble.linkedhouse.house.dto.response.HostHouseResponse;
 import com.weble.linkedhouse.house.entity.House;
 import com.weble.linkedhouse.house.repository.HouseRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
