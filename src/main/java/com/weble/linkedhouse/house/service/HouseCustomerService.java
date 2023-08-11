@@ -16,7 +16,6 @@ import java.util.List;
 public class HouseCustomerService {
 
     private final HouseRepository houseRepository;
-    private final CustomerRepository customerRepository;
 
     public List<House> findAll(String location, Integer price, Integer maxCapacity) {
         Specification<House> specification = Specification.where(null);
