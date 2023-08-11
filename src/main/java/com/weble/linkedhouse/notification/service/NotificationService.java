@@ -1,41 +1,56 @@
 package com.weble.linkedhouse.notification.service;
 
+
 import com.weble.linkedhouse.customer.entity.Customer;
 import com.weble.linkedhouse.customer.repository.CustomerRepository;
+import com.weble.linkedhouse.notification.dtos.NotificationCreateRequestDto;
+import com.weble.linkedhouse.notification.dtos.NotificationDto;
 import com.weble.linkedhouse.notification.entity.Notification;
 import com.weble.linkedhouse.notification.entity.constant.NotificationType;
 import com.weble.linkedhouse.notification.repository.NotificationRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class NotificationService {
-    
+
     private final NotificationRepository notificationRepository;
-    private final CustomerRepository customerRepository; // Import CustomerRepository
+    private final CustomerRepository customerRepository;
 
-    @Autowired
-    public NotificationService(NotificationRepository notificationRepository, CustomerRepository customerRepository) {
-        this.notificationRepository = notificationRepository;
-        this.customerRepository = customerRepository;
+    public List<NotificationDto> getAllNotificationDtos() {
+        List<Notification> notifications = notificationRepository.findAll();
+        return notifications.stream()
+                .map(NotificationDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
-    public List<Notification> getAllNotification() {
-        return notificationRepository.findAll();
+    public NotificationDto getNotificationDtoById(Long notificationId) {
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElse(null);
+
+        if (notification != null) {
+            return NotificationDto.fromEntity(notification);
+        }
+        return null;
     }
 
-    public Notification getNotificationById(Long notificationId) {
-        return notificationRepository.findById(notificationId).orElse(null);
-    }
+    public NotificationDto createNotificationDto(NotificationCreateRequestDto requestDto) {
+        Customer customer = customerRepository.findById(requestDto.getCustomerId())
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found with ID: " + requestDto.getCustomerId()));
 
-    public Notification createNotification(Long customerId, NotificationType notificationType, String notificationContent) {
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found with ID: " + customerId));
+        Notification notification = Notification.of(
+                customer,
+                requestDto.getNotificationType(),
+                requestDto.getNotificationContent()
+        );
 
-        Notification notification = Notification.of(customer, notificationType, notificationContent);
-        return notificationRepository.save(notification);
+        Notification savedNotification = notificationRepository.save(notification);
+
+        return NotificationDto.fromEntity(savedNotification);
     }
 }

@@ -12,17 +12,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Getter
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Notification {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notification_id")
@@ -39,7 +35,7 @@ public class Notification {
 
     @Column(name = "notification_content", nullable = false)
     private String notificationContent;
-
+    @Builder
     private Notification(Customer customer, NotificationType notificationType, String notificationContent) {
         this.customer = customer;
         this.notificationType = notificationType;

@@ -2,10 +2,13 @@ package com.weble.linkedhouse.notification.dtos;
 
 import com.weble.linkedhouse.notification.entity.Notification;
 import com.weble.linkedhouse.notification.entity.constant.NotificationType;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
-
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class NotificationDto {
     private Long notificationId;
     private Long customerId;
@@ -13,11 +16,11 @@ public class NotificationDto {
     private String notificationContent;
 
     public static NotificationDto fromEntity(Notification notification) {
-        NotificationDto dto = new NotificationDto();
-        dto.setNotificationId(notification.getNotificationId());
-        dto.setCustomerId(notification.getCustomer().getCustomerId());
-        dto.setNotificationType(notification.getNotificationType());
-        dto.setNotificationContent(notification.getNotificationContent());
-        return dto;
+        return new NotificationDto(
+                notification.getNotificationId(),
+                notification.getCustomer().getCustomerId(),
+                notification.getNotificationType(),
+                notification.getNotificationContent()
+        );
     }
 }

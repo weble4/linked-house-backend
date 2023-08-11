@@ -19,19 +19,15 @@ import java.util.stream.Collectors;
 public class NotificationController {
     private final NotificationService notificationService;
 
-    @GetMapping // 전체내역 조회
-    public List<NotificationDto> getAllNotification() {
-        List<Notification> notification = notificationService.getAllNotification();
-        return notification.stream()
-                .map(NotificationDto::fromEntity)
-                .collect(Collectors.toList());
+    @GetMapping
+    public List<NotificationDto> getAllNotificationDtos() {
+        return notificationService.getAllNotificationDtos();
     }
 
-    @GetMapping("/{notificationId}") // 단일내역 조회
-    public ResponseEntity<NotificationDto> getNotificationById(@PathVariable Long notificationId) {
-        Notification notification = notificationService.getNotificationById(notificationId);
-        if (notification != null) {
-            NotificationDto notificationDto = NotificationDto.fromEntity(notification);
+    @GetMapping("/{notificationId}")
+    public ResponseEntity<NotificationDto> getNotificationDtoById(@PathVariable Long notificationId) {
+        NotificationDto notificationDto = notificationService.getNotificationDtoById(notificationId);
+        if (notificationDto != null) {
             return ResponseEntity.ok(notificationDto);
         } else {
             return ResponseEntity.notFound().build();
@@ -40,12 +36,7 @@ public class NotificationController {
 
     @PostMapping
     public ResponseEntity<NotificationDto> createNotification(@RequestBody NotificationCreateRequestDto requestDto) {
-        Notification notification = notificationService.createNotification(
-                requestDto.getCustomerId(),
-                requestDto.getNotificationType(),
-                requestDto.getNotificationContent()
-        );
-        NotificationDto notificationDto = NotificationDto.fromEntity(notification);
+        NotificationDto notificationDto = notificationService.createNotificationDto(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(notificationDto);
     }
 }
