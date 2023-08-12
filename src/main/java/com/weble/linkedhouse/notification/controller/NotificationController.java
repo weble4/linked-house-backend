@@ -1,42 +1,48 @@
 package com.weble.linkedhouse.notification.controller;
 
-import com.weble.linkedhouse.notification.dtos.NotificationCreateRequestDto;
+import com.weble.linkedhouse.notification.dtos.NotificationCreateRequest;
 import com.weble.linkedhouse.notification.dtos.NotificationDto;
-import com.weble.linkedhouse.notification.entity.Notification;
 import com.weble.linkedhouse.notification.service.NotificationService;
+import com.weble.linkedhouse.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/notification")
-
 public class NotificationController {
+
     private final NotificationService notificationService;
 
     @GetMapping
-    public List<NotificationDto> getAllNotificationDtos() {
-        return notificationService.getAllNotificationDtos();
+    public Page<NotificationDto> getAllNotification(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                    @PageableDefault(size = 10, sort = "createdAt", direction = DESC) Pageable pageable) {
+        return notificationService.getAllNotificationDtos(userDetails, pageable);
     }
 
     @GetMapping("/{notificationId}")
-    public ResponseEntity<NotificationDto> getNotificationDtoById(@PathVariable Long notificationId) {
-        NotificationDto notificationDto = notificationService.getNotificationDtoById(notificationId);
-        if (notificationDto != null) {
-            return ResponseEntity.ok(notificationDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<NotificationDto> getSingleNotification (@PathVariable Long notificationId) {
+        NotificationDto notificationDto = notificationService.getSingleNotification(notificationId);
+        return ResponseEntity.ok(notificationDto);
     }
 
     @PostMapping
-    public ResponseEntity<NotificationDto> createNotification(@RequestBody NotificationCreateRequestDto requestDto) {
-        NotificationDto notificationDto = notificationService.createNotificationDto(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(notificationDto);
+    public ResponseEntity<NotificationDto> createNotification(@RequestBody NotificationCreateRequest requestDto) {
+        NotificationDto notification = notificationService.createNotificationDto(requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(notification);
     }
 }

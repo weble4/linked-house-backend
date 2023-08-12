@@ -53,19 +53,19 @@ public class CustomerProfile extends AuditingFields {
     private PublicAt publicAt;
 
     @Column(name = "profile_image")
-    private String image;
+    private String imagePath;
 
-    private CustomerProfile(Customer customer, String nickname, String gender, String birthDay, String phoneNum, String image) {
+    private CustomerProfile(Customer customer, String nickname, String gender, String birthDay, String phoneNum, String imagePath) {
         this.customer = customer;
         this.nickname = nickname;
         this.gender = gender;
         this.birthDay = birthDay;
         this.phoneNum = phoneNum;
         this.publicAt = PublicAt.PUBLIC;
-        this.image = image;
+        this.imagePath = imagePath;
     }
-    public static CustomerProfile of(Customer customer, String nickname, String gender, String birthDay, String phoneNum, String image) {
-        return new CustomerProfile(customer, nickname, gender, birthDay, phoneNum, image);
+    public static CustomerProfile of(Customer customer, String nickname, String gender, String birthDay, String phoneNum, String imagePath) {
+        return new CustomerProfile(customer, nickname, gender, birthDay, phoneNum, imagePath);
     }
 
     public void changePublicAt(PublicAt publicAt) {
@@ -76,11 +76,11 @@ public class CustomerProfile extends AuditingFields {
         this.customer = customer;
     }
 
-    public void updateProfile(UpdateRequest updateRequest) {
+    public void updateProfile(UpdateRequest updateRequest, String imagePath) {
         this.nickname = updateRequest.getNickname() !=null ? updateRequest.getNickname() : nickname;
         this.phoneNum = updateRequest.getPhoneNum() != null ? updateRequest.getPhoneNum() : phoneNum;
-        this.image = updateRequest.getImage() != null ? updateRequest.getImage() : image;
         this.publicAt = updateRequest.getPublicAt() != null ? updateRequest.getPublicAt() : publicAt;
+        this.imagePath = imagePath;
     }
 
     @Override

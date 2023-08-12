@@ -41,7 +41,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @TestPropertySource(properties = {
         "spring.mail.username=dummy",
         "srping.mail.password=dummypassword",
-        "jwt.secret_key=testKeyNotRealKeyJustTestKeyAndKeyIsNeedToLength"
+        "jwt.secret_key=testKeyNotRealKeyJustTestKeyAndKeyIsNeedToLength",
 })
 class CustomerServiceTest {
 

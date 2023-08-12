@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
@@ -62,8 +64,8 @@ public class CustomerController {
     }
 
     @PostMapping("/withdrawal")
-    public ResponseEntity<String> requestWithdrawal() {
-        customerService.withdrawl();
+    public ResponseEntity<String> requestWithdrawal(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        customerService.withdrawal(userDetails);
         return ResponseEntity.ok("탈퇴 요청 하였습니다.");
     }
 
@@ -73,7 +75,9 @@ public class CustomerController {
     }
 
     @PatchMapping("/profiles")
-    public ProfileDto updateProfile(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody UpdateRequest updateRequest) {
-        return customerService.updateProfile(userDetails, updateRequest);
+    public ProfileDto updateProfile(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                    @RequestPart UpdateRequest updateRequest,
+                                    @RequestPart MultipartFile image) {
+        return customerService.updateProfile(userDetails, updateRequest, image);
     }
 }

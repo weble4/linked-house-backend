@@ -13,6 +13,7 @@ import com.weble.linkedhouse.customer.entity.constant.AuthState;
 import com.weble.linkedhouse.customer.entity.constant.DeleteRequest;
 import com.weble.linkedhouse.customer.entity.constant.Role;
 import com.weble.linkedhouse.customer.repository.CustomerRepository;
+import com.weble.linkedhouse.customer.repository.DynamicRepository;
 import com.weble.linkedhouse.customer.repository.ProfileRepository;
 import com.weble.linkedhouse.exception.AlreadyAuthentication;
 import com.weble.linkedhouse.exception.AlreadyExistEmailException;
@@ -26,6 +27,7 @@ import com.weble.linkedhouse.security.jwt.JwtTokenProvider;
 import com.weble.linkedhouse.security.jwt.token.RefreshToken;
 import com.weble.linkedhouse.security.jwt.token.RefreshTokenRepository;
 import com.weble.linkedhouse.security.jwt.token.TokenDto;
+import com.weble.linkedhouse.util.CreateFile;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +40,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.concurrent.TimeUnit;
 
@@ -54,6 +57,7 @@ public class CustomerService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final RedisTemplate<String, Object> redisTemplate;
     private final JwtTokenProvider jwtTokenProvider;
+    private final DynamicRepository dynamicRepository;
 
     @Value("${spring.mail.username}")
     private String emailSender;
@@ -122,7 +126,6 @@ public class CustomerService {
         customer.addRole(Role.HOST);
     }
 
-    @Transactional(readOnly = true)
     public ProfileDto getCustomerProfile(UserDetailsImpl userDetails) {
         Customer customer = customerRepository.findByCustomerEmailWithCustomerProfile(userDetails.getUsername())
                 .orElseThrow(NotExistCustomer::new);
@@ -130,14 +133,29 @@ public class CustomerService {
     }
 
     @Transactional
-    public ProfileDto updateProfile(UserDetailsImpl userDetails, UpdateRequest updateRequest) {
+    public ProfileDto updateProfile(UserDetailsImpl userDetails, UpdateRequest updateRequest, MultipartFile image) {
+        CreateFile createFile = new CreateFile();
 
         Customer customer = customerRepository.findByCustomerEmailWithCustomerProfile(userDetails.getUsername())
                 .orElseThrow(NotExistCustomer::new);
-        customer.getCustomerProfile().updateProfile(updateRequest);
+
+        String imagePath;
+
+        if (image.isEmpty()) {
+            if (customer.getCustomerProfile().getImagePath().isEmpty()) {
+                imagePath = null;
+            } else {
+                imagePath = customer.getCustomerProfile().getImagePath();
+            }
+        } else {
+            imagePath = createFile.saveImage(image);
+        }
+
+        customer.getCustomerProfile().updateProfile(updateRequest, imagePath);
 
         return ProfileDto.from(customer.getCustomerProfile());
     }
+
 
     @Transactional
     public void findPassword(PasswordFindRequest passwordFindRequest) {
@@ -147,9 +165,19 @@ public class CustomerService {
         customer.changePassword(encodePw);
     }
 
-    public void withdrawl() {
-        // 동적 SQL로 테이블 생성 후 해야됨.
+    @Transactional
+    public void withdrawal(UserDetailsImpl userDetails) {
+        Customer customer = customerRepository.findById(userDetails.getUserId())
+                .orElseThrow(NotExistCustomer::new);
+        if (customer.getDeleteRequest() == DeleteRequest.DELETE) {
+            throw new DeleteCustomerException();
+        }
+        customer.deleteAccountRequest();
+
+        String tableName = getTableName(userDetails);
+        dynamicRepository.deleteAccount(tableName, userDetails.getUserId());
     }
+
 
 
     private void SendCheckMail(Customer customer) {
@@ -187,4 +215,12 @@ public class CustomerService {
         stringStringValueOperations.set(customerEmail, refreshToken);
         redisTemplate.expire(customerEmail, 1209600, TimeUnit.SECONDS);//2주
     }
+
+    private String getTableName(UserDetailsImpl userDetails) {
+        int idx = userDetails.getUsername().indexOf("@");
+        String origin = userDetails.getUsername().substring(0, idx);
+        Long userId = userDetails.getUserId();
+        return origin + "_" + String.valueOf(userId);
+    }
+
 }
