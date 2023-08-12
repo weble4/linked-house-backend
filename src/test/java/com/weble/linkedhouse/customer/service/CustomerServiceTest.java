@@ -42,8 +42,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
         "spring.mail.username=dummy",
         "srping.mail.password=dummypassword",
         "jwt.secret_key=testKeyNotRealKeyJustTestKeyAndKeyIsNeedToLength",
-        "spring.data.redis.host=localhost",
-        "spring.data.redis.port=6379"
 })
 class CustomerServiceTest {
 
