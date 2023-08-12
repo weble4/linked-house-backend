@@ -49,7 +49,8 @@ public class SignupRequest {
         this.birthDay = birthDay;
     }
 
-    public static SignupRequest of(String customerEmail, String customerPw, Set<Role> role, String nickname, String gender, String phoneNum, String birthDay) {
+    public static SignupRequest of(String customerEmail, String customerPw, Set<Role> role,
+                                   String nickname, String gender, String phoneNum, String birthDay) {
         return new SignupRequest(customerEmail, customerPw, role, nickname, gender, phoneNum, birthDay);
     }
 
