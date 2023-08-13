@@ -47,18 +47,18 @@ public class HouseDTO {
         return new HouseDTO(customer, maxCapacity, minCapacity, price, location, image, autoReservation, room, bed, bathRoom);
     }
 
-    public static HouseDTO from(House entity) {
+    public static HouseDTO from(House house) {
         return new HouseDTO(
-                entity.getCustomer(),
-                entity.getMaxCapacity(),
-                entity.getMinCapacity(),
-                entity.getPrice(),
-                entity.getLocation(),
-                entity.getImage(),
-                entity.getAutoReservation(),
-                entity.getRoom(),
-                entity.getBed(),
-                entity.getBathRoom()
+                house.getCustomer(),
+                house.getMaxCapacity(),
+                house.getMinCapacity(),
+                house.getPrice(),
+                house.getLocation(),
+                house.getImage(),
+                house.getAutoReservation(),
+                house.getRoom(),
+                house.getBed(),
+                house.getBathRoom()
         );
     }
 

@@ -49,7 +49,7 @@ public class HouseHostController {
     }
 
     @PostMapping("")
-    public House save(Customer customer, @PathVariable HostHouseSaveRequest request) {
+    public HostHouseSaveResponse save(HostHouseSaveRequest request) {
         return houseHostService.save(request);
     }
 

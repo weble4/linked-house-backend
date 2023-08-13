@@ -1,6 +1,5 @@
 package com.weble.linkedhouse.house.service;
 
-import com.weble.linkedhouse.customer.entity.Customer;
 import com.weble.linkedhouse.customer.repository.CustomerRepository;
 import com.weble.linkedhouse.exception.NotExistHouseException;
 import com.weble.linkedhouse.house.dto.request.HostHouseSaveRequest;
@@ -39,28 +38,16 @@ public class HouseHostService {
     }
 
     public HostHouseResponse findByRentalId(Long rentalId) {
-        House house = houseRepository.findByRentalId(rentalId).orElseThrow(NotExistHouseException::new);
-        HostHouseResponse response = HostHouseResponse.of(house);
+        HostHouseResponse response = HostHouseResponse.of(
+                houseRepository.findByRentalId(rentalId).orElseThrow(NotExistHouseException::new)
+        );
         return response;
     }
 
     @Transactional
-    public House save(HostHouseSaveRequest request) {
-        Customer customer = request.getCustomer();
+    public HostHouseSaveResponse save(HostHouseSaveRequest request) {
 
-        House house =  House.of(
-                customer,
-                request.getMaxCapacity(),
-                request.getMinCapacity(),
-                request.getPrice(),
-                request.getLocation(),
-                request.getImage(),
-                request.getAutoReservation(),
-                request.getRoom(),
-                request.getBed(),
-                request.getBathRoom()
-        );
-        return houseRepository.save(house);
+        return houseRepository.save(request);
     }
 
     @Transactional

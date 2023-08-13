@@ -3,9 +3,11 @@ package com.weble.linkedhouse.house.dto.response;
 import com.weble.linkedhouse.house.entity.House;
 import com.weble.linkedhouse.house.entity.constant.AutoReservation;
 import lombok.Getter;
+import lombok.Setter;
 
 
 @Getter
+@Setter
 public class HostHouseListResponse {
 
     private Long rentalId;

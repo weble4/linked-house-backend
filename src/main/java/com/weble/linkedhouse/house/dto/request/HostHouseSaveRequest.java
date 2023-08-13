@@ -49,10 +49,12 @@ public class HostHouseSaveRequest {
         this.bathRoom = bathRoom;
     }
 
+    /*
     public House saveHouse() {
         return House.of(customer, maxCapacity, minCapacity, price, location, image,
                 autoReservation, room, bed, bathRoom);
     }
+     */
 
     public House toEntity() {
         return House.builder()

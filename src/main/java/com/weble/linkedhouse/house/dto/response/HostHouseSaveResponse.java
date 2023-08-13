@@ -1,10 +1,9 @@
 package com.weble.linkedhouse.house.dto.response;
 
 import com.weble.linkedhouse.customer.entity.Customer;
+import com.weble.linkedhouse.house.dto.request.HostHouseSaveRequest;
 import com.weble.linkedhouse.house.entity.House;
 import com.weble.linkedhouse.house.entity.constant.AutoReservation;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
@@ -21,7 +20,7 @@ public class HostHouseSaveResponse {
     private Integer bed;
     private Integer bathRoom;
 
-    public HostHouseSaveResponse(House house) {
+    public HostHouseSaveResponse(HostHouseSaveRequest house) {
         this.customer = house.getCustomer();
         this.maxCapacity = house.getMaxCapacity();
         this.minCapacity = house.getMinCapacity();
@@ -33,6 +32,4 @@ public class HostHouseSaveResponse {
         this.bed = house.getBed();
         this.bathRoom = house.getBathRoom();
     }
-
-
 }
