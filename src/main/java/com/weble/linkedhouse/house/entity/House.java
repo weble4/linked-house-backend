@@ -1,15 +1,20 @@
 package com.weble.linkedhouse.house.entity;
 
 
+import com.weble.linkedhouse.customer.entity.Customer;
 import com.weble.linkedhouse.house.entity.constant.AutoReservation;
 import com.weble.linkedhouse.util.AuditingFields;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +27,7 @@ import java.util.Objects;
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(name = "house")
 public class House extends AuditingFields {
 
     @Id
@@ -29,14 +35,18 @@ public class House extends AuditingFields {
     @Column(name = "rental_id", nullable = false)
     private Long rentalId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
     @Column(name = "max_capacity")
-    private int maxCapacity;
+    private Integer maxCapacity;
 
     @Column(name = "min_capacity")
-    private int minCapacity;
+    private Integer minCapacity;
 
     @Column(nullable = false)
-    private int price;
+    private Integer price;
 
     @Column(nullable = false)
     private String location;
@@ -49,19 +59,20 @@ public class House extends AuditingFields {
 
     // 방 갯수
     @Column(nullable = false)
-    private int room;
+    private Integer room;
 
     // 침대 갯수
     @Column(nullable = false)
-    private int bed;
+    private Integer bed;
 
     // 욕실 갯수
     @Column(name = "bath_room", nullable = false)
-    private int bathRoom;
+    private Integer bathRoom;
 
     @Builder
-    private House(int maxCapacity, int minCapacity, int price, String location,
+    private House(Customer customer, int maxCapacity, int minCapacity, int price, String location,
                  String image, AutoReservation autoReservation, int room, int bed, int bathRoom) {
+        this.customer = customer;
         this.maxCapacity = maxCapacity;
         this.minCapacity = minCapacity;
         this.price = price;
@@ -73,9 +84,9 @@ public class House extends AuditingFields {
         this.bathRoom = bathRoom;
     }
 
-    public static House of(int maxCapacity, int minCapacity, int price, String location,
+    public static House of(Customer customer, int maxCapacity, int minCapacity, int price, String location,
                            String image, AutoReservation autoReservation, int room, int bed, int bathRoom) {
-        return new House(maxCapacity, minCapacity, price, location, image, autoReservation, room, bed, bathRoom);
+        return new House(customer, maxCapacity, minCapacity, price, location, image, autoReservation, room, bed, bathRoom);
     }
 
     @Override
