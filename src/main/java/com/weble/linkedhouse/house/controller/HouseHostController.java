@@ -27,7 +27,6 @@ import java.util.List;
 public class HouseHostController {
 
     private final HouseHostService houseHostService;
-    private final CustomerService customerService;
 
     @GetMapping("")
     public ResponseEntity<List<HostHouseListResponse>> findByCustomerId(@RequestParam Long customerId) {
