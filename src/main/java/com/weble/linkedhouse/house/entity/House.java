@@ -36,7 +36,7 @@ public class House extends AuditingFields {
     private Long rentalId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "customer_id")
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @Column(name = "max_capacity")

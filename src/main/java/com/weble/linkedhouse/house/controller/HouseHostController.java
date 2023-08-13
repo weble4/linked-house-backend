@@ -32,10 +32,6 @@ public class HouseHostController {
     @GetMapping("")
     public ResponseEntity<List<HostHouseListResponse>> findByCustomerId(@RequestParam Long customerId) {
 
-        if(houseHostService.findByCustomerId(customerId).isEmpty()) {
-            throw new NotExistHouseException();
-        }
-
         List<HostHouseListResponse> responses = houseHostService.findByCustomerId(customerId);
 
         return ResponseEntity.ok().body(responses);
