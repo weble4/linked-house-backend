@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class HouseDTO {
+  
     private Customer customer;
 
     private int maxCapacity;
@@ -41,7 +42,6 @@ public class HouseDTO {
         this.bed = bed;
         this.bathRoom = bathRoom;
     }
-
 
     public static HouseDTO of(Customer customer, int maxCapacity, int minCapacity, int price, String location, String image, AutoReservation autoReservation, int room, int bed, int bathRoom) {
         return new HouseDTO(customer, maxCapacity, minCapacity, price, location, image, autoReservation, room, bed, bathRoom);

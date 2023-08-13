@@ -3,6 +3,7 @@ package com.weble.linkedhouse.security.jwt;
 import com.weble.linkedhouse.security.jwt.token.TokenDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -82,17 +83,8 @@ public class JwtTokenProvider {
                     .getExpiration();
             return expiration.after(new Date()) ?
                     JwtReturn.SUCCESS : JwtReturn.FAIL;
-        } catch (ExpiredJwtException e) {
-            log.error("jwt token 만료", e);
-            return JwtReturn.EXPIRED;
-        } catch (UnsupportedJwtException e) {
-            log.error("지원되지 않는 JWT 토큰입니다.", e);
-        } catch (IllegalArgumentException e) {
-            log.error("JWT 토큰이 잘못되었습니다.", e);
-        } catch (MalformedJwtException e) {
-            log.error("잘못된 JWT 서명입니다.", e);
         } catch (Exception e) {
-            log.error("오류 입니다", e);
+            log.error("JWT 관련 오류입니다", e);
         }
         return JwtReturn.FAIL;
     }
