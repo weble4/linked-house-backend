@@ -148,7 +148,7 @@ public class CustomerService {
                 imagePath = customer.getCustomerProfile().getImagePath();
             }
         } else {
-            imagePath = createFile.saveImage(image);
+            imagePath = createFile.saveImage(image, customer.getCustomerId());
         }
 
         customer.getCustomerProfile().updateProfile(updateRequest, imagePath);
