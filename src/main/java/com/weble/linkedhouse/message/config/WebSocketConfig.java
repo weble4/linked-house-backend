@@ -23,6 +23,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
+        //TODO : .setAllowedOrigins("*") 은 나중에 Front 관련 site로 바꿀것
         registry.addEndpoint("/websocket")
                 .setAllowedOrigins("*")
                 .withSockJS();
