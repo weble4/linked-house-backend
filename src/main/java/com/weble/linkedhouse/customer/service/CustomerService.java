@@ -23,11 +23,15 @@ import com.weble.linkedhouse.exception.InvalidSignInInformation;
 import com.weble.linkedhouse.exception.NotExistCustomer;
 import com.weble.linkedhouse.exception.Unauthorized;
 import com.weble.linkedhouse.security.UserDetailsImpl;
+import com.weble.linkedhouse.security.jwt.JwtReturn;
 import com.weble.linkedhouse.security.jwt.JwtTokenProvider;
 import com.weble.linkedhouse.security.jwt.token.RefreshToken;
 import com.weble.linkedhouse.security.jwt.token.RefreshTokenRepository;
 import com.weble.linkedhouse.security.jwt.token.TokenDto;
+import com.weble.linkedhouse.security.jwt.token.TokenRequestDto;
 import com.weble.linkedhouse.util.CreateFile;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -156,7 +160,6 @@ public class CustomerService {
         return ProfileDto.from(customer.getCustomerProfile());
     }
 
-
     @Transactional
     public void findPassword(PasswordFindRequest passwordFindRequest) {
         Customer customer = customerRepository.findByCustomerEmail(passwordFindRequest.getCustomerEmail())
@@ -178,7 +181,28 @@ public class CustomerService {
         dynamicRepository.deleteAccount(tableName, userDetails.getUserId());
     }
 
+    public TokenDto reissue(TokenRequestDto tokenRequestDto, UserDetailsImpl userDetails) {
 
+        if (jwtTokenProvider.validToken(tokenRequestDto.getRefreshToken()) != JwtReturn.SUCCESS) {
+            throw new JwtException("JWT RefreshToken 만료");
+        }
+
+        Customer customer = customerRepository.findById(userDetails.getUserId()).orElse(null);
+        String email = customer.getCustomerEmail();
+
+        RefreshToken refreshToken = refreshTokenRepository.findById(email)
+                .orElseThrow(Unauthorized::new);
+
+        if (!refreshToken.getValue().equals(tokenRequestDto.getRefreshToken())) {
+            throw new Unauthorized();
+        }
+
+        TokenDto tokenDto = jwtTokenProvider.generateToken(email);
+        RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
+        refreshTokenRepository.save(newRefreshToken);
+
+        return tokenDto;
+    }
 
     private void SendCheckMail(Customer customer) {
 
@@ -208,6 +232,7 @@ public class CustomerService {
         RefreshToken refreshToken = RefreshToken.create(request.getCustomerEmail(),
                 tokenDto.getRefreshToken());
         authRedisSave(refreshToken.getKey(), refreshToken.getValue());
+        refreshTokenRepository.save(refreshToken);
     }
 
     private void authRedisSave(String customerEmail, String refreshToken) {

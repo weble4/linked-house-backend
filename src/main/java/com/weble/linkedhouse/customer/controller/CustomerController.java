@@ -9,6 +9,8 @@ import com.weble.linkedhouse.customer.dtos.response.LoginResponse;
 import com.weble.linkedhouse.customer.dtos.response.SignupResponse;
 import com.weble.linkedhouse.customer.service.CustomerService;
 import com.weble.linkedhouse.security.UserDetailsImpl;
+import com.weble.linkedhouse.security.jwt.token.TokenDto;
+import com.weble.linkedhouse.security.jwt.token.TokenRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -79,5 +81,12 @@ public class CustomerController {
                                     @RequestPart UpdateRequest updateRequest,
                                     @RequestPart MultipartFile image) {
         return customerService.updateProfile(userDetails, updateRequest, image);
+    }
+
+    @PostMapping("/reissue")
+    public ResponseEntity<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto,
+                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        TokenDto reissue = customerService.reissue(tokenRequestDto, userDetails);
+        return ResponseEntity.ok().body(reissue);
     }
 }
