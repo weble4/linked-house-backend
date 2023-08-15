@@ -1,39 +1,79 @@
 package com.weble.linkedhouse.house.repository;
 
-import static com.weble.linkedhouse.house.entity.QHouse.house;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.weble.linkedhouse.house.dto.response.HouseSearchResponseDTO;
+import com.weble.linkedhouse.house.dto.FilterKeyword;
+import com.weble.linkedhouse.house.dto.SearchKeyword;
 import com.weble.linkedhouse.house.entity.House;
-import org.springframework.stereotype.Repository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Repository
+import static com.weble.linkedhouse.house.entity.QHouse.house;
+import static com.weble.linkedhouse.house.entity.QHouseImage.houseImage;
+
+@RequiredArgsConstructor
 public class HouseRepositoryCustomImpl implements HouseRepositoryCustom {
 
-    private final JPAQueryFactory jpaQueryFactory;
+    private final JPAQueryFactory queryFactory;
 
-    public HouseRepositoryCustomImpl(JPAQueryFactory jpaQueryFactory) {
-        this.jpaQueryFactory = jpaQueryFactory;
-    }
-
-    // 완료
     @Override
-    public List<HouseSearchResponseDTO> findByCondition(String location, Integer price, Integer maxCapacity) {
+    public Page<House> findAllHouse(FilterKeyword filterKeyword, SearchKeyword searchKeyword, Pageable pageable) {
+        List<House> content = queryFactory
+                .selectFrom(house)
+                .leftJoin(house.imagePath, houseImage)
+                .where(locationFilterEq(filterKeyword),
+                        searchKeywordEq(searchKeyword)
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
 
-        List<HouseSearchResponseDTO> responseDTOS = jpaQueryFactory
-                .select(house)
-                .where(house.location.like(location) // location = house.location(%location%)
-                        , house.price.loe(price) // price <= house.price
-                        , house.maxCapacity.loe(maxCapacity))
-                .fetch()
-                .stream()
-                .map(HouseSearchResponseDTO::from)
-                .collect(Collectors.toList());
+        JPAQuery<Long> countQuery = queryFactory
+                .select(house.count())
+                .from(house)
+                .where(locationFilterEq(filterKeyword),
+                        searchKeywordEq(searchKeyword)
+                );
 
-        return responseDTOS;
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
+    private BooleanExpression locationFilterEq(FilterKeyword filterKeyword) {
+        if (filterKeyword == null) return null;
+        return house.location.eq(filterKeyword.getDescription());
+    }
+
+    private BooleanExpression searchKeywordEq(SearchKeyword searchKeyword) {
+        if (searchKeyword == null) {
+            return null;
+        }
+
+        BooleanExpression expression = null;
+
+        if (searchKeyword.getMinPrice() != null) {
+            expression = house.price.goe(searchKeyword.getMinPrice());
+        }
+
+        if (searchKeyword.getMaxPrice() != null) {
+            BooleanExpression maxPriceExpression = house.price.loe(searchKeyword.getMaxPrice());
+            expression = (expression != null) ? expression.and(maxPriceExpression) : maxPriceExpression;
+        }
+
+        if (searchKeyword.getBed() != null) {
+            BooleanExpression bedExpression = house.bed.goe(searchKeyword.getBed());
+            expression = (expression != null) ? expression.and(bedExpression) : bedExpression;
+        }
+
+        if (searchKeyword.getRoom() != null) {
+            BooleanExpression roomExpression = house.room.goe(searchKeyword.getRoom());
+            expression = (expression != null) ? expression.and(roomExpression) : roomExpression;
+        }
+
+        return expression;
+    }
 }

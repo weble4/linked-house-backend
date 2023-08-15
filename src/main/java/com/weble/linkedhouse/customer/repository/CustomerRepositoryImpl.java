@@ -2,12 +2,11 @@ package com.weble.linkedhouse.customer.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.weble.linkedhouse.customer.entity.Customer;
-import com.weble.linkedhouse.customer.entity.QCustomer;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 
-import static com.weble.linkedhouse.customer.entity.QCustomer.*;
+import static com.weble.linkedhouse.customer.entity.QCustomer.customer;
 
 @RequiredArgsConstructor
 public class CustomerRepositoryImpl implements CustomerRepositoryCustom{

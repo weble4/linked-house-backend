@@ -43,18 +43,18 @@ public class CustomerDeleteScheduled {
             Timestamp requestAt = rs.getTimestamp("request_at");
 
             if (requestAt.toLocalDateTime().toLocalDate().equals(LocalDateTime.now().toLocalDate())) {
-                deleteCustomerData(customerId, tableName);
                 dropTable(tableName);
+                deleteCustomerData(customerId, tableName);
             }
             return null;
         });
     }
 
     private void deleteCustomerData(Long customerId, String tableName) {
-        customerRepository.deleteById(customerId);
         profileRepository.deleteById(customerId);
         String deleteDataSql = "DELETE FROM " + tableName + " WHERE customer_id = ?";
         jdbcTemplate.update(deleteDataSql, customerId);
+        customerRepository.deleteById(customerId);
     }
 
     private void dropTable(String tableName) {

@@ -2,11 +2,11 @@ package com.weble.linkedhouse.exception;
 
 import com.weble.linkedhouse.exception.response.ErrorMessage;
 
-public class JwtNullException extends LinkedHouseException {
+public class AboutJwtException extends LinkedHouseException {
 
 
-    public JwtNullException() {
-        super(ErrorMessage.JWT_NOT_NULL);
+    public AboutJwtException() {
+        super(ErrorMessage.JWT_EXCEPTION);
     }
 
     @Override

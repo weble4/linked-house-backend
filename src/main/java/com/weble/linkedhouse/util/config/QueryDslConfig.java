@@ -12,7 +12,6 @@ public class QueryDslConfig {
     @PersistenceContext
     private EntityManager entityManager;
 
-    // Bean 등록으로 프로젝트 전역에서 사용 가능
     @Bean
     public JPAQueryFactory jpaQueryFactory() {
         return new JPAQueryFactory(entityManager);

@@ -2,7 +2,9 @@ package com.weble.linkedhouse.exception.controller;
 
 import com.weble.linkedhouse.exception.LinkedHouseException;
 import com.weble.linkedhouse.exception.response.ErrorResponse;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 

@@ -1,14 +1,20 @@
 package com.weble.linkedhouse.house.controller;
 
-import com.weble.linkedhouse.house.dto.response.HouseSearchResponseDTO;
+import com.weble.linkedhouse.house.dto.FilterKeyword;
+import com.weble.linkedhouse.house.dto.SearchKeyword;
+import com.weble.linkedhouse.house.dto.response.HouseResponseDto;
 import com.weble.linkedhouse.house.service.HouseCustomerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,15 +24,17 @@ public class HouseCustomerController {
     private final HouseCustomerService houseCustomerService;
 
     @GetMapping
-    public List<HouseSearchResponseDTO> findByCondition(@RequestParam String location,
-                                                        @RequestParam Integer price,
-                                                        @RequestParam Integer maxCapacity) {
+    public Page<HouseResponseDto> findAllHouse(
+            @RequestBody(required = false) FilterKeyword filterKeyword,
+            @RequestBody(required = false) SearchKeyword searchKeyword,
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        List<HouseSearchResponseDTO> result = houseCustomerService.findAll(location,
-                price,
-                maxCapacity
-        );
+        return houseCustomerService.findAllHouse(filterKeyword, searchKeyword, pageable);
+    }
 
-        return result;
+    @GetMapping("/{rentalId}")
+    public ResponseEntity<HouseResponseDto> getDetailHouseInfo(@PathVariable Long rentalId) {
+        HouseResponseDto result = houseCustomerService.findHouse(rentalId);
+        return ResponseEntity.ok().body(result);
     }
 }
