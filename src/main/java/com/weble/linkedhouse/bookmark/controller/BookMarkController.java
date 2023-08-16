@@ -35,7 +35,7 @@ public class BookMarkController {
         return ResponseEntity.ok("북마크 추가하였습니다.");
     }
 
-    @DeleteMapping("/rentalId}")
+    @DeleteMapping("/{rentalId}")
     public ResponseEntity<String> deleteBookmark(@PathVariable Long rentalId,
                                                  @AuthenticationPrincipal UserDetailsImpl userDetails) {
         bookMarkService.deleteBookmark(rentalId, userDetails.getUserId());
