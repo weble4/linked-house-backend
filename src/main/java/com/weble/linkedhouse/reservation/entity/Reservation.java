@@ -58,6 +58,11 @@ public class Reservation extends AuditingFields {
         this.reservationNum = reservationNum;
     }
 
+    public Reservation of(House house, Customer customer, LocalDateTime checkinDate,
+                          LocalDateTime checkoutDate, int reservationNum) {
+        return new Reservation(house, customer, checkinDate, checkoutDate, reservationNum);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
