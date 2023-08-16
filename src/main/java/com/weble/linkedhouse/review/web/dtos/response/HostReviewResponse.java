@@ -20,7 +20,8 @@ public class HostReviewResponse {
     private LocalDateTime updatedAt;
 
     @Builder
-    private HostReviewResponse(CustomerDto writer, CustomerDto customerDto, String title, String content, int attitude, int damageDegree, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    private HostReviewResponse(CustomerDto writer, CustomerDto customerDto, String title, String content,
+                               int attitude, int damageDegree, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.writer = writer;
         this.customerDto = customerDto;
         this.title = title;
@@ -31,7 +32,8 @@ public class HostReviewResponse {
         this.updatedAt = updatedAt;
     }
 
-    public static HostReviewResponse of(CustomerDto writer, CustomerDto customerDto, String title, String content, int attitude, int damageDegree, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public static HostReviewResponse of(CustomerDto writer, CustomerDto customerDto, String title, String content,
+                                        int attitude, int damageDegree, LocalDateTime createdAt, LocalDateTime updatedAt) {
         return HostReviewResponse.builder()
                 .writer(writer)
                 .customerDto(customerDto)
@@ -58,5 +60,3 @@ public class HostReviewResponse {
     }
 
 }
-
-

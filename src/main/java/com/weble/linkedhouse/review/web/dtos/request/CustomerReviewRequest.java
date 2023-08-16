@@ -15,11 +15,11 @@ public class CustomerReviewRequest {
     private int scoreClean;
     private int scoreCommunication;
     private int scoreSatisfaction;
-    private int totalScore;
+    private double totalScore;
 
     @Builder
     public CustomerReviewRequest(CustomerDto customerDto, House house, String title, String content,
-                                 int scoreClean, int scoreCommunication, int scoreSatisfaction, int totalScore) {
+                                 int scoreClean, int scoreCommunication, int scoreSatisfaction) {
         this.customerDto = customerDto;
         this.house = house;
         this.title = title;
@@ -27,11 +27,11 @@ public class CustomerReviewRequest {
         this.scoreClean = scoreClean;
         this.scoreCommunication = scoreCommunication;
         this.scoreSatisfaction = scoreSatisfaction;
-        this.totalScore = totalScore;
+        this.totalScore = (double) (scoreClean * scoreCommunication * scoreSatisfaction) / 3.0;
     }
 
     public static CustomerReviewRequest of(CustomerDto customerDto, House house, String title, String content,
-                                       int scoreClean, int scoreCommunication, int scoreSatisfaction, int totalScore){
+                                           int scoreClean, int scoreCommunication, int scoreSatisfaction){
         return CustomerReviewRequest.builder()
                 .customerDto(customerDto)
                 .house(house)
@@ -40,27 +40,24 @@ public class CustomerReviewRequest {
                 .scoreClean(scoreClean)
                 .scoreCommunication(scoreCommunication)
                 .scoreSatisfaction(scoreSatisfaction)
-                .totalScore(totalScore)
                 .build();
     }
 
     public static CustomerReviewRequest from(FeedbackCustomer feedbackCustomer){
         return CustomerReviewRequest.builder()
-                .customerDto(CustomerDto.from(feedbackCustomer.getCustomer())
+                .customerDto(CustomerDto.from(feedbackCustomer.getCustomer()))
                 .house(feedbackCustomer.getHouse())
                 .title(feedbackCustomer.getTitle())
                 .content(feedbackCustomer.getContent())
                 .scoreClean(feedbackCustomer.getScoreClean())
                 .scoreCommunication(feedbackCustomer.getScoreCommunication())
                 .scoreSatisfaction(feedbackCustomer.getScoreSatisfaction())
-                .totalScore(feedbackCustomer.getTotalScore())
                 .build();
-
     }
 
     public FeedbackCustomer toEntity() {
-        return FeedbackCustomer of(customerDto.toEntity(), house, title, content,
-        scoreClean, scoreCommunication, scoreSatisfaction, totalScore);
+        return FeedbackCustomer.of(customerDto.toEntity(), house, title, content,
+                scoreClean, scoreCommunication, scoreSatisfaction);
     }
 
 }

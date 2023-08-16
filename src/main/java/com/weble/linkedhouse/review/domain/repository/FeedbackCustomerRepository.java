@@ -3,10 +3,11 @@ package com.weble.linkedhouse.review.domain.repository;
 import com.weble.linkedhouse.review.domain.entity.FeedbackCustomer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface FeedbackCustomerRepository extends JpaRepository<FeedbackCustomer, Long> {
 
-    Optional<FeedbackCustomer> findByCustomerCustomerId(String CustomerId);
+    List<FeedbackCustomer> findAllByCustomerCustomerId(Long customerId);
 
+    List<FeedbackCustomer> findAllByHouseRentalId(Long rentalId);
 }
