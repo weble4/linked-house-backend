@@ -64,7 +64,6 @@ public class CustomerReviewResponse {
                 .scoreClean(feedbackCustomer.getScoreClean())
                 .scoreCommunication(feedbackCustomer.getScoreCommunication())
                 .scoreSatisfaction(feedbackCustomer.getScoreSatisfaction())
-                .totalScore(feedbackCustomer.getTotalScore())
                 .createdAt(feedbackCustomer.getCreatedAt())
                 .updatedAt(feedbackCustomer.getUpdatedAt())
                 .build();
