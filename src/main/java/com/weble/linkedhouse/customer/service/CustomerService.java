@@ -25,28 +25,23 @@ import com.weble.linkedhouse.exception.Unauthorized;
 import com.weble.linkedhouse.security.UserDetailsImpl;
 import com.weble.linkedhouse.security.jwt.JwtReturn;
 import com.weble.linkedhouse.security.jwt.JwtTokenProvider;
+import com.weble.linkedhouse.security.jwt.token.RedisTokenRepository;
 import com.weble.linkedhouse.security.jwt.token.RefreshToken;
 import com.weble.linkedhouse.security.jwt.token.RefreshTokenRepository;
 import com.weble.linkedhouse.security.jwt.token.TokenDto;
-import com.weble.linkedhouse.security.jwt.token.TokenRequestDto;
 import com.weble.linkedhouse.util.CreateFile;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -59,7 +54,7 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final ProfileRepository profileRepository;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTokenRepository redisTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final DynamicRepository dynamicRepository;
 
@@ -88,7 +83,7 @@ public class CustomerService {
     }
 
     @Transactional
-    public void activateAccount(Long customerId) {
+    public void certifiedEmail(Long customerId) {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(NotExistCustomer::new);
         if (customer.getAuthState() == AuthState.AUTH) {
@@ -114,7 +109,9 @@ public class CustomerService {
 
         TokenDto tokenDto = jwtTokenProvider.generateToken(customer.getCustomerEmail());
 
-        saveRefreshToken(request, tokenDto);
+        RefreshToken refreshToken = RefreshToken.create(request.getCustomerEmail(), tokenDto.getRefreshToken());
+        redisTokenRepository.save(refreshToken.getKey(), refreshToken.getValue());
+        refreshTokenRepository.save(refreshToken);
 
         return LoginResponse.of(customer, customer.getCustomerProfile(), tokenDto);
     }
@@ -128,6 +125,10 @@ public class CustomerService {
             throw new AlreadyHasRole();
         }
         customer.addRole(Role.HOST);
+    }
+
+    public boolean checkEmail(String email) {
+        return customerRepository.findByCustomerEmail(email).isPresent();
     }
 
     public ProfileDto getCustomerProfile(UserDetailsImpl userDetails) {
@@ -181,26 +182,23 @@ public class CustomerService {
         dynamicRepository.deleteAccount(tableName, userDetails.getUserId());
     }
 
-    public TokenDto reissue(TokenRequestDto tokenRequestDto, UserDetailsImpl userDetails) {
+    @Transactional
+    public TokenDto reissue(UserDetailsImpl userDetails) {
 
-        if (jwtTokenProvider.validToken(tokenRequestDto.getRefreshToken()) != JwtReturn.SUCCESS) {
-            throw new JwtException("JWT RefreshToken 만료");
-        }
+        String email = userDetails.getUsername();
 
-        Customer customer = customerRepository.findById(userDetails.getUserId()).orElse(null);
-        String email = customer.getCustomerEmail();
+        String refreshToken = redisTokenRepository.find(email);
 
-        RefreshToken refreshToken = refreshTokenRepository.findById(email)
-                .orElseThrow(Unauthorized::new);
-
-        if (!refreshToken.getValue().equals(tokenRequestDto.getRefreshToken())) {
+        if (refreshToken == null) {
             throw new Unauthorized();
         }
 
-        TokenDto tokenDto = jwtTokenProvider.generateToken(email);
-        RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
-        refreshTokenRepository.save(newRefreshToken);
+        if (jwtTokenProvider.validToken(refreshToken) != JwtReturn.SUCCESS) {
+            throw new JwtException("JWT RefreshToken 만료");
+        }
 
+        TokenDto tokenDto = jwtTokenProvider.generateToken(email);
+        tokenDto.setRefreshToken(refreshToken);
         return tokenDto;
     }
 
@@ -226,19 +224,6 @@ public class CustomerService {
         } catch (MessagingException e) {
             log.error("메시지 발송 오류", e);
         }
-    }
-
-    private void saveRefreshToken(LoginRequest request, TokenDto tokenDto) {
-        RefreshToken refreshToken = RefreshToken.create(request.getCustomerEmail(),
-                tokenDto.getRefreshToken());
-        authRedisSave(refreshToken.getKey(), refreshToken.getValue());
-        refreshTokenRepository.save(refreshToken);
-    }
-
-    private void authRedisSave(String customerEmail, String refreshToken) {
-        final ValueOperations<String, Object> stringStringValueOperations = redisTemplate.opsForValue();
-        stringStringValueOperations.set(customerEmail, refreshToken);
-        redisTemplate.expire(customerEmail, 1209600, TimeUnit.SECONDS);//2주
     }
 
     private String getTableName(UserDetailsImpl userDetails) {

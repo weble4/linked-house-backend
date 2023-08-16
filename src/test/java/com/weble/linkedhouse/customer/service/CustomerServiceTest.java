@@ -97,7 +97,7 @@ class CustomerServiceTest {
                 .orElseThrow(NotExistCustomer::new);
 
         //after then
-        customerService.activateAccount(customer.getCustomerId());
+        customerService.certifiedEmail(customer.getCustomerId());
         assertThat(customer.getAuthState()).isEqualTo(AuthState.AUTH);
     }
 
@@ -119,7 +119,7 @@ class CustomerServiceTest {
         //given
         SignupResponse signupResponse = customerService.saveUser(createSignup());
         Customer customer = customerRepository.findByCustomerEmail(signupResponse.getCustomerEmail()).get();
-        customerService.activateAccount(customer.getCustomerId());
+        customerService.certifiedEmail(customer.getCustomerId());
         LoginRequest loginRequest = new LoginRequest(signupResponse.getCustomerEmail(), "abc123");
 
         //when

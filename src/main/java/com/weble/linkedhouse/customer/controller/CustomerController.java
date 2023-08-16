@@ -10,7 +10,6 @@ import com.weble.linkedhouse.customer.dtos.response.SignupResponse;
 import com.weble.linkedhouse.customer.service.CustomerService;
 import com.weble.linkedhouse.security.UserDetailsImpl;
 import com.weble.linkedhouse.security.jwt.token.TokenDto;
-import com.weble.linkedhouse.security.jwt.token.TokenRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,10 +46,17 @@ public class CustomerController {
         return ResponseEntity.ok().body(login);
     }
 
-    @GetMapping("/activate-state")
-    public ResponseEntity<String> activate(@RequestParam Long customerId) {
-        customerService.activateAccount(customerId);
+    @GetMapping("/certified-email")
+    public ResponseEntity<String> certified(@RequestParam Long customerId ) {
+        customerService.certifiedEmail(customerId);
         return ResponseEntity.ok("인증에 성공하였습니다");
+    }
+
+    //False - email 존재 x, True - email 존재 o
+    @GetMapping("/active-account")
+    public ResponseEntity<Boolean> checkEmail(@RequestBody String email) {
+        boolean value = customerService.checkEmail(email);
+        return ResponseEntity.ok().body(value);
     }
 
     @PostMapping("/add-role")
@@ -61,7 +67,7 @@ public class CustomerController {
 
     // Password 잊어버렸을 때 찾기
     @PatchMapping("/password")
-    public void findPassword(@RequestBody PasswordFindRequest passwordFindRequest) {
+    public void changePassword(@RequestBody PasswordFindRequest passwordFindRequest) {
         customerService.findPassword(passwordFindRequest);
     }
 
@@ -83,10 +89,10 @@ public class CustomerController {
         return customerService.updateProfile(userDetails, updateRequest, image);
     }
 
+    //토큰 재발급
     @PostMapping("/reissue")
-    public ResponseEntity<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto,
-                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        TokenDto reissue = customerService.reissue(tokenRequestDto, userDetails);
-        return ResponseEntity.ok().body(reissue);
+    public ResponseEntity<TokenDto> reissue(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        TokenDto newAccessToken = customerService.reissue(userDetails);
+        return ResponseEntity.ok().body(newAccessToken);
     }
 }
