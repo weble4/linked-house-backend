@@ -22,6 +22,11 @@ public class QNotification extends EntityPathBase<Notification> {
 
     public static final QNotification notification = new QNotification("notification");
 
+    public final com.weble.linkedhouse.util.QAuditingFields _super = new com.weble.linkedhouse.util.QAuditingFields(this);
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
+
     public final com.weble.linkedhouse.customer.entity.QCustomer customer;
 
     public final StringPath notificationContent = createString("notificationContent");
@@ -29,6 +34,9 @@ public class QNotification extends EntityPathBase<Notification> {
     public final NumberPath<Long> notificationId = createNumber("notificationId", Long.class);
 
     public final EnumPath<com.weble.linkedhouse.notification.entity.constant.NotificationType> notificationType = createEnum("notificationType", com.weble.linkedhouse.notification.entity.constant.NotificationType.class);
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public QNotification(String variable) {
         this(Notification.class, forVariable(variable), INITS);

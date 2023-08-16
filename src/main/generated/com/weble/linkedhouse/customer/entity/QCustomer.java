@@ -39,7 +39,7 @@ public class QCustomer extends EntityPathBase<Customer> {
 
     public final EnumPath<com.weble.linkedhouse.customer.entity.constant.DeleteRequest> deleteRequest = createEnum("deleteRequest", com.weble.linkedhouse.customer.entity.constant.DeleteRequest.class);
 
-    public final EnumPath<com.weble.linkedhouse.customer.entity.constant.Role> role = createEnum("role", com.weble.linkedhouse.customer.entity.constant.Role.class);
+    public final SetPath<com.weble.linkedhouse.customer.entity.constant.Role, EnumPath<com.weble.linkedhouse.customer.entity.constant.Role>> role = this.<com.weble.linkedhouse.customer.entity.constant.Role, EnumPath<com.weble.linkedhouse.customer.entity.constant.Role>>createSet("role", com.weble.linkedhouse.customer.entity.constant.Role.class, EnumPath.class, PathInits.DIRECT2);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;

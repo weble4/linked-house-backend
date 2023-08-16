@@ -37,10 +37,10 @@ public class QFeedbackHost extends EntityPathBase<FeedbackHost> {
 
     public final NumberPath<Long> feedbackHostId = createNumber("feedbackHostId", Long.class);
 
-    public final com.weble.linkedhouse.host.entity.QHost host;
-
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
+
+    public final com.weble.linkedhouse.customer.entity.QCustomer writer;
 
     public QFeedbackHost(String variable) {
         this(FeedbackHost.class, forVariable(variable), INITS);
@@ -61,7 +61,7 @@ public class QFeedbackHost extends EntityPathBase<FeedbackHost> {
     public QFeedbackHost(Class<? extends FeedbackHost> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.customer = inits.isInitialized("customer") ? new com.weble.linkedhouse.customer.entity.QCustomer(forProperty("customer"), inits.get("customer")) : null;
-        this.host = inits.isInitialized("host") ? new com.weble.linkedhouse.host.entity.QHost(forProperty("host"), inits.get("host")) : null;
+        this.writer = inits.isInitialized("writer") ? new com.weble.linkedhouse.customer.entity.QCustomer(forProperty("writer"), inits.get("writer")) : null;
     }
 
 }

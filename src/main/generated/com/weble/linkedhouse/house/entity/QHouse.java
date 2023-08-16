@@ -33,9 +33,11 @@ public class QHouse extends EntityPathBase<House> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
-    public final com.weble.linkedhouse.host.entity.QHost host;
+    public final com.weble.linkedhouse.customer.entity.QCustomer customer;
 
-    public final StringPath image = createString("image");
+    public final StringPath detailAddress = createString("detailAddress");
+
+    public final ListPath<HouseImage, QHouseImage> imagePath = this.<HouseImage, QHouseImage>createList("imagePath", HouseImage.class, QHouseImage.class, PathInits.DIRECT2);
 
     public final StringPath location = createString("location");
 
@@ -70,7 +72,7 @@ public class QHouse extends EntityPathBase<House> {
 
     public QHouse(Class<? extends House> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.host = inits.isInitialized("host") ? new com.weble.linkedhouse.host.entity.QHost(forProperty("host"), inits.get("host")) : null;
+        this.customer = inits.isInitialized("customer") ? new com.weble.linkedhouse.customer.entity.QCustomer(forProperty("customer"), inits.get("customer")) : null;
     }
 
 }

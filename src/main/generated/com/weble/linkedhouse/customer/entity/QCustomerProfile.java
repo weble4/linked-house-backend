@@ -24,7 +24,7 @@ public class QCustomerProfile extends EntityPathBase<CustomerProfile> {
 
     public final com.weble.linkedhouse.util.QAuditingFields _super = new com.weble.linkedhouse.util.QAuditingFields(this);
 
-    public final StringPath birthDate = createString("birthDate");
+    public final StringPath birthDay = createString("birthDay");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
@@ -32,6 +32,8 @@ public class QCustomerProfile extends EntityPathBase<CustomerProfile> {
     public final QCustomer customer;
 
     public final StringPath gender = createString("gender");
+
+    public final StringPath imagePath = createString("imagePath");
 
     public final StringPath nickname = createString("nickname");
 
