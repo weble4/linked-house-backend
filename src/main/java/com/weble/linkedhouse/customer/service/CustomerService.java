@@ -193,10 +193,6 @@ public class CustomerService {
 
         String refreshToken = redisTokenRepository.find(email);
 
-        if (refreshToken == null) {
-            throw new Unauthorized();
-        }
-
         if (jwtTokenProvider.validToken(refreshToken) != JwtReturn.SUCCESS) {
             throw new JwtException("JWT RefreshToken 만료");
         }
