@@ -11,8 +11,6 @@ public enum NotificationType {
     private final String reason;
 
     NotificationType(String reason){
-
         this.reason = reason;
     }
-
 }

@@ -8,6 +8,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
+import java.util.Set;
+
 @Getter
 public class SignupRequest {
 
@@ -19,7 +21,7 @@ public class SignupRequest {
     private String customerPw;
 
     @NotNull
-    private Role role;
+    private Set<Role> role;
 
     @NotBlank(message = "닉네임 입력은 필수입니다.")
     private String nickname;
@@ -31,20 +33,25 @@ public class SignupRequest {
     private String phoneNum;
 
     @NotBlank(message = "생년월일 입력은 필수입니다.")
-    private String birthDate;
+    private String birthDay;
 
-    private SignupRequest(String customerEmail, String customerPw, Role role, String nickname, String gender, String phoneNum, String birthDate) {
+    public void pwEncoding(String password) {
+        this.customerPw = password;
+    }
+
+    private SignupRequest(String customerEmail, String customerPw, Set<Role> role, String nickname, String gender, String phoneNum, String birthDay) {
         this.customerEmail = customerEmail;
         this.customerPw = customerPw;
         this.role = role;
         this.nickname = nickname;
         this.gender = gender;
         this.phoneNum = phoneNum;
-        this.birthDate = birthDate;
+        this.birthDay = birthDay;
     }
 
-    public static SignupRequest of(String customerEmail, String customerPw, Role role, String nickname, String gender, String phoneNum, String birthDate) {
-        return new SignupRequest(customerEmail, customerPw, role, nickname, gender, phoneNum, birthDate);
+    public static SignupRequest of(String customerEmail, String customerPw, Set<Role> role,
+                                   String nickname, String gender, String phoneNum, String birthDay) {
+        return new SignupRequest(customerEmail, customerPw, role, nickname, gender, phoneNum, birthDay);
     }
 
     public Customer convertCustomer() {
@@ -52,6 +59,7 @@ public class SignupRequest {
     }
 
     public CustomerProfile convertProfile(Customer customer) {
-        return CustomerProfile.of(customer, nickname, gender, birthDate, phoneNum);
+        return CustomerProfile.of(customer, nickname, gender, birthDay, phoneNum, null);
     }
+
 }
