@@ -1,9 +1,11 @@
 package com.weble.linkedhouse.house.entity;
 
 
-import com.weble.linkedhouse.host.entity.Host;
+import com.weble.linkedhouse.customer.entity.Customer;
+import com.weble.linkedhouse.house.dto.request.UpdateHouseRequestDto;
 import com.weble.linkedhouse.house.entity.constant.AutoReservation;
 import com.weble.linkedhouse.util.AuditingFields;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,20 +14,30 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
+@Entity
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
+@Table(name = "house",
+        indexes = {
+                @Index(columnList = "createdAt"),
+        }
+)
 public class House extends AuditingFields {
 
     @Id
@@ -34,8 +46,8 @@ public class House extends AuditingFields {
     private Long rentalId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hostId")
-    private Host host;
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
     @Column(name = "max_capacity")
     private int maxCapacity;
@@ -49,7 +61,11 @@ public class House extends AuditingFields {
     @Column(nullable = false)
     private String location;
 
-    private String image;
+    @Column(nullable = false)
+    private String detailAddress;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "house")
+    private List<HouseImage> imagePath = new ArrayList<>();
 
     @Column(name = "auto_reservation", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -67,29 +83,51 @@ public class House extends AuditingFields {
     @Column(name = "bath_room", nullable = false)
     private int bathRoom;
 
+    //연관관계 편의 메서드
+    public void addImagePath(HouseImage imagePath) {
+        this.imagePath.add(imagePath);
+        imagePath.setHouse(this);
+    }
+
+    public void updateHouse(UpdateHouseRequestDto update) {
+        this.maxCapacity = update.getMaxCapacity() != null ? update.getMaxCapacity() : maxCapacity;
+        this.minCapacity = update.getMinCapacity() != null ? update.getMinCapacity() : minCapacity;
+        this.price = update.getPrice() != null ? update.getPrice() : price;
+        this.autoReservation = update.getAutoReservation() != null ? update.getAutoReservation() : autoReservation;
+        this.room = update.getRoom() != null ? update.getRoom() : room;
+        this.bed = update.getBed() != null ? update.getBed() : bed;
+        this.bathRoom = update.getBathRoom() != null ? update.getBathRoom() : bathRoom;
+    }
+
     @Builder
-    private House(Host host, int maxCapacity, int minCapacity, int price, String location,
-                 String image, AutoReservation autoReservation, int room, int bed, int bathRoom) {
-        addHost(host);
+    private House(Customer customer, int maxCapacity, int minCapacity, int price, String location, String detailAddress,
+                  AutoReservation autoReservation, int room, int bed, int bathRoom) {
+        this.customer = customer;
         this.maxCapacity = maxCapacity;
         this.minCapacity = minCapacity;
         this.price = price;
         this.location = location;
-        this.image = image;
+        this.detailAddress = detailAddress;
         this.autoReservation = autoReservation;
         this.room = room;
         this.bed = bed;
         this.bathRoom = bathRoom;
     }
 
-    public static House of(Host host, int maxCapacity, int minCapacity, int price, String location,
-                           String image, AutoReservation autoReservation, int room, int bed, int bathRoom) {
-        return new House(host, maxCapacity, minCapacity, price, location, image, autoReservation, room, bed, bathRoom);
-    }
-
-    public void addHost(Host host) {
-        this.host = host;
-        host.getHouses().add(this);
+    public static House of(Customer customer, int maxCapacity, int minCapacity, int price,
+                           String location, String detailAddress, AutoReservation autoReservation,
+                           int room, int bed, int bathRoom) {
+        return new House(
+                customer,
+                maxCapacity,
+                minCapacity,
+                price,
+                location,
+                detailAddress,
+                autoReservation,
+                room,
+                bed,
+                bathRoom);
     }
 
     @Override
@@ -103,4 +141,5 @@ public class House extends AuditingFields {
     public int hashCode() {
         return Objects.hash(getRentalId());
     }
+
 }
