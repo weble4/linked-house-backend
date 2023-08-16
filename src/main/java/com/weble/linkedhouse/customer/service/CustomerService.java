@@ -156,7 +156,11 @@ public class CustomerService {
             imagePath = createFile.saveImage(image, customer.getCustomerId());
         }
 
-        customer.getCustomerProfile().updateProfile(updateRequest, imagePath);
+        customer.getCustomerProfile().updateProfile(
+                updateRequest.getNickname(),
+                updateRequest.getPhoneNum(),
+                updateRequest.getPublicAt(),
+                imagePath);
 
         return ProfileDto.from(customer.getCustomerProfile());
     }

@@ -89,14 +89,15 @@ public class House extends AuditingFields {
         imagePath.setHouse(this);
     }
 
-    public void updateHouse(UpdateHouseRequestDto update) {
-        this.maxCapacity = update.getMaxCapacity() != null ? update.getMaxCapacity() : maxCapacity;
-        this.minCapacity = update.getMinCapacity() != null ? update.getMinCapacity() : minCapacity;
-        this.price = update.getPrice() != null ? update.getPrice() : price;
-        this.autoReservation = update.getAutoReservation() != null ? update.getAutoReservation() : autoReservation;
-        this.room = update.getRoom() != null ? update.getRoom() : room;
-        this.bed = update.getBed() != null ? update.getBed() : bed;
-        this.bathRoom = update.getBathRoom() != null ? update.getBathRoom() : bathRoom;
+    public void updateHouse(int maxCapacity,int minCapacity, int price, AutoReservation autoReservation,
+                            int room, int bed, int bathRoom) {
+        this.maxCapacity = maxCapacity;
+        this.minCapacity = minCapacity;
+        this.price = price;
+        this.autoReservation = autoReservation;
+        this.room = room;
+        this.bed = bed;
+        this.bathRoom = bathRoom;
     }
 
     @Builder
