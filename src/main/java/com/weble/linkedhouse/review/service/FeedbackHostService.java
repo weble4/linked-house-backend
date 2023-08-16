@@ -1,9 +1,9 @@
 package com.weble.linkedhouse.review.service;
 
-import com.weble.linkedhouse.review.domain.entity.FeedbackHost;
-import com.weble.linkedhouse.review.domain.repository.FeedbackHostRepository;
 import com.weble.linkedhouse.review.web.dtos.request.HostReviewRequest;
 import com.weble.linkedhouse.review.web.dtos.response.HostReviewResponse;
+import com.weble.linkedhouse.review.domain.entity.FeedbackHost;
+import com.weble.linkedhouse.review.domain.repository.FeedbackHostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,26 +19,37 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class FeedbackHostService {
+
     private final FeedbackHostRepository feedbackHostRepository;
 
-    public HostFeedbackResponse findReviewByHostId(Long feedbackHostId) {
-        FeedbackHost feedbackHost = feedbackHostRepository.findById(feedbackHostId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 없습니다. id=" + feedbackHostId));
-        return new HostFeedbackResponse(feedbackHost);
-    }
-
-    public List<HostReviewResponse> getAllHostReview(Long customerId) {
-        return feedbackHostRepository.findAllByCustomerCustomerId(customerId)
-                .map(feedbackHosts ->
-                        feedbackHosts.stream()
-                                .map(HostReviewResponse::from)
-                                .collect(Collectors.toList()))
-                .orElse(Collections.emptyList());
-    }
-
     @Transactional
-    public HostReviewResponse createHostReview(HostReviewRequest hostReviewRequest) {
-        FeedbackHost review = feedbackHostRepository.save(hostReviewRequest.toEntity());
+    public HostReviewResponse createHostReview(HostReviewRequest request) {
+        FeedbackHost review = feedbackHostRepository.save(request.toEntity());
+
         return HostReviewResponse.from(review);
+    }
+
+    public HostReviewResponse findByHostReviewId(Long feedbackHostId) {
+        FeedbackHost check = feedbackHostRepository.findById(feedbackHostId)
+                .orElseThrow();
+
+        return HostReviewResponse.from(check);
+    }
+
+    public List<HostReviewResponse> findAllByHostReview(Long customerId) {
+
+        return feedbackHostRepository.findAllByCustomerCustomerId(customerId).stream()
+                .map(HostReviewResponse::from).collect(Collectors.toList());
+    }
+
+    public void deleteHostReview(Long feedbackHostId) {
+        feedbackHostRepository.deleteById(feedbackHostId);
+    }
+
+    public HostReviewResponse updateHostReview(Long feedbackHostId, HostReviewRequest request) {
+        FeedbackHost feedbackHost = feedbackHostRepository.findById(feedbackHostId).orElseThrow();
+        feedbackHost.updateReview(request.getContent(), request.getAttitude(), request.getDamageDegree());
+
+        return HostReviewResponse.from(feedbackHost);
     }
 }

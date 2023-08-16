@@ -13,53 +13,50 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class FeedbackCustomerService {
+
     private final FeedbackCustomerRepository feedbackCustomerRepository;
 
-    public Long createCustomerReview(CustomerReviewRequest request) {
-        FeedbackCustomer entity = feedbackCustomerRepository.save(request.toEntity());
-        return entity.getFeedbackcustomerId();
+    @Transactional
+    public CustomerReviewResponse createCustomerReview(CustomerReviewRequest request) {
+        FeedbackCustomer review = feedbackCustomerRepository.save(request.toEntity());
+
+        return CustomerReviewResponse.from(review);
+    }
+
+    public CustomerReviewResponse findByCustomerReviewId(Long feedbackCustomerId) {
+        FeedbackCustomer check = feedbackCustomerRepository.findById(feedbackCustomerId)
+                .orElseThrow();
+
+        return CustomerReviewResponse.from(check);
+    }
+
+    public List<CustomerReviewResponse> findAllByCustomerReview(Long customerId) {
+        return feedbackCustomerRepository.findAllByCustomerCustomerId(customerId)
+                .stream().map(CustomerReviewResponse::from).collect(Collectors.toList());
     }
 
     public void deleteCustomerReview(Long feedbackCustomerId) {
-        FeedbackCustomer feedbackCustomer = feedbackCustomerRepository.findById(feedbackCustomerId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + feedbackCustomerId));
-        feedbackCustomerRepository.delete(feedbackCustomer);
+        feedbackCustomerRepository.deleteById(feedbackCustomerId);
     }
 
-    public List<CustomerReviewResponse> findAllCustomerReview(Long customerId) {
-        return feedbackCustomerRepository.findByCustomerCustomerId(customerId)
-                .map(feedbackCustomers ->
-                        feedbackCustomers.stream()
-                                .map(CustomerReviewResponse::from)
-                                .collect(Collectors.toList()))
-                .orElse(Collections.emptyList());
-    }
-
+    @Transactional
     public CustomerReviewResponse updateCustomerReview(Long feedbackCustomerId, CustomerReviewRequest request) {
-        FeedbackCustomer feedbackCustomer = feedbackCustomerRepository.findById(feedbackCustomerId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + feedbackCustomerId));
+        FeedbackCustomer feedbackCustomer = feedbackCustomerRepository.findById(feedbackCustomerId).orElseThrow();
 
-        feedbackCustomer.updateCustomerReview(request);
-        return new CustomerReviewResponse();
-    }
-
-    public CustomerReviewResponse findByCustomerId(Long feedbackCustomerId) {
-        return feedbackCustomerRepository.findById(feedbackCustomerId).map(CustomerReviewResponse::from)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + feedbackCustomerId));
+        feedbackCustomer.updateReview(request.getContent(), request.getScoreClean(),
+                request.getScoreCommunication(), request.getScoreSatisfaction());
+        return CustomerReviewResponse.from(feedbackCustomer);
     }
 
     public List<CustomerReviewResponse> findAllHouseReview(Long rentalId) {
         return feedbackCustomerRepository.findAllByHouseRentalId(rentalId)
-                .map(feedbackCustomers ->
-                        feedbackCustomers.stream()
-                                .map(CustomerReviewResponse::from)
-                                .collect(Collectors.toList()))
-                .orElse(Collections.emptyList());
+                .stream().map(CustomerReviewResponse::from).collect(Collectors.toList());
+
     }
 }
-

@@ -3,9 +3,9 @@ package com.weble.linkedhouse.review.web.dtos.response;
 import com.weble.linkedhouse.customer.dtos.CustomerDto;
 import com.weble.linkedhouse.house.entity.House;
 import com.weble.linkedhouse.review.domain.entity.FeedbackCustomer;
-import com.weble.linkedhouse.review.web.dtos.request.CustomerReviewRequest;
 import lombok.Builder;
 import lombok.Getter;
+
 import java.time.LocalDateTime;
 
 
@@ -23,7 +23,7 @@ public class CustomerReviewResponse {
     private LocalDateTime updatedAt;
 
     @Builder
-    public CustomerReviewResponse(CustomerDto customerDto, House house, String title, String content,
+    private CustomerReviewResponse(CustomerDto customerDto, House house, String title, String content,
                                   int scoreClean, int scoreCommunication, int scoreSatisfaction, int totalScore,
                                   LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.customerDto = customerDto;
@@ -53,9 +53,7 @@ public class CustomerReviewResponse {
                 .createdAt(createdAt)
                 .updatedAt(updatedAt)
                 .build();
-
     }
-
 
     public static CustomerReviewResponse from(FeedbackCustomer feedbackCustomer){
         return CustomerReviewResponse.builder()
@@ -70,7 +68,6 @@ public class CustomerReviewResponse {
                 .createdAt(feedbackCustomer.getCreatedAt())
                 .updatedAt(feedbackCustomer.getUpdatedAt())
                 .build();
-
-        }
-
     }
+
+}
