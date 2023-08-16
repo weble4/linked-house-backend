@@ -96,7 +96,7 @@ public class ReviewController {
         return ResponseEntity.ok().body("삭제 되었습니다.");
     }
 
-    @PatchMapping("/{feedbackHostId")
+    @PatchMapping("/{feedbackHostId}")
     public ResponseEntity<HostReviewResponse> updateHostReview(@PathVariable Long feedbackHostId,
                                                                @RequestBody HostReviewRequest hostReviewRequest){
         HostReviewResponse hostReviewResponse = feedbackHostService.updateHostReview(feedbackHostId, hostReviewRequest);
