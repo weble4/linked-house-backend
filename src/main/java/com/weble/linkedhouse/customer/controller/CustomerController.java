@@ -53,7 +53,7 @@ public class CustomerController {
     }
 
     //False - email 존재 x, True - email 존재 o
-    @GetMapping("/active-account")
+    @GetMapping("/check-email")
     public ResponseEntity<Boolean> checkEmail(@RequestBody String email) {
         boolean value = customerService.checkEmail(email);
         return ResponseEntity.ok().body(value);
