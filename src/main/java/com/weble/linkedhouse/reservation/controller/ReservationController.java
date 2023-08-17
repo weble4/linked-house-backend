@@ -1,6 +1,5 @@
 package com.weble.linkedhouse.reservation.controller;
 
-import com.weble.linkedhouse.house.service.HouseCustomerService;
 import com.weble.linkedhouse.reservation.dto.request.ReservationRequest;
 import com.weble.linkedhouse.reservation.dto.response.ReservationResponse;
 import com.weble.linkedhouse.reservation.service.ReservationService;
@@ -25,25 +24,23 @@ import java.util.List;
 public class ReservationController {
 
     private final ReservationService reservationService;
-    private final HouseCustomerService houseCustomerService;
 
     @GetMapping// 게스트가 자신이 예약한 모든 예약을 조회
-    public List<ReservationResponse> findByCustomerId(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return reservationService.findByCustomerId(userDetails.getUserId());
+    public List<ReservationResponse> findByCustomerCustomerId(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return reservationService.findByCustomerCustomerId(userDetails.getUserId());
     }
 
     @GetMapping("/{rentalId}") // 호스트가 자신의 숙소에 접수된 예약 조회
-    @PreAuthorize("ROLE_HOST")
-    public List<ReservationResponse> findByRentalId(@PathVariable Long rentalId) {
-        return reservationService.findByRentalId(rentalId);
+    @PreAuthorize("hasRole('HOST')")
+    public List<ReservationResponse> findByHouseRentalId(@PathVariable Long rentalId) {
+        return reservationService.findByHouseRentalId(rentalId);
     }
 
-    /* 게스트나 호스트가 개별 예약에 대한 상세조회
-    @GetMapping("/details/") //
-    public ReservationResponse findByReservationId(@PathVariable Long reservationId) {
-        return reservationService.findByReservationId(reservationId);
+    @GetMapping("/details/{reservationId}") // 게스트나 호스트가 개별 예약에 대한 상세조회
+    public ReservationResponse findById(@PathVariable Long reservationId) {
+        return reservationService.findById(reservationId);
     }
-     */
+
 
     @PostMapping("/customer/{rentalId}") // 게스트의 예약 신청
     public void createReservation(@AuthenticationPrincipal UserDetailsImpl userDetails,

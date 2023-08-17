@@ -10,12 +10,12 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
     // 예약자의 ID로 예약된 모든 예약목록 리스트
-    List<Reservation> findByCustomerId(Long customerId);
+    List<Reservation> findByCustomerCustomerId(Long customerId);
 
     // 호스트의 숙박업소 ID로 예약받은 모든 리스트
-    List<Reservation> findByRentalId(Long rentalId);
+    List<Reservation> findByHouseRentalId(Long rentalId);
 
     // 예약 건에 대한 단일 조회
-    Reservation findByReservationId(Long reservationId);
+
 
 }

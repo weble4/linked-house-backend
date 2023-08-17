@@ -17,7 +17,7 @@ public class CancelReservationService {
 
     public void deleteReservationByCustomer(Long reservationId) {
 
-        Reservation reservation = reservationRepository.findByReservationId(reservationId);
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NotExistHouseException::new);
 
         if (reservation == null) {
             throw new NotExistHouseException();
@@ -38,11 +38,7 @@ public class CancelReservationService {
 
     public void deleteReservationByHost(Long reservationId) {
 
-        Reservation reservation = reservationRepository.findByReservationId(reservationId);
-
-        if (reservation == null) {
-            throw new NotExistHouseException();
-        }
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NotExistHouseException::new);
 
         CancelReservation cancelReservation = CancelReservation.of(
                 reservation,
