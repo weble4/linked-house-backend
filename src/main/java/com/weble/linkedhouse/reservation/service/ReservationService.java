@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +22,6 @@ public class ReservationService {
     private final CustomerRepository customerRepository;
 
     public List<ReservationResponse> findByCustomerId(Long customerId) {
-
         List<ReservationResponse> responses = reservationRepository.findByCustomerId(customerId).stream()
                 .map(ReservationResponse::from).toList();
         return responses;
@@ -33,18 +33,21 @@ public class ReservationService {
         return responses;
     }
 
+    /* 게스트나 호스트가 개별 예약에 대한 상세조회
     public ReservationResponse findByReservationId(Long reservationId) {
         ReservationResponse response = ReservationResponse.from(reservationRepository.findByReservationId(reservationId));
         return response;
     }
 
-    public void createReservation(UserDetailsImpl userDetails, ReservationRequest request) {
+     */
+
+    public void createReservation(UserDetailsImpl userDetails, ReservationRequest request, Long rentalId) {
         Long customerId = userDetails.getUserId();
 
-        Customer customer = customerRepository.findById(customerId).orElseThrow(NotExistCustomer::new);
+        if(customerRepository.findById(customerId) == null) {
+            throw new NotExistCustomer();
+        }
 
-        Reservation reservation = reservationRepository.save(request.toEntity());
-
-        reservationRepository.save(reservation);
+        reservationRepository.save(request.toEntity());
     }
 }
