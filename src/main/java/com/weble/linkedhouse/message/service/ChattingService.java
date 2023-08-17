@@ -15,12 +15,14 @@ import com.weble.linkedhouse.message.repository.ChatRoomRepository;
 import com.weble.linkedhouse.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ChattingService {
 
     private final ChatRoomRepository chatRoomRepository;
@@ -35,6 +37,7 @@ public class ChattingService {
     }
 
     // 채팅방 생성
+    @Transactional
     public ChatRoomResponse createChatRoom(ChatRoomRequest request) {
 
         Customer sender = customerRepository.findById(request.getSenderId())
@@ -56,6 +59,7 @@ public class ChattingService {
     }
 
     // 1대1 채팅 메시지 전송 (웹소켓을 통해 처리)
+    @Transactional
     public void sendChatMessage(Long roomId, MessageSendDto message, UserDetailsImpl userDetails) {
 
         ChatRoom chatRoom = chatRoomRepository.findById(roomId)

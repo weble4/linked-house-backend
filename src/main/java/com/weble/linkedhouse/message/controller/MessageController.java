@@ -51,7 +51,7 @@ public class MessageController {
     }
 
     // 1대1 채팅 메시지 전송
-    @MessageMapping("/chat/send/{roomId}")
+    @MessageMapping("/send/{roomId}")
     public void sendChatMessage(@DestinationVariable Long roomId,
                                 @Payload MessageSendDto message,
                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {

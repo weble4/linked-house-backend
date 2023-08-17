@@ -40,8 +40,4 @@ public class HouseImage {
     public static HouseImage of(House house, String imagePath) {
         return new HouseImage(house, imagePath);
     }
-
-    public void updateImage(List<String> ImagePath) {
-
-    }
 }

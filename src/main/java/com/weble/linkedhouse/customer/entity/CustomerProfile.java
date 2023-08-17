@@ -76,10 +76,10 @@ public class CustomerProfile extends AuditingFields {
         this.customer = customer;
     }
 
-    public void updateProfile(UpdateRequest updateRequest, String imagePath) {
-        this.nickname = updateRequest.getNickname() !=null ? updateRequest.getNickname() : nickname;
-        this.phoneNum = updateRequest.getPhoneNum() != null ? updateRequest.getPhoneNum() : phoneNum;
-        this.publicAt = updateRequest.getPublicAt() != null ? updateRequest.getPublicAt() : publicAt;
+    public void updateProfile(String nickname, String phoneNum, PublicAt publicAt, String imagePath) {
+        this.nickname = nickname;
+        this.phoneNum = phoneNum;
+        this.publicAt = publicAt;
         this.imagePath = imagePath;
     }
 
