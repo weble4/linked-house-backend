@@ -7,6 +7,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CancelReservationRepository extends JpaRepository<CancelReservation, Long> {
 
-    CancelReservation deleteReservationByReservationId(Long reservationId);
-
 }

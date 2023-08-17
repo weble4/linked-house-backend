@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -19,7 +20,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@ToString
+@ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CancelReservation {
 
@@ -45,7 +46,7 @@ public class CancelReservation {
     @Column(name = "reservation_num", nullable = false)
     private int reservationNum;
 
-
+    @Builder
     public CancelReservation(Reservation reservation, Customer customer, LocalDateTime checkinDate, LocalDateTime checkoutDate, int reservationNum) {
         this.reservation = reservation;
         this.customer = customer;
