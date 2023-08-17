@@ -49,13 +49,12 @@ public class BookMarkRepositoryImpl implements BookMarkRepository{
         String findQuery = """
                 SELECT b.customer_id, b.rental_id, h.price, h.location, hi.image_path
                 FROM %s AS b
-                JOIN House AS h ON b.rental_id = h.rental_id
+                JOIN house AS h ON b.rental_id = h.rental_id
                 LEFT JOIN (
-                    SELECT rentalId, image_path
-                    FROM HouseImage
-                    WHERE rentalId = h.rental_id
+                    SELECT rental_id, image_path
+                    FROM house_image
                     LIMIT 1
-                ) AS hi ON h.rental_id = hi.rentalId
+                ) AS hi ON h.rental_id = hi.rental_id
                 """.formatted(tableName);
 
         return jdbcTemplate.query(findQuery, (rs, rowNum) -> {
