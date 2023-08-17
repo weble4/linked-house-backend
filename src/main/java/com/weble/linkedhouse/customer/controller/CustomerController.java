@@ -46,7 +46,7 @@ public class CustomerController {
         return ResponseEntity.ok().body(login);
     }
 
-    @GetMapping("/certified-email")
+    @GetMapping("/activate-state")
     public ResponseEntity<String> certified(@RequestParam Long customerId ) {
         customerService.certifiedEmail(customerId);
         return ResponseEntity.ok("인증에 성공하였습니다");
@@ -84,7 +84,7 @@ public class CustomerController {
 
     @PatchMapping("/profiles")
     public ProfileDto updateProfile(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                    @RequestPart UpdateRequest updateRequest,
+                                    @RequestPart @Valid UpdateRequest updateRequest,
                                     @RequestPart MultipartFile image) {
         return customerService.updateProfile(userDetails, updateRequest, image);
     }
