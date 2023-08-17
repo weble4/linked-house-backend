@@ -5,6 +5,7 @@ import com.weble.linkedhouse.house.dto.request.UpdateHouseRequestDto;
 import com.weble.linkedhouse.house.dto.response.HouseResponseDto;
 import com.weble.linkedhouse.house.service.HouseHostService;
 import com.weble.linkedhouse.security.UserDetailsImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,7 +54,7 @@ public class HouseHostController {
     @PostMapping
     public ResponseEntity<String> registrationHouse(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestPart HostHouseSaveRequest request,
+            @RequestPart @Valid HostHouseSaveRequest request,
             @RequestPart List<MultipartFile> images
             ) {
 
@@ -63,7 +64,7 @@ public class HouseHostController {
 
     @PatchMapping("/{rentalId}")
     public ResponseEntity<HouseResponseDto> updateHouse(@RequestPart List<MultipartFile> images,
-                                                        @RequestPart UpdateHouseRequestDto update
+                                                        @RequestPart @Valid UpdateHouseRequestDto update
                                                         ) {
         HouseResponseDto result = houseHostService.updateHouse(images, update);
         return ResponseEntity.ok().body(result);

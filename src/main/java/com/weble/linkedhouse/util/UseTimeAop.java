@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UseTimeAop {
 
-    @Around("execution(public * com.sparta.dockingfinalproject..*Controller..*(..))")
+    @Around("execution(public * com.weble.linkedhouse..*Controller..*(..))")
     public Object execute(ProceedingJoinPoint joinPoint) throws Throwable {
 
         long startTime = System.currentTimeMillis();
