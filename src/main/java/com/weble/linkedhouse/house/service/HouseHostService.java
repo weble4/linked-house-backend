@@ -70,7 +70,15 @@ public class HouseHostService {
         House house = houseRepository.findById(update.getRentalId())
                 .orElseThrow(NotExistHouseException::new);
 
-        house.updateHouse(update);
+        house.updateHouse(
+                update.getMaxCapacity(),
+                update.getMinCapacity(),
+                update.getPrice(),
+                update.getAutoReservation(),
+                update.getRoom(),
+                update.getBed(),
+                update.getBathRoom()
+        );
 
         CreateFile createFile = new CreateFile();
 

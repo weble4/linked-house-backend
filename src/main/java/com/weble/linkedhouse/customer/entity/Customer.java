@@ -85,14 +85,15 @@ public class Customer extends AuditingFields {
         this.customerPw = customerPw;
     }
 
+    public void deleteAccountRequest() {
+        this.deleteRequest = DeleteRequest.DELETE;
+    }
+
     public void setCustomerProfile(CustomerProfile customerProfile) {
         this.customerProfile = customerProfile;
         customerProfile.setCustomer(this);
     }
 
-    public void deleteAccountRequest() {
-        this.deleteRequest = DeleteRequest.DELETE;
-    }
     public void addRole(Role newRole) {
         Set<Role> updatedRoles = new HashSet<>(this.role);
         updatedRoles.add(newRole);
