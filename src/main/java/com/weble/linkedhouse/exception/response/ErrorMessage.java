@@ -15,7 +15,8 @@ public enum ErrorMessage {
     DELETE_CUSTOMER("삭제 신청한 아이디입니다."),
     ALREADY_AUTHORIZATION("이미 인증된 이메일입니다."),
     NOT_FOUND_NOTIFICATION("존재하지 않는 알람입니다."),
-    NOT_FOUND_ROOM("존재 하지 않는 방입니다.");
+    NOT_FOUND_ROOM("존재 하지 않는 방입니다."),
+    CAN_NOT_REPORT("다른 사람에 대한 리뷰는 신고할 수 없습니다.");
 
    @Getter
    private final String message;

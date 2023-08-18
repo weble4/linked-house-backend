@@ -12,7 +12,9 @@ public interface BookMarkRepository {
 
     void save(String tableName, Long userId, Long rentalId);
 
-    List<BookmarkResponse> getBookmark(Long userId);
+    List<BookmarkResponse> getBookmark(String tableName, Long userId);
 
-    void deleteByRentalId(Long rentalId, Long customerId);
+    void deleteByRentalId(String tableName, Long rentalId);
+
+    void deleteTable(String tableName);
 }
