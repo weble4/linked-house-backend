@@ -20,7 +20,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/reservations")
 @RequiredArgsConstructor
-@EnableMethodSecurity
 public class ReservationController {
 
     private final ReservationService reservationService;
