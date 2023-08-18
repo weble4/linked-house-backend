@@ -2,7 +2,7 @@ package com.weble.linkedhouse.review.dtos.request;
 
 import com.weble.linkedhouse.customer.dtos.CustomerDto;
 import com.weble.linkedhouse.house.entity.House;
-import com.weble.linkedhouse.review.domain.entity.FeedbackCustomer;
+import com.weble.linkedhouse.review.entity.FeedbackCustomer;
 import lombok.Builder;
 import lombok.Getter;
 

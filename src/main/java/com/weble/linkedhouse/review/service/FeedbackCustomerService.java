@@ -1,9 +1,9 @@
 package com.weble.linkedhouse.review.service;
 
-import com.weble.linkedhouse.review.domain.entity.FeedbackCustomer;
-import com.weble.linkedhouse.review.domain.repository.FeedbackCustomerRepository;
-import com.weble.linkedhouse.review.web.dtos.request.CustomerReviewRequest;
-import com.weble.linkedhouse.review.web.dtos.response.CustomerReviewResponse;
+import com.weble.linkedhouse.review.dtos.request.CustomerReviewRequest;
+import com.weble.linkedhouse.review.dtos.response.CustomerReviewResponse;
+import com.weble.linkedhouse.review.entity.FeedbackCustomer;
+import com.weble.linkedhouse.review.repository.FeedbackCustomerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

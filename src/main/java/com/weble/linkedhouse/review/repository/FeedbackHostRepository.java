@@ -1,6 +1,6 @@
 package com.weble.linkedhouse.review.repository;
 
-import com.weble.linkedhouse.review.domain.entity.FeedbackHost;
+import com.weble.linkedhouse.review.entity.FeedbackHost;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
