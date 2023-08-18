@@ -3,6 +3,8 @@ package com.weble.linkedhouse.notification.dtos;
 import com.weble.linkedhouse.notification.entity.constant.NotificationType;
 import lombok.Getter;
 
+import java.util.List;
+
 
 @Getter
 

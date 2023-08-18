@@ -15,6 +15,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @ToString(callSuper = true)
