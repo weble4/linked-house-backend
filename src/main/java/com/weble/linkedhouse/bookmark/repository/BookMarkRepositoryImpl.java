@@ -13,6 +13,7 @@ public class BookMarkRepositoryImpl implements BookMarkRepository{
 
     private final JdbcTemplate jdbcTemplate;
 
+    //table 네임 - bookmark_email(@앞부분)_id
     @Override
     public boolean isTableExists(String tableName) {
         String checkTableQuery = """
@@ -43,8 +44,7 @@ public class BookMarkRepositoryImpl implements BookMarkRepository{
     }
 
     @Override
-    public List<BookmarkResponse> getBookmark(Long customerId) {
-        String tableName = "bookmark_user" + customerId;
+    public List<BookmarkResponse> getBookmark(String tableName, Long customerId) {
 
         String findQuery = """
                 SELECT b.customer_id, b.rental_id, h.price, h.location, hi.image_path
@@ -67,9 +67,14 @@ public class BookMarkRepositoryImpl implements BookMarkRepository{
     }
 
     @Override
-    public void deleteByRentalId(Long rentalId, Long customerId) {
-        String tableName = "bookmark_user" + customerId;
+    public void deleteByRentalId(String tableName, Long rentalId) {
         String deleteQuery = "DELETE FROM " + tableName + " WHERE rental_id = ?";
         jdbcTemplate.update(deleteQuery, rentalId);
+    }
+
+    @Override
+    public void deleteTable(String tableName) {
+        String deleteQuery = "DROP TABLE " + tableName;
+        jdbcTemplate.execute(deleteQuery);
     }
 }

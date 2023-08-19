@@ -34,19 +34,21 @@ public class JwtTokenProvider {
 
     public TokenDto generateToken(String customerEmail) {
 
+        String tokenPrefix = "Bearer";
+
         Claims claims = Jwts.claims().setSubject(customerEmail);
         claims.put("customerEmail", customerEmail);
 
         Date now = new Date();
 
-        String accessToken = Jwts.builder()
+        String accessToken = tokenPrefix + Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + accessTokenValidTime))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
 
-        String refreshToken = Jwts.builder()
+        String refreshToken = tokenPrefix + Jwts.builder()
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + refreshTokenValidTime))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
@@ -89,7 +91,6 @@ public class JwtTokenProvider {
         return JwtReturn.FAIL;
     }
 
-    // secret을
     private Key getKey() {
         byte[] keyBytes = Decoders.BASE64URL.decode(properties.getSecretKey());
         return Keys.hmacShaKeyFor(keyBytes);

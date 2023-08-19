@@ -1,5 +1,6 @@
 package com.weble.linkedhouse.report.entity;
 
+import com.weble.linkedhouse.customer.entity.Customer;
 import com.weble.linkedhouse.review.entity.FeedbackCustomer;
 import com.weble.linkedhouse.review.entity.FeedbackHost;
 import jakarta.persistence.Column;
@@ -11,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -34,28 +36,29 @@ public class Report {
     @JoinColumn(name = "feedback_customer_id")
     private FeedbackCustomer feedbackCustomer;
 
-    @Column(name = "reported_customer", nullable = false)
-    private String reportedCustomer;
-
-    @Column(name = "reporter", nullable = false)
-    private String reporter;
-
-    @Column(name = "report_type")
-    private String reportType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reporter")
+    private Customer reporter;
 
     @Column(name = "content")
     private String content;
 
 
-    public Report(FeedbackHost feedbackHost, FeedbackCustomer feedbackCustomer,
-                  String reportedCustomer, String reporter,
-                  String reportType, String content) {
+    private Report(FeedbackHost feedbackHost, FeedbackCustomer feedbackCustomer, Customer reporter, String content) {
         this.feedbackHost = feedbackHost;
         this.feedbackCustomer = feedbackCustomer;
-        this.reportedCustomer = reportedCustomer;
         this.reporter = reporter;
-        this.reportType = reportType;
         this.content = content;
+    }
+
+    public static Report of(FeedbackCustomer feedbackCustomer,
+                            Customer reporter, String content) {
+        return new Report(null, feedbackCustomer, reporter, content);
+    }
+
+    public static Report of(FeedbackHost feedbackHost,
+                            Customer reporter, String content) {
+        return new Report(feedbackHost, null, reporter, content);
     }
 
     @Override

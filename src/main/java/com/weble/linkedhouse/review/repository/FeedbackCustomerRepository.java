@@ -1,13 +1,15 @@
 package com.weble.linkedhouse.review.repository;
 
 import com.weble.linkedhouse.review.entity.FeedbackCustomer;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 public interface FeedbackCustomerRepository extends JpaRepository<FeedbackCustomer, Long> {
 
-    List<FeedbackCustomer> findAllByCustomerCustomerId(Long customerId);
+    Page<FeedbackCustomer> findAllByCustomerCustomerId(Long customerId, Pageable pageable);
 
-    List<FeedbackCustomer> findAllByHouseRentalId(Long rentalId);
+    Page<FeedbackCustomer> findAllByHouseRentalId(Long rentalId, Pageable pageable);
 }
