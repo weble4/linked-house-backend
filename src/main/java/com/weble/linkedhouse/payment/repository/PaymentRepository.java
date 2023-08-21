@@ -8,5 +8,5 @@ import java.util.List;
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     // 숙박업소 번호로 전체 조회 (호스트)
-    List<Payment> findByCustomerId(Long customerId);
+    List<Payment> findByReservationCustomerId(Long customerId);
 }

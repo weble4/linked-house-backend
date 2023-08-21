@@ -11,15 +11,13 @@ import java.time.LocalDateTime;
 @Getter
 public class PaymentResponseDto {
 
-    private Long paymentId;
     private House house;
     private Reservation reservation;
     private int price;
     private LocalDateTime requestDay;
 
     @Builder
-    private PaymentResponseDto(Long paymentId, House house, Reservation reservation, int price, LocalDateTime requestDay) {
-        this.paymentId = paymentId;
+    private PaymentResponseDto(House house, Reservation reservation, int price, LocalDateTime requestDay) {
         this.house = house;
         this.reservation = reservation;
         this.price = price;
@@ -28,7 +26,6 @@ public class PaymentResponseDto {
 
     public static PaymentResponseDto from(Payment payment) {
         return new PaymentResponseDto(
-                payment.getPaymentId(),
                 payment.getHouse(),
                 payment.getReservation(),
                 payment.getPrice(),

@@ -1,6 +1,5 @@
 package com.weble.linkedhouse.payment.service;
 
-import com.weble.linkedhouse.customer.entity.Customer;
 import com.weble.linkedhouse.customer.repository.CustomerRepository;
 import com.weble.linkedhouse.exception.NotExistCustomer;
 import com.weble.linkedhouse.exception.NotExistPayment;
@@ -8,13 +7,14 @@ import com.weble.linkedhouse.payment.dto.request.PaymentRequestDto;
 import com.weble.linkedhouse.payment.dto.response.PaymentResponseDto;
 import com.weble.linkedhouse.payment.entity.Payment;
 import com.weble.linkedhouse.payment.repository.PaymentRepository;
+import com.weble.linkedhouse.reservation.entity.Reservation;
+import com.weble.linkedhouse.reservation.repository.ReservationRepository;
 import com.weble.linkedhouse.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +24,7 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final CustomerRepository customerRepository;
+    private final ReservationRepository reservationRepository;
 
 
     public PaymentResponseDto findById(Long paymentId) {
@@ -34,11 +35,15 @@ public class PaymentService {
         return dto;
     }
 
-    public List<PaymentResponseDto> findByCustomerId(Long customerId) {
+    public List<PaymentResponseDto> findByReservationCustomerId(UserDetailsImpl userDetails) {
 
-        customerRepository.findById(customerId).orElseThrow(NotExistCustomer::new);
+        List<Reservation> reservation = reservationRepository.findByCustomerCustomerId(userDetails.getUserId());
 
-        List<PaymentResponseDto> payments = paymentRepository.findByCustomerId(customerId).stream()
+        if(reservation == null) {
+            throw new NotExistPayment();
+        }
+
+        List<PaymentResponseDto> payments = paymentRepository.findByReservationCustomerId(userDetails.getUserId()).stream()
                 .map(PaymentResponseDto::from).collect(Collectors.toList());
 
         return payments;
@@ -51,7 +56,12 @@ public class PaymentService {
 
         customerRepository.findById(userId).orElseThrow(NotExistCustomer::new);
 
-        Payment payment = paymentRequest.toEntity();
+        Payment payment = Payment.builder()
+                .house(paymentRequest.getHouse())
+                .reservation(paymentRequest.getReservation())
+                .price(paymentRequest.getPrice())
+                .requestDay(paymentRequest.getRequestDay())
+                .build();
 
         paymentRepository.save(payment);
     }
