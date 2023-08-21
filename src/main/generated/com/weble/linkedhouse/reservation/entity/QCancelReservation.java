@@ -28,6 +28,8 @@ public class QCancelReservation extends EntityPathBase<CancelReservation> {
 
     public final DateTimePath<java.time.LocalDateTime> checkoutDate = createDateTime("checkoutDate", java.time.LocalDateTime.class);
 
+    public final com.weble.linkedhouse.customer.entity.QCustomer customer;
+
     public final QReservation reservation;
 
     public final NumberPath<Integer> reservationNum = createNumber("reservationNum", Integer.class);
@@ -50,6 +52,7 @@ public class QCancelReservation extends EntityPathBase<CancelReservation> {
 
     public QCancelReservation(Class<? extends CancelReservation> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.customer = inits.isInitialized("customer") ? new com.weble.linkedhouse.customer.entity.QCustomer(forProperty("customer"), inits.get("customer")) : null;
         this.reservation = inits.isInitialized("reservation") ? new QReservation(forProperty("reservation"), inits.get("reservation")) : null;
     }
 

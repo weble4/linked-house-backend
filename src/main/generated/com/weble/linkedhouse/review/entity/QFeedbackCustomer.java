@@ -31,7 +31,7 @@ public class QFeedbackCustomer extends EntityPathBase<FeedbackCustomer> {
 
     public final com.weble.linkedhouse.customer.entity.QCustomer customer;
 
-    public final NumberPath<Long> feedbackcustomerId = createNumber("feedbackcustomerId", Long.class);
+    public final NumberPath<Long> feedbackCustomerId = createNumber("feedbackCustomerId", Long.class);
 
     public final com.weble.linkedhouse.house.entity.QHouse house;
 
@@ -43,7 +43,7 @@ public class QFeedbackCustomer extends EntityPathBase<FeedbackCustomer> {
 
     public final StringPath title = createString("title");
 
-    public final NumberPath<Integer> totalScore = createNumber("totalScore", Integer.class);
+    public final NumberPath<Double> totalScore = createNumber("totalScore", Double.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;

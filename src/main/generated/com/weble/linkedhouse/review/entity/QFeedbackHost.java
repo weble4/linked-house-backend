@@ -37,6 +37,8 @@ public class QFeedbackHost extends EntityPathBase<FeedbackHost> {
 
     public final NumberPath<Long> feedbackHostId = createNumber("feedbackHostId", Long.class);
 
+    public final StringPath title = createString("title");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
