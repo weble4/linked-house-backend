@@ -12,42 +12,35 @@ import java.time.LocalDateTime;
 @Getter
 public class PaymentRequestDto {
 
-    private Long paymentId;
-    private House house;
-    private Reservation reservation;
+    private Long rentalId;
+    private Long reservationId;
     private int price;
     private LocalDateTime requestDay;
 
     @Builder
-    private PaymentRequestDto(Long paymentId, House house, Reservation reservation, int price, LocalDateTime requestDay) {
-        this.paymentId = paymentId;
-        this.house = house;
-        this.reservation = reservation;
+    private PaymentRequestDto(Long rentalId, Long reservationId, int price, LocalDateTime requestDay) {
+
+        this.rentalId = rentalId;
+        this.reservationId = reservationId;
         this.price = price;
         this.requestDay = requestDay;
     }
 
     public static PaymentRequestDto from(Payment payment) {
         return new PaymentRequestDto(
-                payment.getPaymentId(),
-                payment.getHouse(),
-                payment.getReservation(),
+                payment.getHouse().getRentalId(),
+                payment.getReservation().getReservationId(),
                 payment.getPrice(),
                 payment.getRequestDay()
         );
     }
 
-    public static PaymentRequestDto of(Long paymentId, House house, Reservation reservation, int price, LocalDateTime requestDay) {
+    public static PaymentRequestDto of(Long rentalId, Long reservationId, int price, LocalDateTime requestDay) {
         return PaymentRequestDto.builder()
-                .paymentId(paymentId)
-                .house(house)
-                .reservation(reservation)
+                .rentalId(rentalId)
+                .reservationId(reservationId)
                 .price(price)
                 .requestDay(requestDay)
                 .build();
-    }
-
-    public Payment toEntity() {
-        return Payment.of(house, reservation, price, requestDay); // Pass required parameters
     }
 }

@@ -1,10 +1,8 @@
 package com.weble.linkedhouse.payment.controller;
 
-import com.weble.linkedhouse.exception.NotExistHouseException;
 import com.weble.linkedhouse.payment.dto.request.PaymentRequestDto;
 import com.weble.linkedhouse.payment.dto.response.PaymentResponseDto;
 import com.weble.linkedhouse.payment.service.PaymentService;
-import com.weble.linkedhouse.reservation.repository.ReservationRepository;
 import com.weble.linkedhouse.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,22 +21,23 @@ import java.util.List;
 public class PaymentController {
 
     private final PaymentService paymentService;
-    private final ReservationRepository reservationRepository;
 
-    @GetMapping("/{paymentId}") // 개별 결제 조회
-    public PaymentResponseDto findById(@PathVariable Long paymentId) {
-        return paymentService.findById(paymentId);
+    // 결제 단건 조회
+    @GetMapping("/{paymentId}")
+    public PaymentResponseDto findByPaymentId(@PathVariable Long paymentId) {
+
+        return paymentService.findByPaymentId(paymentId);
     }
 
-    @GetMapping// 개인 결제 내역 전체 조회
+    // 결제 전건 조회
+    @GetMapping
     public List<PaymentResponseDto> findByReservationCustomerId(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return paymentService.findByReservationCustomerId(userDetails);
     }
 
-    @PostMapping("/{rentalId}") // 결제
-    public void savePayment(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody PaymentRequestDto paymentRequestDto, @PathVariable Long rentalId) {
-        reservationRepository.findById(rentalId).orElseThrow(NotExistHouseException::new);
-        paymentService.savePayment(userDetails, paymentRequestDto);
+    // 결제 요청
+    @PostMapping("/{reservationId}")
+    public void save(@RequestBody PaymentRequestDto paymentRequest, @PathVariable Long reservationId) {
+        paymentService.save(paymentRequest, reservationId);
     }
-
 }

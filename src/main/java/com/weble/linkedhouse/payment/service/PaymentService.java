@@ -1,8 +1,9 @@
 package com.weble.linkedhouse.payment.service;
 
 import com.weble.linkedhouse.customer.repository.CustomerRepository;
-import com.weble.linkedhouse.exception.NotExistCustomer;
 import com.weble.linkedhouse.exception.NotExistPayment;
+import com.weble.linkedhouse.house.entity.House;
+import com.weble.linkedhouse.house.repository.HouseRepository;
 import com.weble.linkedhouse.payment.dto.request.PaymentRequestDto;
 import com.weble.linkedhouse.payment.dto.response.PaymentResponseDto;
 import com.weble.linkedhouse.payment.entity.Payment;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,44 +25,34 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final CustomerRepository customerRepository;
     private final ReservationRepository reservationRepository;
+    private final HouseRepository houseRepository;
 
-
-    public PaymentResponseDto findById(Long paymentId) {
-
-        Payment payment = paymentRepository.findById(paymentId).orElseThrow(NotExistPayment::new);
-
-        PaymentResponseDto dto = PaymentResponseDto.from(payment);
-        return dto;
+    // 결제 단건 조회
+    public PaymentResponseDto findByPaymentId(Long paymentId) {
+        Payment payment = paymentRepository.findByPaymentId(paymentId).orElseThrow(NotExistPayment::new);
+        PaymentResponseDto response = PaymentResponseDto.from(payment);
+        return response;
     }
 
+    // 결제 전건 조회
     public List<PaymentResponseDto> findByReservationCustomerId(UserDetailsImpl userDetails) {
-
-        List<Reservation> reservation = reservationRepository.findByCustomerCustomerId(userDetails.getUserId());
-
-        if(reservation == null) {
-            throw new NotExistPayment();
-        }
-
-        List<PaymentResponseDto> payments = paymentRepository.findByReservationCustomerId(userDetails.getUserId()).stream()
-                .map(PaymentResponseDto::from).collect(Collectors.toList());
-
-        return payments;
+        List<PaymentResponseDto> responses =  paymentRepository.findByReservationCustomerId(userDetails.getUserId()).stream().map(PaymentResponseDto::from).toList();
+        return responses;
     }
 
-    @Transactional
-    public void savePayment(UserDetailsImpl userDetails, PaymentRequestDto paymentRequest) {
-
-        Long userId = userDetails.getUserId();
-
-        customerRepository.findById(userId).orElseThrow(NotExistCustomer::new);
-
+    // 결제 요청
+    public void save(PaymentRequestDto request, Long reservationId) {
+        // paymentRepository.save(Payment.of(request.getRentalId(), request.getReservationId(), request.getPrice(), request.getRequestDay()), reservationId);
+        House house = houseRepository.findById(request.getRentalId()).orElseThrow();
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow();
         Payment payment = Payment.builder()
-                .house(paymentRequest.getHouse())
-                .reservation(paymentRequest.getReservation())
-                .price(paymentRequest.getPrice())
-                .requestDay(paymentRequest.getRequestDay())
+                .house(house)
+                .reservation(reservation)
+                .price(request.getPrice())
+                .requestDay(request.getRequestDay())
                 .build();
 
         paymentRepository.save(payment);
     }
+
 }
