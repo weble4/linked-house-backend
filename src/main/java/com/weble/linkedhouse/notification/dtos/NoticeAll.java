@@ -24,5 +24,4 @@ public class NoticeAll {
         return new NoticeAll(customerId, notificationType, notificationContent);
     }
 
-    
 }
