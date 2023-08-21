@@ -16,7 +16,7 @@ public enum ErrorMessage {
     NOT_FOUND_CUSTOMER("존재하지 않는 회원입니다."),
     NOT_FOUND_NOTIFICATION("존재하지 않는 알람입니다."),
     NOT_FOUND_ROOM("존재 하지 않는 방입니다."),
-    NOT_FOUND_PAYMENT("존재 하지 않는 결제입니다.");
+    NOT_FOUND_PAYMENT("존재 하지 않는 결제입니다."),
     NOT_FOUND_REVIEW("존재하지 않는 리뷰입니다."),
     CAN_NOT_REPORT("다른 사람에 대한 리뷰는 신고할 수 없습니다.");
 
