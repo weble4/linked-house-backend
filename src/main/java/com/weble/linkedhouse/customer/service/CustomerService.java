@@ -1,5 +1,6 @@
 package com.weble.linkedhouse.customer.service;
 
+import com.weble.linkedhouse.bookmark.repository.BookMarkRepository;
 import com.weble.linkedhouse.customer.dtos.ProfileDto;
 import com.weble.linkedhouse.customer.dtos.request.LoginRequest;
 import com.weble.linkedhouse.customer.dtos.request.PasswordFindRequest;
@@ -57,6 +58,7 @@ public class CustomerService {
     private final RedisTokenRepository redisTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final DynamicRepository dynamicRepository;
+    private final BookMarkRepository bookMarkRepository;
 
     @Value("${spring.mail.username}")
     private String emailSender;
@@ -184,6 +186,12 @@ public class CustomerService {
 
         String tableName = getTableName(userDetails);
         dynamicRepository.deleteAccount(tableName, userDetails.getUserId());
+
+
+        String bookmarkTableName = "bookmark_" + getTableName(userDetails);
+        if (bookMarkRepository.isTableExists(bookmarkTableName)) {
+            bookMarkRepository.deleteTable(bookmarkTableName);
+        }
     }
 
     @Transactional
@@ -227,10 +235,11 @@ public class CustomerService {
     }
 
     private String getTableName(UserDetailsImpl userDetails) {
+        //email 뒤를 때버리고 + 유저번호
         int idx = userDetails.getUsername().indexOf("@");
         String origin = userDetails.getUsername().substring(0, idx);
         Long userId = userDetails.getUserId();
-        return origin + "_" + String.valueOf(userId);
+        return origin + "_" + userId;
     }
 
 }

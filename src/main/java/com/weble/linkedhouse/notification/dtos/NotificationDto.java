@@ -2,9 +2,7 @@ package com.weble.linkedhouse.notification.dtos;
 
 import com.weble.linkedhouse.notification.entity.Notification;
 import com.weble.linkedhouse.notification.entity.constant.NotificationType;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 

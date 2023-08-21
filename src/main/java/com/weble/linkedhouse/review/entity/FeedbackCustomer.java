@@ -12,6 +12,9 @@ import java.util.Objects;
 @Getter
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = {
+        @Index(columnList = "createdAt")
+})
 public class FeedbackCustomer extends AuditingFields {
 
     @Id
@@ -70,8 +73,9 @@ public class FeedbackCustomer extends AuditingFields {
     }
 
     public double calculate() {
-        return (double) (scoreSatisfaction * scoreCommunication * scoreClean) / 3.0;
+        return Math.round((scoreClean * scoreCommunication * scoreSatisfaction) / 3.0 * 100.0) / 100.0;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -83,6 +87,4 @@ public class FeedbackCustomer extends AuditingFields {
     public int hashCode() {
         return Objects.hash(getFeedbackCustomerId());
     }
-
-
 }

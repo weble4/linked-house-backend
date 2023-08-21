@@ -26,12 +26,8 @@ public class DynamicRepoImpl implements DynamicRepository{
                     expected_at TIMESTAMP
                 ); """.formatted(tableName);
 
-        try {
-            jdbcTemplate.execute(createTableSql);
-            log.info("유저 삭제 테이블이 생성 되었습니다. - {}", tableName);
-        } catch (DataAccessException e) {
-            log.info("이미 존재하는 테이블입니다.");
-        }
+        jdbcTemplate.execute(createTableSql);
+        log.info("유저 삭제 테이블이 생성 되었습니다. - {}", tableName);
 
         LocalDateTime requestAt = LocalDateTime.now();
         LocalDateTime expectedAt = requestAt.plusDays(30);

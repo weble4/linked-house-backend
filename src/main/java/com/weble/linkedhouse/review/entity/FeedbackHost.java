@@ -14,6 +14,9 @@ import java.util.Objects;
 @Getter
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = {
+        @Index(columnList = "createdAt")
+})
 public class FeedbackHost extends AuditingFields {
 
     @Id
