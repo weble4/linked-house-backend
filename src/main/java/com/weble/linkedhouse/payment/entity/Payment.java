@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -43,15 +44,16 @@ public class Payment {
     @Column(name = "request_day")
     private LocalDateTime requestDay;
 
-    private Payment(House house, Reservation reservation, int price) {
+    @Builder
+    private Payment(House house, Reservation reservation, int price, LocalDateTime requestDay) {
         this.house = house;
         this.reservation = reservation;
         this.price = price;
         this.requestDay = LocalDateTime.now();
     }
 
-    public static Payment of(House house, Reservation reservation, int price) {
-        return new Payment(house, reservation, price);
+    public static Payment of(House house, Reservation reservation, int price, LocalDateTime requestDay) {
+        return new Payment(house, reservation, price, requestDay);
     }
 
 }
