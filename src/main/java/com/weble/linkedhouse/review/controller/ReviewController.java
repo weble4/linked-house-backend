@@ -31,13 +31,13 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/review")
+@RequestMapping("/api/reviews")
 public class ReviewController {
 
     private final FeedbackCustomerService feedbackCustomerService;
     private final FeedbackHostService feedbackHostService;
 
-    @PostMapping("/{customerId}")
+    @PostMapping("/hosts/{customerId}")
     @PreAuthorize("hasRole('HOST')")
     public ResponseEntity<HostReviewResponse> createHostReview(@PathVariable Long customerId,
                                                                @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -47,7 +47,7 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.CREATED).body(hostReviewResponse);
     }
 
-    @PostMapping("/{rentalId}")
+    @PostMapping("/customers/{rentalId}")
     public ResponseEntity<CustomerReviewResponse> createCustomerReview(@PathVariable Long rentalId,
                                                                        @AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                        @RequestBody CustomerReviewRequest customerReviewRequest) {
@@ -57,40 +57,40 @@ public class ReviewController {
     }
 
     // 호스트 리뷰 하나 단독 조회
-    @GetMapping("/{feedbackHostId}")
+    @GetMapping("/hosts/{feedbackHostId}")
     public ResponseEntity<HostReviewResponse> findByHostReviewId(@PathVariable Long feedbackHostId) {
         HostReviewResponse hostReviewResponse = feedbackHostService.findByHostReviewId(feedbackHostId);
         return ResponseEntity.ok().body(hostReviewResponse);
     }
 
     //고객 리뷰 하나 단독조회
-    @GetMapping("/{feedbackCustomerId}")
+    @GetMapping("/customers/{feedbackCustomerId}")
     public ResponseEntity<CustomerReviewResponse> findByCustomerId(@PathVariable Long feedbackCustomerId) {
         CustomerReviewResponse customerReviewResponse =
                 feedbackCustomerService.findByCustomerReviewId(feedbackCustomerId);
         return ResponseEntity.ok().body(customerReviewResponse);
     }
 
-    @GetMapping("/host/{customerId}")
+    @GetMapping("/all-hosts/{customerId}")
     public Page<HostReviewResponse> findAllByHostReview(@PathVariable Long customerId,
                                                         @PageableDefault(size = 10, sort = "createdAt", direction = DESC) Pageable pageable) {
         return feedbackHostService.findAllByHostReview(customerId, pageable);
     }
 
-    @GetMapping("/customer/{customerId}")
+    @GetMapping("/all-customers/{customerId}")
     public Page<CustomerReviewResponse> findAllByCustomerReview(@PathVariable Long customerId,
                                                                 @PageableDefault(size = 10, sort = "createdAt", direction = DESC) Pageable pageable) {
         return feedbackCustomerService.findAllByCustomerReview(customerId, pageable);
     }
 
-    @GetMapping("/{rentalId}")
+    @GetMapping("/houses/{rentalId}")
     public Page<CustomerReviewResponse> findAllHouseReview(@PathVariable Long rentalId,
                                                            @PageableDefault(size = 10, sort = "createdAt", direction = DESC) Pageable pageable) {
         return feedbackCustomerService.findAllHouseReview(rentalId, pageable);
     }
 
 
-    @PatchMapping("/{feedbackCustomerId}")
+    @PatchMapping("/customers/{feedbackCustomerId}")
     public ResponseEntity<CustomerReviewResponse> updateCustomerReview(@PathVariable Long feedbackCustomerId,
                                                                        @RequestBody CustomerReviewRequest customerReviewRequest) {
         CustomerReviewResponse customerReviewResponse = feedbackCustomerService
@@ -99,20 +99,21 @@ public class ReviewController {
         return ResponseEntity.ok().body(customerReviewResponse);
     }
 
-    @PatchMapping("/{feedbackHostId}")
+    @PatchMapping("/hosts/{feedbackHostId}")
+    @PreAuthorize("hasRole('HOST')")
     public ResponseEntity<HostReviewResponse> updateHostReview(@PathVariable Long feedbackHostId,
                                                                @RequestBody HostReviewRequest hostReviewRequest){
         HostReviewResponse hostReviewResponse = feedbackHostService.updateHostReview(feedbackHostId, hostReviewRequest);
         return ResponseEntity.ok().body(hostReviewResponse);
     }
 
-    @DeleteMapping("/{feedbackCustomerId}")
+    @DeleteMapping("/customers/{feedbackCustomerId}")
     public ResponseEntity<String> deleteCustomerReview(@PathVariable Long feedbackCustomerId) {
         feedbackCustomerService.deleteCustomerReview(feedbackCustomerId);
         return ResponseEntity.ok().body("삭제 되었습니다.");
     }
 
-    @DeleteMapping("/{feedbackHostId}")
+    @DeleteMapping("/hosts/{feedbackHostId}")
     public ResponseEntity<String> deleteHostReview(@PathVariable Long feedbackHostId) {
         feedbackHostService.deleteHostReview(feedbackHostId);
         return ResponseEntity.ok().body("삭제 되었습니다.");

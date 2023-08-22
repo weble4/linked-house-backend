@@ -36,13 +36,13 @@ public class HouseHostService {
     public Page<HouseResponseDto> findMyRegistrationHouseList(UserDetailsImpl userDetails, Pageable pageable) {
 
         Long customerId = userDetails.getUserId();
-        customerRepository.findById(customerId).orElseThrow(NotExistCustomer::new);
+        customerRepository.findByIdWithProfile(customerId).orElseThrow(NotExistCustomer::new);
 
         return houseRepository.findByCustomerCustomerId(customerId, pageable).map(HouseResponseDto::from);
     }
 
     public HouseResponseDto findMyRegistrationHouse(Long rentalId) {
-        return houseRepository.findById(rentalId).map(HouseResponseDto::from)
+        return houseRepository.findByIdWithCustomer(rentalId).map(HouseResponseDto::from)
                 .orElseThrow(NotExistHouseException::new);
     }
 
@@ -64,10 +64,10 @@ public class HouseHostService {
     }
 
 
-    //개선 방법이 있다면 개선필요!!
     @Transactional
     public HouseResponseDto updateHouse(List<MultipartFile> images, UpdateHouseRequestDto update) {
-        House house = houseRepository.findById(update.getRentalId())
+
+        House house = houseRepository.findByIdWithCustomer(update.getRentalId())
                 .orElseThrow(NotExistHouseException::new);
 
         house.updateHouse(
@@ -81,29 +81,23 @@ public class HouseHostService {
         );
 
         CreateFile createFile = new CreateFile();
-
-        List<HouseImage> houseImageList = houseImageRepository.findByHouseRentalId(house.getRentalId());
-
-        List<String> collect = houseImageList.stream().map(HouseImage::getImagePath)
+        List<HouseImage> saveImagePath = house.getImagePath();
+        List<String> collect = saveImagePath.stream().map(HouseImage::getImagePath)
                 .collect(Collectors.toList());
+        saveImagePath.clear();
+        houseImageRepository.deleteByHouseRentalId(house.getRentalId());
+        createFile.deleteImageFile(collect);
+        List<HouseImage> newList = new ArrayList<>();
 
-        //이미지파일이 null 일때 이미지 삭제
-        if (images == null) {
-            houseImageList.clear();
-        } else {
+        if (images != null) {
             List<String> imageList = createFile.saveHouseImage(images, house.getRentalId());
-            houseImageList.clear();
             for (String imagePath : imageList) {
                 HouseImage newImage = HouseImage.of(house, imagePath);
+                newList.add(newImage);
                 house.addImagePath(newImage);
-                houseImageList.add(newImage);
             }
+            houseImageRepository.saveAll(newList);
         }
-        //새로인 이미지 파일 저장
-        houseImageRepository.saveAll(houseImageList);
-        //실제 기존 파일들 삭제
-        createFile.deleteImageFile(collect);
-
         return HouseResponseDto.from(house);
     }
 

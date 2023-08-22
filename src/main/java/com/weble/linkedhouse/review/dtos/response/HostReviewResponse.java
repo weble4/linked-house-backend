@@ -1,6 +1,5 @@
 package com.weble.linkedhouse.review.dtos.response;
 
-import com.weble.linkedhouse.customer.dtos.CustomerDto;
 import com.weble.linkedhouse.review.entity.FeedbackHost;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,8 +9,9 @@ import java.time.LocalDateTime;
 @Getter                                  // responseDTO의 데이터를 호출하기 위해 @Getter가 필요함
 public class HostReviewResponse {
 
-    private CustomerDto writer;
-    private CustomerDto customerDto;
+    private Long feedbackHostId;
+    private Long writerId;
+    private Long customerId;
     private String title;
     private String content;
     private int attitude;
@@ -20,10 +20,11 @@ public class HostReviewResponse {
     private LocalDateTime updatedAt;
 
     @Builder
-    private HostReviewResponse(CustomerDto writer, CustomerDto customerDto, String title, String content,
+    private HostReviewResponse(Long feedbackHostId, Long writer, Long customerId, String title, String content,
                                int attitude, int damageDegree, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.writer = writer;
-        this.customerDto = customerDto;
+        this.feedbackHostId = feedbackHostId;
+        this.writerId = writer;
+        this.customerId = customerId;
         this.title = title;
         this.content = content;
         this.attitude = attitude;
@@ -32,11 +33,12 @@ public class HostReviewResponse {
         this.updatedAt = updatedAt;
     }
 
-    public static HostReviewResponse of(CustomerDto writer, CustomerDto customerDto, String title, String content,
+    public static HostReviewResponse of(Long feedbackHostId, Long writerId, Long customerId, String title, String content,
                                         int attitude, int damageDegree, LocalDateTime createdAt, LocalDateTime updatedAt) {
         return HostReviewResponse.builder()
-                .writer(writer)
-                .customerDto(customerDto)
+                .feedbackHostId(feedbackHostId)
+                .writer(writerId)
+                .customerId(customerId)
                 .title(title)
                 .content(content)
                 .attitude(attitude)
@@ -48,8 +50,9 @@ public class HostReviewResponse {
 
     public static HostReviewResponse from(FeedbackHost feedbackHost){
         return HostReviewResponse.builder()
-                .writer(CustomerDto.from(feedbackHost.getWriter()))
-                .customerDto(CustomerDto.from(feedbackHost.getCustomer()))
+                .feedbackHostId(feedbackHost.getFeedbackHostId())
+                .writer(feedbackHost.getWriter().getCustomerId())
+                .customerId(feedbackHost.getCustomer().getCustomerId())
                 .title(feedbackHost.getTitle())
                 .content(feedbackHost.getContent())
                 .attitude(feedbackHost.getAttitude())

@@ -3,6 +3,8 @@ package com.weble.linkedhouse.house.repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.weble.linkedhouse.customer.entity.QCustomer;
+import com.weble.linkedhouse.customer.entity.QCustomerProfile;
 import com.weble.linkedhouse.house.dto.FilterKeyword;
 import com.weble.linkedhouse.house.dto.SearchKeyword;
 import com.weble.linkedhouse.house.entity.House;
@@ -12,7 +14,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
+import java.util.Optional;
 
+import static com.weble.linkedhouse.customer.entity.QCustomer.*;
+import static com.weble.linkedhouse.customer.entity.QCustomerProfile.*;
 import static com.weble.linkedhouse.house.entity.QHouse.house;
 import static com.weble.linkedhouse.house.entity.QHouseImage.houseImage;
 
@@ -21,11 +26,23 @@ public class HouseRepositoryCustomImpl implements HouseRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
+
+    @Override
+    public Optional<House> findByIdWithCustomer(Long rentalId) {
+        return Optional.ofNullable(queryFactory.selectFrom(house)
+                .leftJoin(house.imagePath, houseImage)
+                .leftJoin(house.customer, customer).fetchJoin()
+                .leftJoin(customer.role).fetchJoin()
+                .leftJoin(customer.customerProfile, customerProfile).fetchJoin()
+                .where(house.rentalId.eq(rentalId))
+                .fetchOne());
+    }
+
     @Override
     public Page<House> findAllHouse(FilterKeyword filterKeyword, SearchKeyword searchKeyword, Pageable pageable) {
         List<House> content = queryFactory
                 .selectFrom(house)
-                .leftJoin(house.imagePath, houseImage)
+                .leftJoin(house.imagePath, houseImage).fetchJoin()
                 .where(locationFilterEq(filterKeyword),
                         searchKeywordEq(searchKeyword)
                 )

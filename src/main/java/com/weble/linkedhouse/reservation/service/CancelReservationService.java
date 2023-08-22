@@ -19,10 +19,6 @@ public class CancelReservationService {
 
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NotExistHouseException::new);
 
-        if (reservation == null) {
-            throw new NotExistHouseException();
-        }
-
         CancelReservation cancelReservation = CancelReservation.of(
                 reservation,
                 reservation.getCustomer(),
@@ -32,7 +28,6 @@ public class CancelReservationService {
         );
 
         cancelReservationRepository.save(cancelReservation);
-
         reservationRepository.delete(reservation);
     }
 
@@ -49,7 +44,6 @@ public class CancelReservationService {
         );
 
         cancelReservationRepository.save(cancelReservation);
-
         reservationRepository.delete(reservation);
     }
 }

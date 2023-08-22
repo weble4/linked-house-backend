@@ -71,7 +71,7 @@ public class HouseHostController {
     }
 
     @DeleteMapping("/{rentalId}")
-    public void delete(Long rentalId) {
+    public void delete(@PathVariable Long rentalId) {
         houseHostService.delete(rentalId);
     }
 

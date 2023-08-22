@@ -61,13 +61,15 @@ public class FeedbackHostService {
                 .map(HostReviewResponse::from);
     }
 
+    @Transactional
     public void deleteHostReview(Long feedbackHostId) {
         feedbackHostRepository.deleteById(feedbackHostId);
     }
 
     @Transactional
     public HostReviewResponse updateHostReview(Long feedbackHostId, HostReviewRequest request) {
-        FeedbackHost feedbackHost = feedbackHostRepository.findById(feedbackHostId).orElseThrow();
+        FeedbackHost feedbackHost = feedbackHostRepository.findById(feedbackHostId)
+                .orElseThrow(NotExistReview::new);
 
         feedbackHost.updateReview(
                 request.getContent(),

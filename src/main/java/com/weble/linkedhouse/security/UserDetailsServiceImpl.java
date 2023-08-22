@@ -3,7 +3,6 @@ package com.weble.linkedhouse.security;
 import com.weble.linkedhouse.customer.dtos.ProfileDto;
 import com.weble.linkedhouse.customer.entity.Customer;
 import com.weble.linkedhouse.customer.repository.CustomerRepository;
-import com.weble.linkedhouse.customer.repository.ProfileRepository;
 import com.weble.linkedhouse.exception.NotExistCustomer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String customerEmail) throws UsernameNotFoundException {
-        ProfileDto profile = customerRepository.findByCustomerEmailWithCustomerProfile(customerEmail)
+        ProfileDto profile = customerRepository.findByCustomerEmailWithProfile(customerEmail)
                 .map(Customer::getCustomerProfile)
                 .map(ProfileDto::from)
                 .orElseThrow(NotExistCustomer::new);

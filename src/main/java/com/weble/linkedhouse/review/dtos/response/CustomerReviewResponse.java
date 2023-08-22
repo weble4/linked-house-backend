@@ -1,7 +1,5 @@
 package com.weble.linkedhouse.review.dtos.response;
 
-import com.weble.linkedhouse.customer.dtos.CustomerDto;
-import com.weble.linkedhouse.house.entity.House;
 import com.weble.linkedhouse.review.entity.FeedbackCustomer;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,8 +9,10 @@ import java.time.LocalDateTime;
 
 @Getter
 public class CustomerReviewResponse {
-    private CustomerDto customerDto;
-    private House house;
+
+    private Long feedbackCustomerId;
+    private Long customerId;
+    private Long rentalId;
     private String title;
     private String content;
     private int scoreClean;
@@ -23,11 +23,12 @@ public class CustomerReviewResponse {
     private LocalDateTime updatedAt;
 
     @Builder
-    private CustomerReviewResponse(CustomerDto customerDto, House house, String title, String content,
+    private CustomerReviewResponse(Long feedbackCustomerId, Long customerId, Long rentalId, String title, String content,
                                   int scoreClean, int scoreCommunication, int scoreSatisfaction, int totalScore,
                                   LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.customerDto = customerDto;
-        this.house = house;
+        this.feedbackCustomerId = feedbackCustomerId;
+        this.customerId = customerId;
+        this.rentalId = rentalId;
         this.title = title;
         this.content = content;
         this.scoreClean = scoreClean;
@@ -38,12 +39,13 @@ public class CustomerReviewResponse {
         this.updatedAt = updatedAt;
     }
 
-    public CustomerReviewResponse of(CustomerDto customerDto, House house, String title, String content,
+    public CustomerReviewResponse of(Long feedbackCustomerId, Long customerId, Long rentalId, String title, String content,
                                      int scoreClean, int scoreCommunication, int scoreSatisfaction, int totalScore,
                                      LocalDateTime createdAt, LocalDateTime updatedAt) {
         return CustomerReviewResponse.builder()
-                .customerDto(customerDto)
-                .house(house)
+                .feedbackCustomerId(feedbackCustomerId)
+                .customerId(customerId)
+                .rentalId(rentalId)
                 .title(title)
                 .content(content)
                 .scoreClean(scoreClean)
@@ -57,8 +59,9 @@ public class CustomerReviewResponse {
 
     public static CustomerReviewResponse from(FeedbackCustomer feedbackCustomer){
         return CustomerReviewResponse.builder()
-                .customerDto(CustomerDto.from(feedbackCustomer.getCustomer()))
-                .house(feedbackCustomer.getHouse())
+                .feedbackCustomerId(feedbackCustomer.getFeedbackCustomerId())
+                .customerId(feedbackCustomer.getCustomer().getCustomerId())
+                .rentalId(feedbackCustomer.getHouse().getRentalId())
                 .title(feedbackCustomer.getTitle())
                 .content(feedbackCustomer.getContent())
                 .scoreClean(feedbackCustomer.getScoreClean())

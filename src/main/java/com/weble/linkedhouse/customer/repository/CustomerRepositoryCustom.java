@@ -6,5 +6,7 @@ import java.util.Optional;
 
 public interface CustomerRepositoryCustom {
 
-    Optional<Customer> findByCustomerEmailWithCustomerProfile(String customerEmail);
+
+    Optional<Customer> findByCustomerEmailWithProfile(String customerEmail);
+    Optional<Customer> findByIdWithProfile(Long customerId);
 }

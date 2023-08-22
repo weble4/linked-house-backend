@@ -3,9 +3,9 @@ package com.weble.linkedhouse.customer.entity.constant;
 import lombok.Getter;
 
 public enum Role {
-    CUSTOMER("ROLE_CUSTOMER"),
-    HOST("ROLE_HOST"),
-    ADMIN("ROLE_ADMIN");
+    ROLE_CUSTOMER("ROLE_CUSTOMER"),
+    ROLE_HOST("ROLE_HOST"),
+    ROLE_ADMIN("ROLE_ADMIN");
 
     @Getter
     private final String reason;

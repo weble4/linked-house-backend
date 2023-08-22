@@ -30,7 +30,7 @@ public class ReportService {
         FeedbackHost feedbackHost = feedbackHostRepository.findById(reportRequest.getFeedbackHostId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        Customer customer = customerRepository.findById(reportRequest.getReporterId())
+        Customer customer = customerRepository.findById(userDetails.getUserId())
                 .orElseThrow(NotExistCustomer::new);
 
         if (!feedbackHost.getCustomer().getCustomerId().equals(userDetails.getUserId())) {
@@ -47,7 +47,7 @@ public class ReportService {
         FeedbackCustomer feedbackCustomer = feedbackCustomerRepository.findById(reportRequest.getFeedbackCustomerId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        Customer customer = customerRepository.findById(reportRequest.getReporterId())
+        Customer customer = customerRepository.findById(userDetails.getUserId())
                 .orElseThrow(NotExistCustomer::new);
 
         reportRepository.save(Report.of(

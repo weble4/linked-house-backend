@@ -56,7 +56,6 @@ public class FeedbackCustomer extends AuditingFields {
         this.scoreClean = scoreClean;
         this.scoreCommunication = scoreCommunication;
         this.scoreSatisfaction = scoreSatisfaction;
-        this.totalScore = calculate();
     }
 
     public static FeedbackCustomer of(Customer customer, House house, String title, String content,
@@ -72,8 +71,8 @@ public class FeedbackCustomer extends AuditingFields {
         this.scoreSatisfaction = scoreSatisfaction;
     }
 
-    public double calculate() {
-        return Math.round((scoreClean * scoreCommunication * scoreSatisfaction) / 3.0 * 100.0) / 100.0;
+    public void calculate() {
+        this.totalScore = Math.round((scoreClean + scoreCommunication + scoreSatisfaction) / 3.0 * 100.0) / 100.0;
     }
 
     @Override

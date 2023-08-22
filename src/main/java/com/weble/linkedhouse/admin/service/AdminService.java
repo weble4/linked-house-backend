@@ -16,6 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -26,17 +29,18 @@ public class AdminService {
     private final CustomerRepository customerRepository;
     private final FeedbackHostRepository feedbackHostRepository;
 
+    @Transactional
     public void informNotification(NoticeAll request) {
 
+        List<Notification> notificationList = new ArrayList<>();
         for (int i = 0; i < request.getCustomerId().size(); i++) {
             Customer customer = customerRepository.findById(request.getCustomerId().get(i))
                     .orElseThrow(NotExistCustomer::new);
 
-            Notification save = notificationRepository.save(Notification.of(
-                    customer,
-                    request.getNotificationType(),
-                    request.getNotificationContent()));
+            Notification notification = Notification.of(customer, request.getNotificationContent());
+            notificationList.add(notification);
         }
+        notificationRepository.saveAll(notificationList);
     }
 
     public Page<HostReviewResponse> findAllByHostReview(Long customerId, Pageable pageable) {
@@ -50,7 +54,8 @@ public class AdminService {
                 .orElseThrow(NotExistReview::new);
     }
 
-        public void deleteHostReviewId(Long feedbackHostId) {
+    @Transactional
+    public void deleteHostReviewId(Long feedbackHostId) {
         feedbackHostRepository.deleteById(feedbackHostId);
     }
 
