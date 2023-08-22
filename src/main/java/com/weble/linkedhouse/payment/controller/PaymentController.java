@@ -31,8 +31,8 @@ public class PaymentController {
 
     // 결제 전건 조회
     @GetMapping
-    public List<PaymentResponseDto> findByReservationCustomerId(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return paymentService.findByReservationCustomerId(userDetails);
+    public List<PaymentResponseDto> findByReservationCustomerCustomerId(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return paymentService.findByReservationCustomerCustomerId(userDetails);
     }
 
     // 결제 요청
