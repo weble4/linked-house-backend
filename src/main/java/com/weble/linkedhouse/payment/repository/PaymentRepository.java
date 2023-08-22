@@ -15,5 +15,5 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     Optional<Payment> findByPaymentId(Long reservationId);
 
     // 결제 내역에 대한 전건 조회 (게스트)
-    List<Payment> findByReservationCustomerId(Long customerId);
+    List<Payment> findByReservationCustomerCustomerId(Long customerId);
 }

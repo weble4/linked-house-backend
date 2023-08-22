@@ -35,8 +35,8 @@ public class PaymentService {
     }
 
     // 결제 전건 조회
-    public List<PaymentResponseDto> findByReservationCustomerId(UserDetailsImpl userDetails) {
-        List<PaymentResponseDto> responses =  paymentRepository.findByReservationCustomerId(userDetails.getUserId()).stream().map(PaymentResponseDto::from).toList();
+    public List<PaymentResponseDto> findByReservationCustomerCustomerId(UserDetailsImpl userDetails) {
+        List<PaymentResponseDto> responses =  paymentRepository.findByReservationCustomerCustomerId(userDetails.getUserId()).stream().map(PaymentResponseDto::from).toList();
         return responses;
     }
 
