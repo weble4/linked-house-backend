@@ -12,12 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
@@ -35,7 +30,7 @@ public class NotificationController {
     }
 
     @GetMapping("/{notificationId}")
-    public ResponseEntity<NotificationDto> getSingleNotification (@PathVariable Long notificationId) {
+    public ResponseEntity<NotificationDto> getSingleNotification(@PathVariable Long notificationId) {
         NotificationDto notificationDto = notificationService.getSingleNotification(notificationId);
         return ResponseEntity.ok(notificationDto);
     }
@@ -44,5 +39,11 @@ public class NotificationController {
     public ResponseEntity<NotificationDto> createNotification(@RequestBody NotificationCreateRequest requestDto) {
         NotificationDto notification = notificationService.createNotificationDto(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(notification);
+    }
+
+    @DeleteMapping("/{notificationId}")
+    public ResponseEntity<String> deleteNotification(@PathVariable Long notificationId) {
+        notificationService.deleteNotification(notificationId);
+        return ResponseEntity.ok().body("삭제완료");
     }
 }

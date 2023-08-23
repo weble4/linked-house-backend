@@ -14,14 +14,13 @@ public class CancelReservationController {
 
     private final CancelReservationService cancelReservationService;
 
-    @DeleteMapping("/customer/{reservationId}")
+    @DeleteMapping("/host/{reservationId}")
     public void deleteReservationByHost(@PathVariable Long reservationId) {
         cancelReservationService.deleteReservationByHost(reservationId);
     }
 
-    @DeleteMapping("/host/{reservationId}")
+    @DeleteMapping("/customer/{reservationId}")
     public void deleteReservationByCustomer(@PathVariable Long reservationId) {
         cancelReservationService.deleteReservationByCustomer(reservationId);
     }
-
 }

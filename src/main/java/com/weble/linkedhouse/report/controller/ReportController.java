@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/report")
+@RequestMapping("/api/reports")
 @RequiredArgsConstructor
 public class ReportController {
 
     private final ReportService reportService;
 
-    @PostMapping("/{feedbackCustomerId}")
+    @PostMapping("/customers/{feedbackCustomerId}")
     public ResponseEntity<String> customerReviewReport(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                        @RequestBody CustomerReviewReportRequest reportRequest) {
 
@@ -27,7 +27,7 @@ public class ReportController {
         return ResponseEntity.ok("신고되었습니다.");
     }
 
-    @PostMapping("/{feedbackHostId}")
+    @PostMapping("/hosts/{feedbackHostId}")
     public ResponseEntity<String> hostReviewReport(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                    @RequestBody HostReviewReportRequest reportRequest) {
 

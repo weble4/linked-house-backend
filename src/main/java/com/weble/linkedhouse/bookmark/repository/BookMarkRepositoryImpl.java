@@ -2,26 +2,31 @@ package com.weble.linkedhouse.bookmark.repository;
 
 import com.weble.linkedhouse.bookmark.dto.BookmarkResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class BookMarkRepositoryImpl implements BookMarkRepository{
 
     private final JdbcTemplate jdbcTemplate;
 
-    //table 네임 - bookmark_email(@앞부분)_id
     @Override
     public boolean isTableExists(String tableName) {
-        String checkTableQuery = """
-                SELECT COUNT(*)
-                FROM information_schema.tables
-                WHERE table_name = ?""";
-        Integer result = jdbcTemplate.queryForObject(checkTableQuery, Integer.class, tableName);
-        return result != null && result > 0;
+        String checkTableQuery = "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = ?";
+
+        //실제 DB에서는 소문자로 테이블 이름이 들어갈 시 생성은 상관이 없었지만, 검색에서는 되지 않음
+        //uppercase가 되어야 테이블을 제대로 검색 하였다.
+
+        Integer count = jdbcTemplate.queryForObject(checkTableQuery, Integer.class, tableName.toUpperCase());
+
+        log.info("테이블 개수 : {}", count);
+
+        return count != null && count > 0;
     }
 
     @Override

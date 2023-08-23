@@ -63,6 +63,13 @@ public class CustomerService {
     @Value("${spring.mail.username}")
     private String emailSender;
 
+    public ProfileDto getCustomer(Long customerId) {
+        return customerRepository.findByIdWithProfile(customerId)
+                .map(Customer::getCustomerProfile)
+                .map(ProfileDto::from)
+                .orElseThrow(NotExistCustomer::new);
+    }
+
     @Transactional
     public SignupResponse saveUser(SignupRequest signupRequest) {
         log.info("saveUser service");
@@ -120,13 +127,13 @@ public class CustomerService {
 
     @Transactional
     public void applyHost(UserDetailsImpl userDetails) {
-        Customer customer = customerRepository.findByCustomerEmailWithCustomerProfile(userDetails.getUsername())
+        Customer customer = customerRepository.findByIdWithProfile(userDetails.getUserId())
                 .orElseThrow(NotExistCustomer::new);
 
-        if (customer.getRole().contains(Role.HOST)) {
+        if (customer.getRole().contains(Role.ROLE_HOST)) {
             throw new AlreadyHasRole();
         }
-        customer.addRole(Role.HOST);
+        customer.addRole(Role.ROLE_HOST);
     }
 
     public boolean checkEmail(String email) {
@@ -134,7 +141,7 @@ public class CustomerService {
     }
 
     public ProfileDto getCustomerProfile(UserDetailsImpl userDetails) {
-        Customer customer = customerRepository.findByCustomerEmailWithCustomerProfile(userDetails.getUsername())
+        Customer customer = customerRepository.findByIdWithProfile(userDetails.getUserId())
                 .orElseThrow(NotExistCustomer::new);
         return ProfileDto.from(customer.getCustomerProfile());
     }
@@ -143,7 +150,7 @@ public class CustomerService {
     public ProfileDto updateProfile(UserDetailsImpl userDetails, UpdateRequest updateRequest, MultipartFile image) {
         CreateFile createFile = new CreateFile();
 
-        Customer customer = customerRepository.findByCustomerEmailWithCustomerProfile(userDetails.getUsername())
+        Customer customer = customerRepository.findByIdWithProfile(userDetails.getUserId())
                 .orElseThrow(NotExistCustomer::new);
 
         String imagePath;
@@ -186,7 +193,6 @@ public class CustomerService {
 
         String tableName = getTableName(userDetails);
         dynamicRepository.deleteAccount(tableName, userDetails.getUserId());
-
 
         String bookmarkTableName = "bookmark_" + getTableName(userDetails);
         if (bookMarkRepository.isTableExists(bookmarkTableName)) {

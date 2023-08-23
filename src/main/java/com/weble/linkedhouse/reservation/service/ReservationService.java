@@ -1,9 +1,13 @@
 package com.weble.linkedhouse.reservation.service;
 
+import com.weble.linkedhouse.customer.entity.Customer;
 import com.weble.linkedhouse.customer.repository.CustomerRepository;
 import com.weble.linkedhouse.exception.NotExistHouseException;
+import com.weble.linkedhouse.house.entity.House;
+import com.weble.linkedhouse.house.repository.HouseRepository;
 import com.weble.linkedhouse.reservation.dto.request.ReservationRequest;
 import com.weble.linkedhouse.reservation.dto.response.ReservationResponse;
+import com.weble.linkedhouse.reservation.entity.Reservation;
 import com.weble.linkedhouse.reservation.repository.ReservationRepository;
 import com.weble.linkedhouse.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -17,32 +21,40 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final CustomerRepository customerRepository;
+    private final HouseRepository houseRepository;
 
     public List<ReservationResponse> findByCustomerCustomerId(Long customerId) {
-        List<ReservationResponse> responses = reservationRepository.findByCustomerCustomerId(customerId).stream()
+        return reservationRepository.findByCustomerCustomerId(customerId).stream()
                 .map(ReservationResponse::from).toList();
-        return responses;
     }
 
     public List<ReservationResponse> findByHouseRentalId(Long rentalId) {
-        List<ReservationResponse> responses = reservationRepository.findByHouseRentalId(rentalId).stream()
+        return reservationRepository.findByHouseRentalId(rentalId).stream()
                 .map(ReservationResponse::from).toList();
-        return responses;
     }
 
     // 게스트나 호스트가 개별 예약에 대한 상세조회
     public ReservationResponse findById(Long reservationId) {
-        ReservationResponse response = ReservationResponse.from(reservationRepository.findById(reservationId).orElseThrow(NotExistHouseException::new));
-        return response;
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(NotExistHouseException::new);
+        return ReservationResponse.from(reservation);
     }
-
 
 
     public void createReservation(UserDetailsImpl userDetails, ReservationRequest request, Long rentalId) {
         Long customerId = userDetails.getUserId();
 
-        customerRepository.findById(customerId).orElseThrow(NotExistHouseException::new);
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(NotExistHouseException::new);
+        House house = houseRepository.findById(rentalId)
+                .orElseThrow(NotExistHouseException::new);
 
-        reservationRepository.save(request.toEntity());
+        Reservation reservation = Reservation.of(house,
+                customer,
+                request.getCheckinDate(),
+                request.getCheckoutDate(),
+                request.getReservationNum());
+
+        reservationRepository.save(reservation);
     }
 }

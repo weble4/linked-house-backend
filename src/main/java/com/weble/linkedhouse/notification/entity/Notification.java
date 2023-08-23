@@ -38,7 +38,7 @@ public class Notification extends AuditingFields {
     private Customer customer;
 
     @Column(name = "notification_type", nullable = false,
-            columnDefinition = "VARCHAR(50) DEFAULT 'CHECK'")
+            columnDefinition = "VARCHAR(50) DEFAULT 'alert'")
     @Enumerated(EnumType.STRING)
     private NotificationType notificationType;
 
@@ -46,13 +46,17 @@ public class Notification extends AuditingFields {
     private String notificationContent;
 
     @Builder
-    private Notification(Customer customer, NotificationType notificationType, String notificationContent) {
+    private Notification(Customer customer, String notificationContent) {
         this.customer = customer;
-        this.notificationType = notificationType;
+        this.notificationType = NotificationType.ALERT;
         this.notificationContent = notificationContent;
     }
 
-    public static Notification of(Customer customer, NotificationType notificationType, String notificationContent){
-        return new Notification(customer, notificationType, notificationContent);
+    public static Notification of(Customer customer, String notificationContent){
+        return new Notification(customer, notificationContent);
+    }
+
+    public void updateCheck() {
+        this.notificationType = NotificationType.CHECK;
     }
 }

@@ -14,12 +14,24 @@ public class CustomerRepositoryImpl implements CustomerRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Optional<Customer> findByCustomerEmailWithCustomerProfile(String customerEmail) {
+    public Optional<Customer> findByCustomerEmailWithProfile(String customerEmail) {
         Customer result = queryFactory
                 .selectFrom(customer)
                 .leftJoin(customer.customerProfile).fetchJoin()
                 .leftJoin(customer.role).fetchJoin()
                 .where(customer.customerEmail.eq(customerEmail))
+                .fetchOne();
+
+        return Optional.ofNullable(result);
+    }
+
+    @Override
+    public Optional<Customer> findByIdWithProfile(Long customerId) {
+        Customer result = queryFactory
+                .selectFrom(customer)
+                .leftJoin(customer.customerProfile).fetchJoin()
+                .leftJoin(customer.role).fetchJoin()
+                .where(customer.customerId.eq(customerId))
                 .fetchOne();
 
         return Optional.ofNullable(result);

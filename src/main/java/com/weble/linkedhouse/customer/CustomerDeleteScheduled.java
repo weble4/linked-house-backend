@@ -32,8 +32,8 @@ public class CustomerDeleteScheduled {
     }
 
     private List<String> getDeleteTableNames() {
-        String queryTableNames = "SELECT table_name FROM information_schema.tables WHERE table_name LIKE 'delete_%'";
-        return jdbcTemplate.queryForList(queryTableNames, String.class);
+        String queryTableNames = "SELECT table_name FROM information_schema.tables WHERE table_name LIKE 'DELETE_%'";
+        return jdbcTemplate.queryForList(queryTableNames.toUpperCase(), String.class);
     }
 
     private void deleteCustomerAndTable(String tableName) {
@@ -58,7 +58,7 @@ public class CustomerDeleteScheduled {
     }
 
     private void dropTable(String tableName) {
-        String dropTableSql = "DROP TABLE " + tableName;
+        String dropTableSql = "DROP TABLE " + tableName.toUpperCase();
         jdbcTemplate.update(dropTableSql);
     }
 }

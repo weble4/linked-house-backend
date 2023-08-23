@@ -1,5 +1,7 @@
 package com.weble.linkedhouse.util;
 
+import com.weble.linkedhouse.util.logtrace.LogTrace;
+import com.weble.linkedhouse.util.logtrace.TraceStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -11,19 +13,32 @@ import org.springframework.stereotype.Component;
 @Component
 public class UseTimeAop {
 
-    @Around("execution(public * com.weble.linkedhouse..*Controller..*(..))")
+    private final LogTrace logTrace;
+
+    public UseTimeAop(LogTrace logTrace) {
+        this.logTrace = logTrace;
+    }
+
+    @Around("execution(public * com.weble.linkedhouse..*Controller..*(..)) || " +
+            "execution(public * com.weble.linkedhouse..*Service..*(..)) || " +
+            "execution(public * com.weble.linkedhouse..*Repository..*(..))")
     public Object execute(ProceedingJoinPoint joinPoint) throws Throwable {
+        TraceStatus status = null;
 
         long startTime = System.currentTimeMillis();
 
         try {
-            Object output = joinPoint.proceed();
-            return output;
-        } finally {
-            long endTime = System.currentTimeMillis();
-            long runTime = endTime - startTime;
+            String message = joinPoint.getSignature().toShortString();
+            status = logTrace.begin(message);
 
-            log.info("[[   APIUseTime   >>>   " + runTime + "   ]]   ");
+            Object result = joinPoint.proceed();
+
+            logTrace.end(status);
+
+            return result;
+        }  catch (Exception e){
+            logTrace.exception(status, e);
+            throw e;
         }
     }
 }

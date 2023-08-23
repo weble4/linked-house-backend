@@ -6,12 +6,10 @@ import lombok.Getter;
 @Getter
 public class HostReviewReportRequest {
 
-    private Long reporterId;
     private Long feedbackHostId;
     private String content;
 
-    private HostReviewReportRequest(Long reporterId, Long feedbackHostId, String content) {
-        this.reporterId = reporterId;
+    private HostReviewReportRequest(Long feedbackHostId, String content) {
         this.feedbackHostId = feedbackHostId;
         this.content = content;
     }
@@ -19,7 +17,6 @@ public class HostReviewReportRequest {
     public static HostReviewReportRequest from(Report report) {
         return new HostReviewReportRequest(
                 report.getReporter().getCustomerId(),
-                report.getFeedbackHost().getFeedbackHostId(),
                 report.getContent());
     }
 }

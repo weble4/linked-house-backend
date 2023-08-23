@@ -1,18 +1,18 @@
 package com.weble.linkedhouse.reservation.dto.request;
 
-import com.weble.linkedhouse.customer.entity.Customer;
-import com.weble.linkedhouse.house.entity.House;
 import com.weble.linkedhouse.reservation.entity.Reservation;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Getter
 public class ReservationRequest {
 
     // House 의 rentalId
-    private House house;
+    private Long rentalId;
 
     // Reservation 의 customerId
-    private Customer customer;
+    private Long customerId;
 
     private LocalDateTime checkinDate;
 
@@ -20,39 +20,29 @@ public class ReservationRequest {
 
     private Integer reservationNum;
 
-    private ReservationRequest(House house, Customer customer, LocalDateTime checkinDate, LocalDateTime checkoutDate, Integer reservationNum) {
-        this.house = house;
-        this.customer = customer;
+    private ReservationRequest(Long rentalId, Long customerId, LocalDateTime checkinDate, LocalDateTime checkoutDate, Integer reservationNum) {
+        this.rentalId = rentalId;
+        this.customerId = customerId;
         this.checkinDate = checkinDate;
         this.checkoutDate = checkoutDate;
         this.reservationNum = reservationNum;
     }
 
-    public static ReservationRequest of(House house,
-                                        Customer customer,
+    public static ReservationRequest of(Long rentalId,
+                                        Long customerId,
                                         LocalDateTime checkinDate,
                                         LocalDateTime checkoutDate,
                                         Integer reservationNum) {
-        return new ReservationRequest(house, customer, checkinDate, checkoutDate, reservationNum);
+        return new ReservationRequest(rentalId, customerId, checkinDate, checkoutDate, reservationNum);
     }
 
     public ReservationRequest from(Reservation reservation) {
         return new ReservationRequest(
-                reservation.getHouse(),
-                reservation.getCustomer(),
+                reservation.getHouse().getRentalId(),
+                reservation.getCustomer().getCustomerId(),
                 reservation.getCheckinDate(),
                 reservation.getCheckoutDate(),
                 reservation.getReservationNum()
         );
-    }
-
-    public Reservation toEntity() {
-        return Reservation.builder()
-                .house(house)
-                .customer(customer)
-                .checkinDate(checkinDate)
-                .checkoutDate(checkoutDate)
-                .reservationNum(reservationNum)
-                .build();
     }
 }

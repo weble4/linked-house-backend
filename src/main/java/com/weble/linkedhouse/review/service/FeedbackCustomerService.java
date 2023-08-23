@@ -46,6 +46,7 @@ public class FeedbackCustomerService {
                 request.getScoreCommunication(),
                 request.getScoreSatisfaction()
         );
+        review.calculate();
 
         FeedbackCustomer saveReview = feedbackCustomerRepository.save(review);
 
@@ -83,6 +84,8 @@ public class FeedbackCustomerService {
                 request.getScoreCommunication(),
                 request.getScoreSatisfaction());
 
+        feedbackCustomer.calculate();
+
         return CustomerReviewResponse.from(feedbackCustomer);
     }
 
@@ -90,6 +93,4 @@ public class FeedbackCustomerService {
     public void deleteCustomerReview(Long feedbackCustomerId) {
         feedbackCustomerRepository.deleteById(feedbackCustomerId);
     }
-
-
 }

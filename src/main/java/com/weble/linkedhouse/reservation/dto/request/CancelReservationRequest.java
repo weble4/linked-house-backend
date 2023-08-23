@@ -1,17 +1,15 @@
 package com.weble.linkedhouse.reservation.dto.request;
 
-import com.weble.linkedhouse.customer.entity.Customer;
 import com.weble.linkedhouse.reservation.entity.CancelReservation;
-import com.weble.linkedhouse.reservation.entity.Reservation;
 
 import java.time.LocalDateTime;
 
 public class CancelReservationRequest {
 
 
-    private Reservation reservation;
+    private Long reservationId;
 
-    private Customer customer;
+    private Long customerId;
 
     private LocalDateTime checkinDate;
 
@@ -19,9 +17,9 @@ public class CancelReservationRequest {
 
     private int reservationNum;
 
-    private CancelReservationRequest(Reservation reservation, Customer customer, LocalDateTime checkinDate, LocalDateTime checkoutDate, int reservationNum) {
-        this.reservation = reservation;
-        this.customer = customer;
+    private CancelReservationRequest(Long reservation, Long customerId, LocalDateTime checkinDate, LocalDateTime checkoutDate, int reservationNum) {
+        this.reservationId = reservation;
+        this.customerId = customerId;
         this.checkinDate = checkinDate;
         this.checkoutDate = checkoutDate;
         this.reservationNum = reservationNum;
@@ -29,21 +27,11 @@ public class CancelReservationRequest {
 
     public static CancelReservationRequest from(CancelReservation cancelReservation) {
         return new CancelReservationRequest(
-                cancelReservation.getReservation(),
-                cancelReservation.getCustomer(),
+                cancelReservation.getReservation().getReservationId(),
+                cancelReservation.getCustomer().getCustomerId(),
                 cancelReservation.getCheckinDate(),
                 cancelReservation.getCheckoutDate(),
                 cancelReservation.getReservationNum()
         );
-    }
-
-    public CancelReservation toEntity() {
-        return CancelReservation.builder()
-                .reservation(reservation)
-                .customer(customer)
-                .checkinDate(checkinDate)
-                .checkoutDate(checkoutDate)
-                .reservationNum(reservationNum)
-                .build();
     }
 }

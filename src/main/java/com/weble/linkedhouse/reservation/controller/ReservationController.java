@@ -35,7 +35,7 @@ public class ReservationController {
         return reservationService.findByHouseRentalId(rentalId);
     }
 
-    @GetMapping("/details/{reservationId}") // 게스트나 호스트가 개별 예약에 대한 상세조회
+    @GetMapping("/details/{reservationId}") // 게스트가 개별 예약에 대한 상세조회
     public ReservationResponse findById(@PathVariable Long reservationId) {
         return reservationService.findById(reservationId);
     }

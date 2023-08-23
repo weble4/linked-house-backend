@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class CustomerReviewRequest {
+
     private String title;
     private String content;
     private int scoreClean;

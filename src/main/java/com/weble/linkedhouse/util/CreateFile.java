@@ -18,7 +18,7 @@ public class CreateFile {
 
         List<String> imagePathList = new ArrayList<>();
         //TODO: 저장되는 System Path 나중에 deploy 환경에서 서버에 맞게 루트를 조정해야 합니다
-        String uploadDir = "D:\\images\\house\\host" + customerId; // 이미지를 저장할 디렉토리 지정
+        String uploadDir = "D:\\images\\house\\host-" + customerId; // 이미지를 저장할 디렉토리 지정
         File dir = new File(uploadDir);
 
         if (!dir.exists()) {
@@ -31,7 +31,7 @@ public class CreateFile {
 
         for (MultipartFile image : images) {
             String storeFileName = createStoreFileName(image.getOriginalFilename());
-            String pullPath = uploadDir + storeFileName;
+            String pullPath = uploadDir +"\\"+ storeFileName;
 
             try {
                 image.transferTo(new File(pullPath));
@@ -45,7 +45,7 @@ public class CreateFile {
 
     public String saveImage(MultipartFile file, Long customerId) {
         //TODO: 저장되는 System Path 나중에 deploy 환경에서 서버에 맞게 루트를 조정해야 합니다
-        String sysPath = "D:\\image\\profile\\user" + customerId;
+        String sysPath = "D:\\images\\profile\\user-" + customerId;
         File dir = new File(sysPath);
 
         if (!dir.exists()) {
@@ -57,7 +57,7 @@ public class CreateFile {
         }
 
         String storeFileName = createStoreFileName(file.getOriginalFilename());
-        String pullPath = sysPath + storeFileName;
+        String pullPath = sysPath + "\\" + storeFileName;
 
         try {
             file.transferTo(new File(pullPath));
@@ -70,7 +70,7 @@ public class CreateFile {
     public void deleteImageFile(List<String> collect) {
         for (String path : collect) {
             try {
-                Files.deleteIfExists(Paths.get(path));
+                Files.delete(Paths.get(path));
             } catch (IOException e) {
                 log.error("Failed to delete image file: " + path, e);
             }
