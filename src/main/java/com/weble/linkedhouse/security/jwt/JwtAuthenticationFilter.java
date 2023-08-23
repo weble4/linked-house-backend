@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @Component
 @RequiredArgsConstructor
@@ -35,6 +36,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             switch (validationResult) {
                 case EXPIRED, FAIL -> {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("application/json");
+                    try (PrintWriter out = response.getWriter()) {
+                        out.write("json token expired!! please reissue");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     return;
                 }
                 case SUCCESS -> {

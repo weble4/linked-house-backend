@@ -15,6 +15,7 @@ public class HouseResponseDto {
 
     private Long rentalId;
     private ProfileDto host;
+    private String description;
     private String location;
     private int price;
     private int maxCapacity;
@@ -22,10 +23,11 @@ public class HouseResponseDto {
     private List<String> imagePath;
     private AutoReservation autoReservation;
 
-    private HouseResponseDto(Long rentalId, ProfileDto host, String location, int price, int maxCapacity,
-                             List<String> imagePath, AutoReservation autoReservation) {
+    private HouseResponseDto(Long rentalId, ProfileDto host, String description, String location,
+                             int price, int maxCapacity, List<String> imagePath, AutoReservation autoReservation) {
         this.rentalId = rentalId;
         this.host = host;
+        this.description = description;
         this.location = location;
         this.price = price;
         this.maxCapacity = maxCapacity;
@@ -42,6 +44,7 @@ public class HouseResponseDto {
         return new HouseResponseDto(
                 house.getRentalId(),
                 ProfileDto.from(house.getCustomer().getCustomerProfile()),
+                house.getDescription(),
                 house.getLocation(),
                 house.getPrice(),
                 house.getMaxCapacity(),

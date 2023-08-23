@@ -10,6 +10,9 @@ import lombok.Getter;
 @Getter
 public class HostHouseSaveRequest {
 
+    @NotBlank(message = "소개글을 작성해주세요.")
+    private String description;
+
     @NotNull(message = "최대 인원을 작성해주세요.")
     private Integer maxCapacity;
 
@@ -37,8 +40,9 @@ public class HostHouseSaveRequest {
     @NotNull(message = "욕실 갯수를 작성해주세요.")
     private int bathRoom;
 
-    private HostHouseSaveRequest(Integer maxCapacity, Integer minCapacity, Integer price, String location,
+    private HostHouseSaveRequest(String description, Integer maxCapacity, Integer minCapacity, Integer price, String location,
                                  String detailAddress, AutoReservation autoReservation, Integer room, Integer bed, Integer bathRoom) {
+        this.description = description;
         this.maxCapacity = maxCapacity;
         this.minCapacity = minCapacity;
         this.price = price;
@@ -53,6 +57,7 @@ public class HostHouseSaveRequest {
     public House toEntity(Customer customer) {
         return House.builder()
                 .customer(customer)
+                .description(description)
                 .maxCapacity(maxCapacity)
                 .minCapacity(minCapacity)
                 .price(price)

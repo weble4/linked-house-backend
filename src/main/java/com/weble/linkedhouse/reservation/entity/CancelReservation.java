@@ -29,9 +29,8 @@ public class CancelReservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cancelId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reservation_id")
-    private Reservation reservation;
+    @Column(name = "reservation_id")
+    private Long reservationId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
@@ -47,15 +46,15 @@ public class CancelReservation {
     private int reservationNum;
 
     @Builder
-    public CancelReservation(Reservation reservation, Customer customer, LocalDateTime checkinDate, LocalDateTime checkoutDate, int reservationNum) {
-        this.reservation = reservation;
+    private CancelReservation(Long reservationId, Customer customer, LocalDateTime checkinDate, LocalDateTime checkoutDate, int reservationNum) {
+        this.reservationId = reservationId;
         this.customer = customer;
         this.checkinDate = checkinDate;
         this.checkoutDate = checkoutDate;
         this.reservationNum = reservationNum;
     }
 
-    public static CancelReservation of(Reservation reservation, Customer customer, LocalDateTime checkinDate, LocalDateTime checkoutDate, int reservationNum) {
-        return new CancelReservation(reservation, customer, checkinDate, checkoutDate, reservationNum);
+    public static CancelReservation of(Long reservationId, Customer customer, LocalDateTime checkinDate, LocalDateTime checkoutDate, int reservationNum) {
+        return new CancelReservation(reservationId, customer, checkinDate, checkoutDate, reservationNum);
     }
 }

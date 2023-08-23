@@ -44,6 +44,7 @@ public class FeedbackHost extends AuditingFields {
     private FeedbackHost(Customer customer, Customer writer, String title, String content, int attitude, int damageDegree) {
         this.customer = customer;
         this.writer = writer;
+        this.title = title;
         this.content = content;
         this.attitude = attitude;
         this.damageDegree = damageDegree;

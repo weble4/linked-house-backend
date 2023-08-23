@@ -1,14 +1,16 @@
 package com.weble.linkedhouse.reservation.service;
 
-import com.weble.linkedhouse.exception.NotExistHouseException;
+import com.weble.linkedhouse.exception.NotExistReservation;
 import com.weble.linkedhouse.reservation.entity.CancelReservation;
 import com.weble.linkedhouse.reservation.entity.Reservation;
 import com.weble.linkedhouse.reservation.repository.CancelReservationRepository;
 import com.weble.linkedhouse.reservation.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CancelReservationService {
 
@@ -17,10 +19,10 @@ public class CancelReservationService {
 
     public void deleteReservationByCustomer(Long reservationId) {
 
-        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NotExistHouseException::new);
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NotExistReservation::new);
 
         CancelReservation cancelReservation = CancelReservation.of(
-                reservation,
+                reservation.getReservationId(),
                 reservation.getCustomer(),
                 reservation.getCheckinDate(),
                 reservation.getCheckoutDate(),
@@ -33,10 +35,10 @@ public class CancelReservationService {
 
     public void deleteReservationByHost(Long reservationId) {
 
-        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NotExistHouseException::new);
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(NotExistReservation::new);
 
         CancelReservation cancelReservation = CancelReservation.of(
-                reservation,
+                reservation.getReservationId(),
                 reservation.getCustomer(),
                 reservation.getCheckinDate(),
                 reservation.getCheckoutDate(),

@@ -1,6 +1,5 @@
 package com.weble.linkedhouse.payment.entity;
 
-import com.weble.linkedhouse.customer.entity.Customer;
 import com.weble.linkedhouse.house.entity.House;
 import com.weble.linkedhouse.reservation.entity.Reservation;
 import jakarta.persistence.Column;
@@ -45,15 +44,14 @@ public class Payment {
     private LocalDateTime requestDay;
 
     @Builder
-    private Payment(House house, Reservation reservation, int price, LocalDateTime requestDay) {
+    private Payment(House house, Reservation reservation, int price) {
         this.house = house;
         this.reservation = reservation;
         this.price = price;
         this.requestDay = LocalDateTime.now();
     }
 
-    public static Payment of(House house, Reservation reservation, int price, LocalDateTime requestDay) {
-        return new Payment(house, reservation, price, requestDay);
+    public static Payment of(House house, Reservation reservation, int price) {
+        return new Payment(house, reservation, price);
     }
-
 }
