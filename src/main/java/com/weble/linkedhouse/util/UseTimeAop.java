@@ -1,7 +1,7 @@
 package com.weble.linkedhouse.util;
 
-import com.weble.linkedhouse.util.logtarce.LogTrace;
-import com.weble.linkedhouse.util.logtarce.TraceStatus;
+import com.weble.linkedhouse.util.logtrace.LogTrace;
+import com.weble.linkedhouse.util.logtrace.TraceStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

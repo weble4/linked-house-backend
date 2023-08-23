@@ -1,4 +1,4 @@
-package com.weble.linkedhouse.util.logtarce;
+package com.weble.linkedhouse.util.logtrace;
 
 import lombok.extern.slf4j.Slf4j;
 
