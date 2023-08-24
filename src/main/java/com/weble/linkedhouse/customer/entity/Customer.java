@@ -60,6 +60,14 @@ public class Customer extends AuditingFields {
             columnDefinition = "varchar(30) default 'non_auth'")
     private AuthState authState;
 
+    @Column(name = "is_customer")
+    private Boolean isCustomer;
+
+    @Column(name = "is_Host")
+    private Boolean isHost;
+
+    @Column(name = "is_suspended")
+    private Boolean isSuspended;
 
     @ToString.Exclude
     @OneToOne(mappedBy = "customer")
@@ -99,7 +107,15 @@ public class Customer extends AuditingFields {
         updatedRoles.add(newRole);
         this.role = updatedRoles;
     }
-
+    public Boolean getIsCustomer(){
+        return isCustomer;
+    }
+    public Boolean getIsHost(){
+        return isHost;
+    }
+    public Boolean getIsSuspended() {
+        return isSuspended;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

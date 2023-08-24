@@ -1,15 +1,26 @@
 package com.weble.linkedhouse.customer.repository;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.weble.linkedhouse.customer.entity.Customer;
-import lombok.RequiredArgsConstructor;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.weble.linkedhouse.admin.service.AdminFilter;
+import com.weble.linkedhouse.customer.entity.Customer;
+
+import com.weble.linkedhouse.customer.entity.QCustomer;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
+
+import java.util.List;
 import java.util.Optional;
 
 import static com.weble.linkedhouse.customer.entity.QCustomer.customer;
 
+
 @RequiredArgsConstructor
-public class CustomerRepositoryImpl implements CustomerRepositoryCustom{
+public class CustomerRepositoryImpl implements CustomerRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
@@ -35,5 +46,37 @@ public class CustomerRepositoryImpl implements CustomerRepositoryCustom{
                 .fetchOne();
 
         return Optional.ofNullable(result);
+    }
+
+    public BooleanExpression adminFilterEq(QCustomer customer, AdminFilter adminFilter) {
+        switch (adminFilter) {
+            case Customer:
+                return customer.isCustomer.eq(true);
+            case Host:
+                return customer.isHost.eq(true);
+            case SUSPENDED:
+                return customer.isSuspended.eq(true);
+            default:
+                return null;
+        }
+    }
+
+    public Page<Customer> findAllCustomers(AdminFilter adminFilter, Pageable pageable) {
+        QCustomer customer = QCustomer.customer;
+        BooleanExpression adminFilterExpression = adminFilterEq(customer, adminFilter);
+
+        List<Customer> content = queryFactory
+                .selectFrom(customer)
+                .where(adminFilterExpression)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Long> countQuery = queryFactory
+                .select(customer.count())
+                .from(customer)
+                .where(adminFilterExpression);
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 }
