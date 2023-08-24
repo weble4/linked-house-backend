@@ -48,27 +48,13 @@ public class CustomerRepositoryImpl implements CustomerRepositoryCustom {
         return Optional.ofNullable(result);
     }
 
-    public BooleanExpression adminFilterEq(QCustomer customer, AdminFilter adminFilter) {
-        switch (adminFilter) {
-            case ROLE_CUSTOMER:
-                return customer.isCustomer.eq(true);
-            case ROLE_HOST:
-                return customer.isHost.eq(true);
-            case SUSPENDED:
-                return customer.isSuspended.eq(true);
-            default:
-                return null;
-        }
-    }
 
     public Page<Customer> findAllCustomers(AdminFilter adminFilter, Pageable pageable) {
-        QCustomer customer = QCustomer.customer;
-        BooleanExpression adminFilterExpression = adminFilterEq(customer, adminFilter);
 
         List<Customer> content = queryFactory
                 .selectFrom(customer)
                 .leftJoin(customer.customerProfile).fetchJoin()
-                .where(adminFilterExpression)
+                .where()
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -76,7 +62,7 @@ public class CustomerRepositoryImpl implements CustomerRepositoryCustom {
         JPAQuery<Long> countQuery = queryFactory
                 .select(customer.count())
                 .from(customer)
-                .where(adminFilterExpression);
+                .where();
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
