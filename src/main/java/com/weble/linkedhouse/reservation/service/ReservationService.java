@@ -12,10 +12,12 @@ import com.weble.linkedhouse.reservation.repository.ReservationRepository;
 import com.weble.linkedhouse.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ReservationService {
 
@@ -41,6 +43,7 @@ public class ReservationService {
     }
 
 
+    @Transactional
     public void createReservation(UserDetailsImpl userDetails, ReservationRequest request, Long rentalId) {
         Long customerId = userDetails.getUserId();
 
@@ -49,7 +52,8 @@ public class ReservationService {
         House house = houseRepository.findById(rentalId)
                 .orElseThrow(NotExistHouseException::new);
 
-        Reservation reservation = Reservation.of(house,
+        Reservation reservation = Reservation.of(
+                house,
                 customer,
                 request.getCheckinDate(),
                 request.getCheckoutDate(),

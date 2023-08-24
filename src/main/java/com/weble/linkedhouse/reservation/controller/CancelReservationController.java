@@ -2,12 +2,12 @@ package com.weble.linkedhouse.reservation.controller;
 
 import com.weble.linkedhouse.reservation.service.CancelReservationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Service
+@RestController
 @RequestMapping("/api/reservations")
 @RequiredArgsConstructor
 public class CancelReservationController {

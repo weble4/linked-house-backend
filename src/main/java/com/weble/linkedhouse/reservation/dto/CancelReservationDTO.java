@@ -1,6 +1,5 @@
 package com.weble.linkedhouse.reservation.dto;
 
-import com.weble.linkedhouse.reservation.entity.CancelReservation;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -38,17 +37,5 @@ public class CancelReservationDTO {
 
     public static CancelReservationDTO of(Long cancelId, Long reservationId, Long rentalId, Long customerId, LocalDateTime checkinDate, LocalDateTime checkoutDate, Integer reservationNum) {
         return new CancelReservationDTO(cancelId, reservationId, rentalId, customerId, checkinDate, checkoutDate, reservationNum);
-    }
-
-    public static CancelReservationDTO from(CancelReservation entity) {
-        return new CancelReservationDTO(
-                entity.getCancelId(),
-                entity.getReservation().getReservationId(),
-                entity.getReservation().getHouse().getRentalId(),
-                entity.getCustomer().getCustomerId(),
-                entity.getCheckinDate(),
-                entity.getCheckoutDate(),
-                entity.getReservationNum()
-        );
     }
 }

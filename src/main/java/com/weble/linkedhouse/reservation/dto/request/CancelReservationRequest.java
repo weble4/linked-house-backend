@@ -27,7 +27,7 @@ public class CancelReservationRequest {
 
     public static CancelReservationRequest from(CancelReservation cancelReservation) {
         return new CancelReservationRequest(
-                cancelReservation.getReservation().getReservationId(),
+                cancelReservation.getReservationId(),
                 cancelReservation.getCustomer().getCustomerId(),
                 cancelReservation.getCheckinDate(),
                 cancelReservation.getCheckoutDate(),

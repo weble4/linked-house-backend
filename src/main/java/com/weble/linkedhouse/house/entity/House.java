@@ -49,6 +49,8 @@ public class House extends AuditingFields {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    private String description;
+
     @Column(name = "max_capacity")
     private int maxCapacity;
 
@@ -89,8 +91,9 @@ public class House extends AuditingFields {
         imagePath.setHouse(this);
     }
 
-    public void updateHouse(int maxCapacity,int minCapacity, int price, AutoReservation autoReservation,
-                            int room, int bed, int bathRoom) {
+    public void updateHouse(String description, int maxCapacity,int minCapacity, int price,
+                            AutoReservation autoReservation, int room, int bed, int bathRoom) {
+        this.description = description;
         this.maxCapacity = maxCapacity;
         this.minCapacity = minCapacity;
         this.price = price;
@@ -101,9 +104,10 @@ public class House extends AuditingFields {
     }
 
     @Builder
-    private House(Customer customer, int maxCapacity, int minCapacity, int price, String location, String detailAddress,
-                  AutoReservation autoReservation, int room, int bed, int bathRoom) {
+    private House(Customer customer, String description, int maxCapacity, int minCapacity, int price, String location,
+                  String detailAddress, AutoReservation autoReservation, int room, int bed, int bathRoom) {
         this.customer = customer;
+        this.description = description;
         this.maxCapacity = maxCapacity;
         this.minCapacity = minCapacity;
         this.price = price;
@@ -115,11 +119,12 @@ public class House extends AuditingFields {
         this.bathRoom = bathRoom;
     }
 
-    public static House of(Customer customer, int maxCapacity, int minCapacity, int price,
+    public static House of(Customer customer, String description, int maxCapacity, int minCapacity, int price,
                            String location, String detailAddress, AutoReservation autoReservation,
                            int room, int bed, int bathRoom) {
         return new House(
                 customer,
+                description,
                 maxCapacity,
                 minCapacity,
                 price,
@@ -142,5 +147,4 @@ public class House extends AuditingFields {
     public int hashCode() {
         return Objects.hash(getRentalId());
     }
-
 }

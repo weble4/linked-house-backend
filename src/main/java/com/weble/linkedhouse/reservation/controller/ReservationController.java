@@ -5,14 +5,15 @@ import com.weble.linkedhouse.reservation.dto.response.ReservationResponse;
 import com.weble.linkedhouse.reservation.service.ReservationService;
 import com.weble.linkedhouse.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -42,9 +43,9 @@ public class ReservationController {
 
 
     @PostMapping("/customer/{rentalId}") // 게스트의 예약 신청
+    @ResponseStatus(HttpStatus.CREATED)
     public void createReservation(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                   @RequestBody ReservationRequest request, @PathVariable Long rentalId) {
-
         reservationService.createReservation(userDetails, request, rentalId);
     }
 

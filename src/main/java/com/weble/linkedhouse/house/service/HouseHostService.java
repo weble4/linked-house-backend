@@ -71,6 +71,7 @@ public class HouseHostService {
                 .orElseThrow(NotExistHouseException::new);
 
         house.updateHouse(
+                update.getDescription(),
                 update.getMaxCapacity(),
                 update.getMinCapacity(),
                 update.getPrice(),
