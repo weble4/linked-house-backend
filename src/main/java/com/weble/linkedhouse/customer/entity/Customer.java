@@ -1,6 +1,7 @@
 package com.weble.linkedhouse.customer.entity;
 
 import com.weble.linkedhouse.customer.entity.constant.AuthState;
+import com.weble.linkedhouse.customer.entity.constant.Banneduser;
 import com.weble.linkedhouse.customer.entity.constant.DeleteRequest;
 import com.weble.linkedhouse.customer.entity.constant.Role;
 import com.weble.linkedhouse.util.AuditingFields;
@@ -60,6 +61,8 @@ public class Customer extends AuditingFields {
             columnDefinition = "varchar(30) default 'non_auth'")
     private AuthState authState;
 
+    @Column(name = "suspended")
+    private Banneduser suspended;
 
     @ToString.Exclude
     @OneToOne(mappedBy = "customer")
@@ -71,6 +74,7 @@ public class Customer extends AuditingFields {
         this.deleteRequest = DeleteRequest.NOT_DELETE;
         this.role = role;
         this.authState= AuthState.NONAUTH;
+        this.suspended = Banneduser.ACTIVE;
     }
 
     public static Customer of(String customerEmail, String customerPw, Set<Role> role) {
@@ -99,7 +103,9 @@ public class Customer extends AuditingFields {
         updatedRoles.add(newRole);
         this.role = updatedRoles;
     }
-
+    public void banned() {
+        this.suspended = Banneduser.SUSPENDED;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -111,4 +117,6 @@ public class Customer extends AuditingFields {
     public int hashCode() {
         return Objects.hash(getCustomerId());
     }
+
+
 }

@@ -22,7 +22,7 @@ public class ProfileDto {
 
     private PublicAt publicAt;
 
-    public ProfileDto(CustomerDto customerDto, String nickname, String gender, String birthDay, String phoneNum, String imagePath, PublicAt publicAt) {
+    private ProfileDto(CustomerDto customerDto, String nickname, String gender, String birthDay, String phoneNum, String imagePath, PublicAt publicAt) {
         this.customerDto = customerDto;
         this.nickname = nickname;
         this.gender = gender;
