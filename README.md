@@ -4,40 +4,50 @@
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fweble4%2Flinked-house-backend&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 
 ### 프로젝트 개요
-- **LinkedHouse** 는 사용자가 자신의 숙소를 숙박처로 제공하여 다른 이용자의 숙박이 가능한 숙박 공유 플랫폼입니다.
+Weble4 팀의 프로젝트 linked-house backend는 airbnb 모델을 벤치마킹하여, 숙박 공유 사이트를 만드는 것을 목표로 합니다.
+백엔드에서는 Rest API를 통해 안정적으로 데이터를 주고받는 서버를 구축하고, 향후 웹 뿐만 아니라 모바일까지의 확장성을 
+염두해 Rest API 형식으로 설계하였습니다.
 * * *
-### 주요 기능
-- 숙박 업소 제공
 
-  사용자는 호스트 등록을 통해 자신의 거처 또는 호텔을 숙박 업소로 등록 가능합니다.
-- 숙박 예약
+### **📅** 프로젝트 기간
 
-  숙박하고자 하는 게스트는 등록된 숙박 업소에 예약 신청이 가능합니다.
-  자동 예약과 수동 예약으로 나뉘며, 자동 예약은 게스트의 예약과 결제가 한 번에 이루어지며 결제 완료시 호스트 응답 없이 바로 예약 가능합니다.
-  수동 예약은 예약 신청 시 호스트의 승인을 받아 예약이 가능합니다.
-- 메시지 기능
+백엔드 구현 기간 
+2023.08.04 ~ 2023.08.27
 
-  호스트와 게스트 간의 채팅을 지원합니다.
-- 북마크 기능
-
-  게스트는 마음에 드는 숙박 업소를 자신의 북마크에 등록 가능합니다.
 * * *
+
+## 팀원 소개
+
+```java
+이찬희 = programmer(Team weble4, Project linkedhouse)
+```
+
+```java
+민세기 = programmer(Team weble4, Project linkedhouse)
+```
+
+```java
+김지민 = programmer(Team weble4, Project linkedhouse)
+```
+
+```java
+김승용 = programmer(Team weble4, Project linkedhouse)
+```
+
+* * *
+
 ### 기술 스택
 - Backend
 
 <img alt="Springboot" src ="https://img.shields.io/badge/Spring boot-6DB33F.svg?&style=for-the-badge&logo=Springboot&logoColor=white"/>
 <img alt="Springsecurity" src ="https://img.shields.io/badge/Spring security-6DB33F.svg?&style=for-the-badge&logo=Springsecurity&logoColor=white"/>
 
-- Frontend
-
-<img alt="React" src ="https://img.shields.io/badge/React-61DAFB.svg?&style=for-the-badge&logo=React&logoColor=black"/>
-
 - DB
 
 <img alt="mysql" src ="https://img.shields.io/badge/mysql-61DAFB.svg?&style=for-the-badge&logo=mysql&logoColor=black"/>
 <img alt="redis" src ="https://img.shields.io/badge/redis-DC382D.svg?&style=for-the-badge&logo=redis&logoColor=black"/>
 
-- CI/CD
+- CI/CD, CLOUD
 
 <img alt="git" src ="https://img.shields.io/badge/git-F05032.svg?&style=for-the-badge&logo=git&logoColor=black"/>
 <img alt="github" src ="https://img.shields.io/badge/github-181717.svg?&style=for-the-badge&logo=github&logoColor=white"/>
@@ -48,10 +58,70 @@
 * * *
 ### ERD
 
-* * *
-### Prototype UI / Menu Tree
-[Figma](https://www.figma.com/file/FB2dkLEj9lk23AZo9OIgFp/LinkedHouse?type=design&node-id=0%3A1&mode=design&t=05Syue0AovCBNiWv-1)
+<image src="images/erd.png"></image>
 
 * * *
-### 컨벤션 전략
-[Convention](https://www.notion.so/f645a6ae98ae46d08fdcaa8c4a10dacf)
+### 시스템 아키텍쳐
+
+* * *
+
+### Git Commit 전략 & 워크플로우 및 컨벤션
+
+[워크플로우 및 깃 커밋 전략 링크](https://www.notion.so/754a694747884d369ee42da947ae089b?pvs=4)  
+
+[컨벤션 정리 링크](https://www.notion.so/f645a6ae98ae46d08fdcaa8c4a10dacf?pvs=4)
+
+* * *
+
+### 백엔드 기능
+
+[API 설계 보러 가기](https://www.notion.so/ac03553cb84c440094aef63933d1e277?v=60034cdb041543cfb107d9b6a7a5c120&pvs=4)
+
+[주요 구현 기술](https://www.notion.so/2f29c7648cd049f6aced89b8f6698cf3?pvs=4)
+
+- CRUD 기능 구현
+  - 리뷰 게시판을 통한 CRUD 기능 구현
+  - House 등록 CRUD 기능 구현
+  - Image 업로드 기능 구현
+
+
+- ADMIN 기능 구현
+  - 유저 정지 기능 구현 
+  - 전체 알람 보내기 기능
+  - 신고 글 확인 및 유저 글 삭제 기능
+
+
+- 알람 기능
+  - RDBMS를 이용하여 CRUD 기능을 통한 알람 생성
+
+
+-  로그인 기능
+   - Spring security + JWT를 활용한 자체 로그인기능 및 OAuth 이용한 소셜 로그인 기능 구현
+   - Redis를 활용한 RefreshToken 활용
+   - JavaMailSender를 활용한 Email 인증 작업 기능 구현
+
+
+- WebSocket을 이용한 대화기능 구현
+  - Stomp를 사용해 대화기능 구현
+
+
+- JDBC 활용한 동적 SQL을 활용한 테이블 생성
+  - 유저가 숙소 북마크를 할 시, 개인 테이블이 생성되어 저장되게 구현
+  - 유저 탈퇴시 개인 유저 탈퇴 테이블이 생성되고, Scheduler를 활용해 일정 기간후 유저 정보 삭제 및 테이블 삭제
+
+
+- AOP를 이용한 로그 API 타임 측정
+  - Thread Local을 활용하여 요청에 동일성을 주려고 함.
+  - 레이어 계층의 이동을 표현한 Log로 각 레이어별 요청 응답시간 측정
+
+
+- Spring data JPA + Querydsl 활용
+  - Spring 에서 제공하는 Page 기능 적극 활용
+  - Querydsl을 활용하여 동적 SQL을 통한 검색 기능 작성
+
+* * *
+### Trouble Shooting
+
+팀원 개개인이 기능 구현을 하며 겪은 Trouble Shooting 정리
+
+[보러가기](https://www.notion.so/Trouble-Shooting-eb252aeeb0fa4498993ce97d22a4a34b?pvs=4)
