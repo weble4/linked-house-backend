@@ -5,6 +5,7 @@ import com.weble.linkedhouse.house.entity.House;
 import com.weble.linkedhouse.house.entity.constant.AutoReservation;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -40,6 +41,7 @@ public class HostHouseSaveRequest {
     @NotNull(message = "욕실 갯수를 작성해주세요.")
     private int bathRoom;
 
+    @Builder
     private HostHouseSaveRequest(String description, Integer maxCapacity, Integer minCapacity, Integer price, String location,
                                  String detailAddress, AutoReservation autoReservation, Integer room, Integer bed, Integer bathRoom) {
         this.description = description;
