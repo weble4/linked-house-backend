@@ -64,7 +64,7 @@ public class ReservationServiceTest {
         Reservation reservation = createReservation(house, customer);
         reservationRepository.save(reservation);
 
-        List<ReservationResponse> reservationList = reservationService.findByCustomerCustomerId(1L);
+        List<ReservationResponse> reservationList = reservationService.findByCustomerCustomerId(house.getRentalId());
 
         assertThat(reservationList.size()).isEqualTo(1);
     }
