@@ -126,6 +126,12 @@ public class CustomerService {
     }
 
     @Transactional
+    public void logout(UserDetailsImpl userDetails) {
+        String email = userDetails.getUsername();
+        redisTokenRepository.deleteToken(email);
+    }
+
+    @Transactional
     public void applyHost(UserDetailsImpl userDetails) {
         Customer customer = customerRepository.findByIdWithProfile(userDetails.getUserId())
                 .orElseThrow(NotExistCustomer::new);
@@ -148,22 +154,11 @@ public class CustomerService {
 
     @Transactional
     public ProfileDto updateProfile(UserDetailsImpl userDetails, UpdateRequest updateRequest, MultipartFile image) {
-        CreateFile createFile = new CreateFile();
 
         Customer customer = customerRepository.findByIdWithProfile(userDetails.getUserId())
                 .orElseThrow(NotExistCustomer::new);
 
-        String imagePath;
-
-        if (image.isEmpty()) {
-            if (customer.getCustomerProfile().getImagePath().isEmpty()) {
-                imagePath = null;
-            } else {
-                imagePath = customer.getCustomerProfile().getImagePath();
-            }
-        } else {
-            imagePath = createFile.saveImage(image, customer.getCustomerId());
-        }
+        String imagePath = checkImageAndGetPath(image, customer);
 
         customer.getCustomerProfile().updateProfile(
                 updateRequest.getNickname(),
@@ -201,13 +196,13 @@ public class CustomerService {
     }
 
     @Transactional
-    public TokenDto reissue(UserDetailsImpl userDetails) {
+    public TokenDto reissue(String refreshToken) {
 
-        String email = userDetails.getUsername();
+        String email = jwtTokenProvider.getCustomerEmail(refreshToken);
 
-        String refreshToken = redisTokenRepository.find(email);
+        String value = redisTokenRepository.find(email);
 
-        if (jwtTokenProvider.validToken(refreshToken) != JwtReturn.SUCCESS) {
+        if (jwtTokenProvider.validToken(value) != JwtReturn.SUCCESS) {
             throw new JwtException("JWT RefreshToken 만료");
         }
 
@@ -248,4 +243,18 @@ public class CustomerService {
         return origin + "_" + userId;
     }
 
+    private String checkImageAndGetPath(MultipartFile image, Customer customer) {
+        CreateFile createFile = new CreateFile();
+        String result;
+        if (image.isEmpty()) {
+            if (customer.getCustomerProfile().getImagePath().isEmpty()) {
+                result = null;
+            } else {
+                result = customer.getCustomerProfile().getImagePath();
+            }
+        } else {
+            result = createFile.saveImage(image, customer.getCustomerId());
+        }
+        return result;
+    }
 }

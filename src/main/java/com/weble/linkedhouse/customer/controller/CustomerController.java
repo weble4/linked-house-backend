@@ -53,8 +53,14 @@ public class CustomerController {
         return ResponseEntity.ok().body(login);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<TokenDto> logout(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        customerService.logout(userDetails);
+        return ResponseEntity.ok().body(TokenDto.of("", "", 0L));
+    }
+
     @GetMapping("/activate-state")
-    public ResponseEntity<String> certified(@RequestParam Long customerId ) {
+    public ResponseEntity<String> certified(@RequestParam Long customerId) {
         customerService.certifiedEmail(customerId);
         return ResponseEntity.ok("인증에 성공하였습니다");
     }
@@ -98,8 +104,8 @@ public class CustomerController {
 
     //토큰 재발급
     @PostMapping("/reissue")
-    public ResponseEntity<TokenDto> reissue(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        TokenDto newAccessToken = customerService.reissue(userDetails);
+    public ResponseEntity<TokenDto> reissue(@RequestBody String refreshToken) {
+        TokenDto newAccessToken = customerService.reissue(refreshToken);
         return ResponseEntity.ok().body(newAccessToken);
     }
 }

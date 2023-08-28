@@ -19,4 +19,8 @@ public class RedisTokenRepository {
     public String find(String email) {
         return stringRedisTemplate.opsForValue().get(email);
     }
+
+    public void deleteToken(String email) {
+        stringRedisTemplate.delete(email);
+    }
 }

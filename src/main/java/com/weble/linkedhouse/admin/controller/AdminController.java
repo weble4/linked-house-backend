@@ -36,7 +36,7 @@ public class AdminController {
         return ResponseEntity.ok().body("메시지 전달이 성공했습니다.");
     }
 
-    @GetMapping("/reviews/hosts/{customerId}")
+    @GetMapping("/reviews/hosts/all/{customerId}")
     public Page<HostReviewResponse> findAllByHostReview(
             @PathVariable Long customerId,
             @PageableDefault(size = 10, sort = "createdAt", direction = DESC) Pageable pageable) {

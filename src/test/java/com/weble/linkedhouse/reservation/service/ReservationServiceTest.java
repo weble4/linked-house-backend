@@ -12,6 +12,7 @@ import com.weble.linkedhouse.house.repository.HouseRepository;
 import com.weble.linkedhouse.reservation.dto.request.ReservationRequest;
 import com.weble.linkedhouse.reservation.dto.response.ReservationResponse;
 import com.weble.linkedhouse.reservation.entity.Reservation;
+import com.weble.linkedhouse.reservation.entity.constant.ReservationState;
 import com.weble.linkedhouse.reservation.repository.ReservationRepository;
 import com.weble.linkedhouse.security.UserDetailsImpl;
 import org.junit.jupiter.api.DisplayName;
@@ -205,7 +206,8 @@ public class ReservationServiceTest {
                 customer,
                 LocalDateTime.of(2023, 8, 24, 00, 00, 0000),
                 LocalDateTime.of(2023, 8, 31, 00, 00, 0000),
-                5
+                5,
+                ReservationState.PERMISSION
         );
     }
 }

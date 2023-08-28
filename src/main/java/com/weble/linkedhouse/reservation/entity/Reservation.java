@@ -3,6 +3,7 @@ package com.weble.linkedhouse.reservation.entity;
 import com.weble.linkedhouse.customer.entity.Customer;
 import com.weble.linkedhouse.house.entity.House;
 import com.weble.linkedhouse.reservation.entity.constant.PaymentState;
+import com.weble.linkedhouse.reservation.entity.constant.ReservationState;
 import com.weble.linkedhouse.util.AuditingFields;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -53,20 +54,27 @@ public class Reservation extends AuditingFields {
             columnDefinition = "varchar(50) default 'NOT_PAY'")
     private PaymentState paymentState;
 
+    private ReservationState reservationState;
+
     @Builder
     private Reservation(House house, Customer customer, LocalDateTime checkinDate,
-                        LocalDateTime checkoutDate, int reservationNum) {
+                        LocalDateTime checkoutDate, int reservationNum, ReservationState reservationState) {
         this.house = house;
         this.customer = customer;
         this.checkinDate = checkinDate;
         this.checkoutDate = checkoutDate;
         this.reservationNum = reservationNum;
         this.paymentState = PaymentState.NOT_PAY;
+        this.reservationState = reservationState;
     }
 
     public static Reservation of(House house, Customer customer, LocalDateTime checkinDate,
-                          LocalDateTime checkoutDate, int reservationNum) {
-        return new Reservation(house, customer, checkinDate, checkoutDate, reservationNum);
+                          LocalDateTime checkoutDate, int reservationNum, ReservationState reservationState) {
+        return new Reservation(house, customer, checkinDate, checkoutDate, reservationNum, reservationState);
+    }
+
+    public void permission() {
+        this.reservationState = ReservationState.PERMISSION;
     }
 
     public void payComplete() {

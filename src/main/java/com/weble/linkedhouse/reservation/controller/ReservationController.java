@@ -6,6 +6,7 @@ import com.weble.linkedhouse.reservation.service.ReservationService;
 import com.weble.linkedhouse.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +37,13 @@ public class ReservationController {
         return reservationService.findByHouseRentalId(rentalId);
     }
 
+    @PostMapping("/permission/{reservationId}")
+    @PreAuthorize("hasRole('HOST')")
+    public ResponseEntity<String> hostManualPermission(@PathVariable Long reservationId) {
+        reservationService.permissionReservation(reservationId);
+        return ResponseEntity.ok("예약 승인 하였습니다.");
+    }
+
     @GetMapping("/details/{reservationId}") // 게스트가 개별 예약에 대한 상세조회
     public ReservationResponse findById(@PathVariable Long reservationId) {
         return reservationService.findById(reservationId);
@@ -48,5 +56,4 @@ public class ReservationController {
                                   @RequestBody ReservationRequest request, @PathVariable Long rentalId) {
         reservationService.createReservation(userDetails, request, rentalId);
     }
-
 }
