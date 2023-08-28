@@ -9,6 +9,7 @@ import com.weble.linkedhouse.customer.repository.ProfileRepository;
 import com.weble.linkedhouse.house.dto.FilterKeyword;
 import com.weble.linkedhouse.house.dto.SearchKeyword;
 import com.weble.linkedhouse.house.dto.request.HostHouseSaveRequest;
+import com.weble.linkedhouse.house.dto.request.UpdateHouseRequestDto;
 import com.weble.linkedhouse.house.dto.response.HouseResponseDto;
 import com.weble.linkedhouse.house.entity.House;
 import com.weble.linkedhouse.house.entity.HouseImage;
@@ -17,6 +18,7 @@ import com.weble.linkedhouse.house.repository.HouseImageRepository;
 import com.weble.linkedhouse.house.repository.HouseRepository;
 import com.weble.linkedhouse.reservation.repository.ReservationRepository;
 import com.weble.linkedhouse.security.UserDetailsImpl;
+import com.weble.linkedhouse.util.CreateFile;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,22 +164,15 @@ public class HouseServiceTest {
         assertThat(houseList.iterator().next().getDescription()).isEqualTo("description");
     }
 
-    // Todo : eq(null) is not allowed Fix
-    /*
     @Test
     @DisplayName("숙박업소 내용 수정 확인")
     void updateHouseTest() {
         // Host 생성
-        Customer host = createHost();
-        customerRepository.save(host);
-        // Host Profile 생성
-        CustomerProfile hostProfile = profileRepository.save(createProfile(host));
-        host.setCustomerProfile(hostProfile);
-        // UserDetails 생성
-        UserDetailsImpl userDetails = new UserDetailsImpl(ProfileDto.from(hostProfile));
-        // House 생성
-        House house = createHouse(host);
-        House saved = houseRepository.save(house);
+        Customer customer = customerRepository.save(createHost());
+        CustomerProfile hostProfile = profileRepository.save(createProfile(customer));
+        customer.setCustomerProfile(hostProfile);
+        House saved = houseRepository.save(createHouse(customer));
+
         // Image Mock 생성
         MockMultipartFile mockImage = new MockMultipartFile(
                 "imageFile",
@@ -185,38 +180,25 @@ public class HouseServiceTest {
                 "image/jpg",
                 "Image".getBytes()
         );
+
         List<MultipartFile> images = Collections.singletonList(mockImage);
         // Image 저장
         CreateFile createFile = new CreateFile();
-        List<String> imagePathList = createFile.saveHouseImage(images, host.getCustomerId());
-        List<HouseImage> houseImages = houseImageList(imagePathList, house);
+        List<String> imagePathList = createFile.saveHouseImage(images,customer.getCustomerId());
+        List<HouseImage> houseImages = houseImageList(imagePathList, saved);
         houseImageRepository.saveAll(houseImages);
 
         // 업데이트 로직
-        // 새 House 객체
-        House newHouse = House.of(
-                host,
+        UpdateHouseRequestDto dto = UpdateHouseRequestDto.of(
+                saved.getRentalId(),
                 "Update",
                 5,
                 1,
                 10000,
-                "인천",
-                "인천",
                 AutoReservation.AUTO,
                 3,
                 3,
                 3
-        );
-
-        UpdateHouseRequestDto dto = UpdateHouseRequestDto.of(
-                newHouse.getDescription(),
-                newHouse.getMaxCapacity(),
-                newHouse.getMinCapacity(),
-                newHouse.getPrice(),
-                newHouse.getAutoReservation(),
-                newHouse.getRoom(),
-                newHouse.getBed(),
-                newHouse.getBathRoom()
         );
 
         // 새 Mock Image
@@ -227,9 +209,8 @@ public class HouseServiceTest {
                 "Update".getBytes()
         );
         List<MultipartFile> newImages = Collections.singletonList(newMockImage);
-        createFile = new CreateFile();
-        List<String> newImagePathList = createFile.saveHouseImage(newImages, host.getCustomerId());
-        List<HouseImage> newHouseImages = houseImageList(newImagePathList, house);
+        List<String> newImagePathList = createFile.saveHouseImage(newImages, customer.getCustomerId() );
+        List<HouseImage> newHouseImages = houseImageList(newImagePathList,saved );
         HouseResponseDto updated = houseHostService.updateHouse(newImages, dto);
 
         String imagePath = newImages.get(0).getOriginalFilename();
@@ -238,7 +219,6 @@ public class HouseServiceTest {
         assertThat(houseHostService.findMyRegistrationHouse(rentalId).getDescription()).isEqualTo(updated.getDescription());
         assertThat(houseHostService.findMyRegistrationHouse(rentalId).getImagePath()).isEqualTo(updated.getImagePath());
     }
-     */
 
     // HouseCustomerService 관련
     @Test
