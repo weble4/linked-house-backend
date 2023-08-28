@@ -38,7 +38,8 @@ public class SecurityConfig {
     private final String[] permitUrl = {
             "/api/customers/login",
             "/api/customers/signup",
-            "/api/customers/activate-state"
+            "/api/customers/activate-state",
+            "/api/customers/reissue"
     };
 
     @Bean

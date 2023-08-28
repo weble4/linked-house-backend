@@ -125,3 +125,15 @@ Weble4 팀의 프로젝트 linked-house backend는 airbnb 모델을 벤치마킹
 팀원 개개인이 기능 구현을 하며 겪은 Trouble Shooting 정리
 
 [보러가기](https://www.notion.so/Trouble-Shooting-eb252aeeb0fa4498993ce97d22a4a34b?pvs=4)
+
+* * *
+
+### API doc
+
+<image src="images/actu.png"></image>
+<image src="images/customer0.png"></image>
+<image src="images/customer1.png"></image>
+<image src="images/reser0.png"></image>
+<image src="images/reser1.png"></image>
+<image src="images/reser2.png"></image>
+<image src="images/review.png"></image>

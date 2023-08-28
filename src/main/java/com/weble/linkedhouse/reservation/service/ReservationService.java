@@ -3,11 +3,14 @@ package com.weble.linkedhouse.reservation.service;
 import com.weble.linkedhouse.customer.entity.Customer;
 import com.weble.linkedhouse.customer.repository.CustomerRepository;
 import com.weble.linkedhouse.exception.NotExistHouseException;
+import com.weble.linkedhouse.exception.NotExistReservation;
 import com.weble.linkedhouse.house.entity.House;
+import com.weble.linkedhouse.house.entity.constant.AutoReservation;
 import com.weble.linkedhouse.house.repository.HouseRepository;
 import com.weble.linkedhouse.reservation.dto.request.ReservationRequest;
 import com.weble.linkedhouse.reservation.dto.response.ReservationResponse;
 import com.weble.linkedhouse.reservation.entity.Reservation;
+import com.weble.linkedhouse.reservation.entity.constant.ReservationState;
 import com.weble.linkedhouse.reservation.repository.ReservationRepository;
 import com.weble.linkedhouse.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -52,13 +55,30 @@ public class ReservationService {
         House house = houseRepository.findById(rentalId)
                 .orElseThrow(NotExistHouseException::new);
 
+        ReservationState state = validReservationState(house.getAutoReservation());
+
         Reservation reservation = Reservation.of(
                 house,
                 customer,
                 request.getCheckinDate(),
                 request.getCheckoutDate(),
-                request.getReservationNum());
+                request.getReservationNum(),
+                state);
 
         reservationRepository.save(reservation);
+    }
+
+    @Transactional
+    public void permissionReservation(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(NotExistReservation::new);
+        reservation.permission();
+    }
+
+    private ReservationState validReservationState(AutoReservation autoReservation) {
+        return switch (autoReservation) {
+            case AUTO -> ReservationState.PERMISSION;
+            case MANUAL -> ReservationState.NOT_PERMISSION;
+        };
     }
 }
