@@ -34,8 +34,9 @@ public class UpdateHouseRequestDto {
     @NotNull(message = "욕실 갯수를 작성해주세요.")
     private Integer bathRoom;
 
-    private UpdateHouseRequestDto(String description, Integer maxCapacity, Integer minCapacity, Integer price,
+    private UpdateHouseRequestDto(Long rentalId, String description, Integer maxCapacity, Integer minCapacity, Integer price,
                                   AutoReservation autoReservation, Integer room, Integer bed, Integer bathRoom) {
+        this.rentalId = rentalId;
         this.description = description;
         this.maxCapacity = maxCapacity;
         this.minCapacity = minCapacity;
@@ -46,9 +47,11 @@ public class UpdateHouseRequestDto {
         this.bathRoom = bathRoom;
     }
 
-    public static UpdateHouseRequestDto of(String description, Integer maxCapacity, Integer minCapacity, Integer price,
+    public static UpdateHouseRequestDto of(Long rentalId, String description, Integer maxCapacity, Integer minCapacity, Integer price,
                                            AutoReservation autoReservation, Integer room, Integer bed, Integer bathRoom) {
-        return new UpdateHouseRequestDto(description,
+        return new UpdateHouseRequestDto(
+                rentalId,
+                description,
                 maxCapacity,
                 minCapacity,
                 price,
