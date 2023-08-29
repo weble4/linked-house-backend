@@ -4,8 +4,6 @@ name: Auto deploy NCP
 on:
   push:
     branches: "main"
-  merge:
-    branches: "main"
 
 jobs:
   push_to_registry:
