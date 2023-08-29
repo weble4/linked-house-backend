@@ -39,7 +39,7 @@ public class SecurityConfig {
             "/api/customers/login",
             "/api/customers/signup",
             "/api/customers/activate-state",
-            "/api/customers/reissue"
+            "/api/customers/reissue",
     };
 
     @Bean
@@ -51,6 +51,7 @@ public class SecurityConfig {
                         .requestMatchers(mvc.matchers(permitUrl)).permitAll()
                         .requestMatchers(mvc.matchers(docsUrl)).permitAll()
                         .requestMatchers(toStaticResources().atCommonLocations(), toH2Console()).permitAll()
+                        .requestMatchers(mvc.matchers("/api/admin/*")).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionConfig -> sessionConfig

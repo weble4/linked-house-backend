@@ -4,10 +4,9 @@ package com.weble.linkedhouse.customer.repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.weble.linkedhouse.admin.service.AdminFilter;
 import com.weble.linkedhouse.customer.entity.Customer;
-
-import com.weble.linkedhouse.customer.entity.QCustomer;
+import com.weble.linkedhouse.customer.entity.constant.Banneduser;
+import com.weble.linkedhouse.customer.entity.constant.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,22 +47,39 @@ public class CustomerRepositoryImpl implements CustomerRepositoryCustom {
         return Optional.ofNullable(result);
     }
 
-
-    public Page<Customer> findAllCustomers(AdminFilter adminFilter, Pageable pageable) {
+    @Override
+    public Page<Customer> findAllCustomers(Banneduser banneduser, Role role, Pageable pageable) {
 
         List<Customer> content = queryFactory
                 .selectFrom(customer)
+                .leftJoin(customer.role).fetchJoin()
                 .leftJoin(customer.customerProfile).fetchJoin()
-                .where()
+                .where(userRoleFilter(role),
+                        userSuspendedFilter(banneduser))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory
                 .select(customer.count())
-                .from(customer)
-                .where();
+                .where(userRoleFilter(role),
+                        userSuspendedFilter(banneduser))
+                .from(customer);
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
+    }
+
+    private BooleanExpression userRoleFilter(Role role) {
+        if (role == null) {
+            return null;
+        }
+        return customer.role.contains(role);
+    }
+
+    private BooleanExpression userSuspendedFilter(Banneduser banneduser) {
+        if (banneduser == null) {
+            return null;
+        }
+        return customer.suspended.eq(banneduser);
     }
 }

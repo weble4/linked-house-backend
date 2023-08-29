@@ -14,7 +14,6 @@ public class UpdateRequest {
     @NotBlank(message ="휴대폰 번호를 적어주세요")
     private String phoneNum;
 
-    @NotBlank(message ="공개 여부를 선택 해야 합니다.")
     private PublicAt publicAt;
 
     @Builder

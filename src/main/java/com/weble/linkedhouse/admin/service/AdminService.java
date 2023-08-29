@@ -3,6 +3,7 @@ package com.weble.linkedhouse.admin.service;
 import com.weble.linkedhouse.customer.dtos.ProfileDto;
 import com.weble.linkedhouse.customer.entity.BannedCustomer;
 import com.weble.linkedhouse.customer.entity.Customer;
+import com.weble.linkedhouse.customer.entity.constant.Banneduser;
 import com.weble.linkedhouse.customer.entity.constant.Role;
 import com.weble.linkedhouse.customer.repository.BannedCustomerRepository;
 import com.weble.linkedhouse.customer.repository.CustomerRepository;
@@ -12,6 +13,7 @@ import com.weble.linkedhouse.notification.dtos.NoticeAll;
 import com.weble.linkedhouse.notification.entity.Notification;
 import com.weble.linkedhouse.notification.repository.NotificationRepository;
 import com.weble.linkedhouse.review.dtos.response.HostReviewResponse;
+import com.weble.linkedhouse.review.entity.FeedbackHost;
 import com.weble.linkedhouse.review.repository.FeedbackHostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +63,7 @@ public class AdminService {
 
     @Transactional
     public void deleteHostReviewId(Long feedbackHostId) {
+        feedbackHostRepository.getReferenceById(feedbackHostId);
         feedbackHostRepository.deleteById(feedbackHostId);
     }
 
@@ -80,32 +83,11 @@ public class AdminService {
         bannedCustomerRepository.save(bannedCustomer);
     }
 
-    @Transactional
-    public void addRoleToCustomer(Long customerId, Role newRole) {
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(NotExistCustomer::new);
 
-        customer.addRole(newRole);
-
-        customerRepository.save(customer);
-    }
-    public Page<ProfileDto> findAllCustomers(AdminFilter adminFilter, Pageable pageable) {
-        Page<Customer> allCustomers = customerRepository.findAllCustomers(adminFilter, pageable);
+    public Page<ProfileDto> findAllCustomers(Banneduser banneduser, Role role, Pageable pageable) {
+        Page<Customer> allCustomers = customerRepository.findAllCustomers(banneduser,role,pageable);
 
         Page<ProfileDto> map = allCustomers.map(customer -> ProfileDto.from(customer.getCustomerProfile()));
     return map;
     }
 }
-        /*
-        List<ProfileDto> profileDtosList = new ArrayList<>();
-        for (Customer customer : AllCustomers) {
-            ProfileList.add(profileDto.from(customer.getCustomerProfile()))
-        }
-        return profileDtosList;
-
-        --------------------------------------------------------------------
-
-        return customerRepository.findAllCustomers(adminFilter, pageable)
-                    .map(customer -> profileDto.from(customer.getCustomerProfile()));
-
-        */
