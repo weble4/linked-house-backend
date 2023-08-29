@@ -61,7 +61,9 @@ public class Customer extends AuditingFields {
             columnDefinition = "varchar(30) default 'non_auth'")
     private AuthState authState;
 
-    @Column(name = "suspended")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "suspended", nullable = false,
+        columnDefinition = "varchar(30) default 'ACTIVE'")
     private Banneduser suspended;
 
     @ToString.Exclude

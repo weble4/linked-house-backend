@@ -3,6 +3,8 @@ package com.weble.linkedhouse.customer.entity;
 import com.weble.linkedhouse.customer.entity.constant.Banneduser;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -20,6 +22,7 @@ public class BannedCustomer {
     @Column(name = "suspended_date")
     private LocalDateTime suspendedDate;
 
+    @Enumerated(EnumType.STRING)
     private Banneduser suspend;
 
     private BannedCustomer(Long customerId){

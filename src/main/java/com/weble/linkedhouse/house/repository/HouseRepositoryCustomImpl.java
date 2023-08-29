@@ -29,13 +29,15 @@ public class HouseRepositoryCustomImpl implements HouseRepositoryCustom {
 
     @Override
     public Optional<House> findByIdWithCustomer(Long rentalId) {
-        return Optional.ofNullable(queryFactory.selectFrom(house)
-                .leftJoin(house.imagePath, houseImage)
+        return Optional.ofNullable(
+                queryFactory.selectFrom(house)
+                .leftJoin(house.imagePath, houseImage).fetchJoin()
                 .leftJoin(house.customer, customer).fetchJoin()
                 .leftJoin(customer.role).fetchJoin()
                 .leftJoin(customer.customerProfile, customerProfile).fetchJoin()
                 .where(house.rentalId.eq(rentalId))
-                .fetchOne());
+                .fetchOne()
+        );
     }
 
     @Override
