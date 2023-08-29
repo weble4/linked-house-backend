@@ -1,11 +1,8 @@
 package com.weble.linkedhouse.admin.service;
 
-import com.weble.linkedhouse.customer.dtos.CustomerDto;
 import com.weble.linkedhouse.customer.dtos.ProfileDto;
 import com.weble.linkedhouse.customer.entity.BannedCustomer;
 import com.weble.linkedhouse.customer.entity.Customer;
-import com.weble.linkedhouse.customer.entity.CustomerProfile;
-import com.weble.linkedhouse.customer.entity.constant.Banneduser;
 import com.weble.linkedhouse.customer.entity.constant.Role;
 import com.weble.linkedhouse.customer.repository.BannedCustomerRepository;
 import com.weble.linkedhouse.customer.repository.CustomerRepository;
@@ -25,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @Slf4j
@@ -59,8 +55,8 @@ public class AdminService {
 
     public HostReviewResponse findByHostReviewId(Long feedbackHostId) {
         return feedbackHostRepository.findById(feedbackHostId)
-                .map(HostReviewResponse::from)
-                .orElseThrow(NotExistReview::new);
+                .map(HostReviewResponse::from)   // 리포지토리에서 조회한 값이, null이 아닌 경우(값이 있는 경우) 리턴되는 구문
+                .orElseThrow(NotExistReview::new);  // 리포지토리에서 조회한 값이, null인 경우(값이 없는 경우) 리턴되는 구문
     }
 
     @Transactional

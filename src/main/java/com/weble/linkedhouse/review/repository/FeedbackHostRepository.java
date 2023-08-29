@@ -10,4 +10,5 @@ import java.util.List;
 public interface FeedbackHostRepository extends JpaRepository<FeedbackHost, Long> {
 
     Page<FeedbackHost> findAllByCustomerCustomerId(Long customerId, Pageable pageable);
+
 }

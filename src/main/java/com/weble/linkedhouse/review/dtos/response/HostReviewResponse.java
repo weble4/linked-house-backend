@@ -20,10 +20,10 @@ public class HostReviewResponse {
     private LocalDateTime updatedAt;
 
     @Builder
-    private HostReviewResponse(Long feedbackHostId, Long writer, Long customerId, String title, String content,
+    private HostReviewResponse(Long feedbackHostId, Long writerId, Long customerId, String title, String content,
                                int attitude, int damageDegree, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.feedbackHostId = feedbackHostId;
-        this.writerId = writer;
+        this.writerId = writerId;
         this.customerId = customerId;
         this.title = title;
         this.content = content;
@@ -37,7 +37,7 @@ public class HostReviewResponse {
                                         int attitude, int damageDegree, LocalDateTime createdAt, LocalDateTime updatedAt) {
         return HostReviewResponse.builder()
                 .feedbackHostId(feedbackHostId)
-                .writer(writerId)
+                .writerId(writerId)
                 .customerId(customerId)
                 .title(title)
                 .content(content)
@@ -51,7 +51,7 @@ public class HostReviewResponse {
     public static HostReviewResponse from(FeedbackHost feedbackHost){
         return HostReviewResponse.builder()
                 .feedbackHostId(feedbackHost.getFeedbackHostId())
-                .writer(feedbackHost.getWriter().getCustomerId())
+                .writerId(feedbackHost.getWriter().getCustomerId())
                 .customerId(feedbackHost.getCustomer().getCustomerId())
                 .title(feedbackHost.getTitle())
                 .content(feedbackHost.getContent())

@@ -45,7 +45,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Import(TestConfig.class)
 @TestPropertySource(properties = {
         "spring.mail.username=dummy",
-        "srping.mail.password=dummypassword",
+        "spring.mail.password=dummypassword",
         "jwt.secret_key=testKeyNotRealKeyJustTestKeyAndKeyIsNeedToLength",
 })
 @Transactional
@@ -280,7 +280,7 @@ class CustomerServiceTest {
 
     Customer createUser() {
         return Customer.of(
-                "sameple@mail.com",
+                "sample@mail.com",
                 passwordEncoder.encode("abc123"),
                 Set.of(Role.ROLE_CUSTOMER)
         );
