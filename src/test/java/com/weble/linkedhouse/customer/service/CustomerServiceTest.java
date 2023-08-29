@@ -99,7 +99,7 @@ class CustomerServiceTest {
         CustomerProfile profile = profileRepository.save(createProfile(save));
 
         //when
-        Customer customer = customerRepository.findByCustomerEmail("sameple@mail.com")
+        Customer customer = customerRepository.findByCustomerEmail("sample@mail.com")
                 .orElseThrow(NotExistCustomer::new);
 
         //after then
@@ -140,7 +140,7 @@ class CustomerServiceTest {
         //then
         assertThat(loginResponse).isNotNull()
                 .hasFieldOrPropertyWithValue("customerId", customer.getCustomerId())
-                .hasFieldOrPropertyWithValue("customerEmail", "sameple@mail.com")
+                .hasFieldOrPropertyWithValue("customerEmail", "sample@mail.com")
                 .hasFieldOrPropertyWithValue("nickname", "nickname")
                 .hasFieldOrProperty("token");
     }
@@ -186,7 +186,7 @@ class CustomerServiceTest {
     void checkEmailDuplicatedTest() {
         Customer save = customerRepository.save(createUser());
 
-        boolean checkEmail = customerService.checkEmail("sameple@mail.com");
+        boolean checkEmail = customerService.checkEmail("sample@mail.com");
         //true - email 중복
         assertThat(checkEmail).isTrue();
     }
