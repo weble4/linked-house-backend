@@ -63,9 +63,9 @@ jobs:
           password: ${{ secrets.NCP_SERVER_PASSWORD }}
           port: 22
           script: |
-            docker login ${{ secrets.NCP_CONTAINER_REGISTRY }} -u ${{ secrets.NCP_API_KEY }} -p ${{ secrets.NCP_API_SECRET_KEY }}
+            echo "${{ secrets.NCP_API_SECRET_KEY }}" | docker login ${{ secrets.NCP_CONTAINER_REGISTRY }} -u ${{ secrets.NCP_API_KEY }} --password-stdin
             docker pull ${{ secrets.NCP_CONTAINER_REGISTRY }}/weble-backend:latest
             docker stop weble-backend || true
             docker rm weble-backend || true
-            docker run -d --name weble-backend -p 8080:8080 ${{ secrets.NCP_CONTAINER_REGISTRY }}/weble-backend:latest
+            docker run -d -e SPRING_PROFILE=prod --name weble-backend -p 8080:8080 ${{ secrets.NCP_CONTAINER_REGISTRY }}/weble-backend:latest
             docker image prune -f
