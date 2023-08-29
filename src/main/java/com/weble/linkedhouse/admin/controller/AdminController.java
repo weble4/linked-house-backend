@@ -1,14 +1,16 @@
 package com.weble.linkedhouse.admin.controller;
 
-import com.weble.linkedhouse.admin.service.AdminFilter;
 import com.weble.linkedhouse.admin.service.AdminService;
 import com.weble.linkedhouse.customer.dtos.ProfileDto;
+import com.weble.linkedhouse.customer.entity.constant.Banneduser;
+import com.weble.linkedhouse.customer.entity.constant.Role;
 import com.weble.linkedhouse.notification.dtos.NoticeAll;
 import com.weble.linkedhouse.review.dtos.response.HostReviewResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,9 +58,10 @@ public class AdminController {
 
     @GetMapping("/customers")
     public Page<ProfileDto> findAllCustomers(
-            @RequestParam(required = false) AdminFilter adminFilter,
+            @RequestParam(required = false)Banneduser banneduser,
+            @RequestParam(required = false) Role role,
             @PageableDefault(size = 10, sort = "createdAt", direction = DESC) Pageable pageable) {
-        return adminService.findAllCustomers(adminFilter, pageable);
+        return adminService.findAllCustomers(banneduser, role, pageable);
     }
 
     @GetMapping("/customers/{customerId}")

@@ -61,7 +61,9 @@ Weble4 팀의 프로젝트 linked-house backend는 airbnb 모델을 벤치마킹
 <image src="images/erd.png"></image>
 
 * * *
-### 시스템 아키텍쳐
+### 아키텍쳐
+
+<image src="images/architecture.png"></image>
 
 * * *
 

@@ -199,7 +199,6 @@ public class CustomerService {
     public TokenDto reissue(String refreshToken) {
 
         String email = jwtTokenProvider.getCustomerEmail(refreshToken);
-
         String value = redisTokenRepository.find(email);
 
         if (jwtTokenProvider.validToken(value) != JwtReturn.SUCCESS) {
@@ -209,6 +208,17 @@ public class CustomerService {
         TokenDto tokenDto = jwtTokenProvider.generateToken(email);
         tokenDto.setRefreshToken(refreshToken);
         return tokenDto;
+    }
+
+    @Transactional
+    public void addRoleAdmin(UserDetailsImpl userDetails) {
+        Customer customer = customerRepository.findByIdWithProfile(userDetails.getUserId())
+                .orElseThrow(NotExistCustomer::new);
+
+        if (customer.getRole().contains(Role.ROLE_ADMIN)) {
+            throw new AlreadyHasRole();
+        }
+        customer.addRole(Role.ROLE_ADMIN);
     }
 
     private void SendCheckMail(Customer customer) {

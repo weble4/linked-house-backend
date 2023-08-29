@@ -5,7 +5,6 @@ import lombok.Getter;
 @Getter
 public enum AdminFilter {
 
-    ROLE_CUSTOMER("ROLE_CUSTOMER"),
     ROLE_HOST("ROLE_HOST"),
     SUSPENDED("Suspended");
 

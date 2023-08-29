@@ -7,6 +7,8 @@ import com.weble.linkedhouse.reservation.entity.constant.ReservationState;
 import com.weble.linkedhouse.util.AuditingFields;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -54,6 +56,7 @@ public class Reservation extends AuditingFields {
             columnDefinition = "varchar(50) default 'NOT_PAY'")
     private PaymentState paymentState;
 
+    @Enumerated(EnumType.STRING)
     private ReservationState reservationState;
 
     @Builder

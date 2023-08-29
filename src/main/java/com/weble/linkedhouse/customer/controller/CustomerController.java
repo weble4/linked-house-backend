@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -104,8 +105,14 @@ public class CustomerController {
 
     //토큰 재발급
     @PostMapping("/reissue")
-    public ResponseEntity<TokenDto> reissue(@RequestBody String refreshToken) {
+    public ResponseEntity<TokenDto> reissue(@RequestHeader("refresh") String refreshToken) {
         TokenDto newAccessToken = customerService.reissue(refreshToken);
         return ResponseEntity.ok().body(newAccessToken);
+    }
+
+    @PostMapping("/admin")
+    public ResponseEntity<String> adminRoleUser(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        customerService.addRoleAdmin(userDetails);
+        return ResponseEntity.ok().body("어드민 유저 전환");
     }
 }
