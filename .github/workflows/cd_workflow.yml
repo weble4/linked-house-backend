@@ -63,6 +63,7 @@ jobs:
           password: ${{ secrets.NCP_SERVER_PASSWORD }}
           port: 22
           script: |
+            docker login ${{ secrets.NCP_CONTAINER_REGISTRY }} -u ${{ secrets.NCP_API_KEY }} -p ${{ secrets.NCP_API_SECRET_KEY }}
             docker pull ${{ secrets.NCP_CONTAINER_REGISTRY }}/weble-backend:latest
             docker stop weble-backend || true
             docker rm weble-backend || true
