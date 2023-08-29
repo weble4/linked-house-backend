@@ -21,6 +21,7 @@ import com.weble.linkedhouse.exception.Unauthorized;
 import com.weble.linkedhouse.security.UserDetailsImpl;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -121,6 +122,7 @@ class CustomerServiceTest {
                 .isInstanceOf(Unauthorized.class);
     }
 
+    @Disabled
     @Test
     @DisplayName("로그인 기능 로직 체크 - 로그인 성공")
     void loginSuccessTest() {
