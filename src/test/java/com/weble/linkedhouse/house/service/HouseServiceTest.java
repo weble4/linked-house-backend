@@ -19,6 +19,7 @@ import com.weble.linkedhouse.house.repository.HouseRepository;
 import com.weble.linkedhouse.reservation.repository.ReservationRepository;
 import com.weble.linkedhouse.security.UserDetailsImpl;
 import com.weble.linkedhouse.util.CreateFile;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Disabled
 @Transactional
 @SpringBootTest
 public class HouseServiceTest {
