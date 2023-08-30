@@ -9,7 +9,6 @@ import com.weble.linkedhouse.exception.NotExistReview;
 import com.weble.linkedhouse.review.dtos.response.HostReviewResponse;
 import com.weble.linkedhouse.review.entity.FeedbackHost;
 import com.weble.linkedhouse.review.repository.FeedbackHostRepository;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@Disabled
 @SpringBootTest
 class AdminServiceTest {
 

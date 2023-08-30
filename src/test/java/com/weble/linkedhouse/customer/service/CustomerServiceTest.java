@@ -42,7 +42,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
-@Disabled
 @SpringBootTest
 @Import(TestConfig.class)
 @TestPropertySource(properties = {
