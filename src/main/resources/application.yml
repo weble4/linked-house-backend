@@ -42,6 +42,8 @@ springdoc:
 jwt:
   secret_key: ${secret_key}
 ---
+management:
+  endpoints.web.exposure.include: "*"
 spring:
   config.activate.on-profile: prod
   jpa:
