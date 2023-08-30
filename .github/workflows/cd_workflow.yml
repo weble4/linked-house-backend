@@ -67,5 +67,5 @@ jobs:
             docker pull ${{ secrets.NCP_CONTAINER_REGISTRY }}/weble-backend:latest
             docker stop weble-backend || true
             docker rm weble-backend || true
-            docker run -d -e SPRING_PROFILE=prod --name weble-backend -p 8080:80 ${{ secrets.NCP_CONTAINER_REGISTRY }}/weble-backend:latest
+            docker run -d -e SPRING_PROFILE=prod --name weble-backend -p 8080:8080 ${{ secrets.NCP_CONTAINER_REGISTRY }}/weble-backend:latest
             docker image prune -f
