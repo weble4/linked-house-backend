@@ -5,6 +5,7 @@ import com.weble.linkedhouse.customer.dtos.ProfileDto;
 import com.weble.linkedhouse.customer.entity.constant.Banneduser;
 import com.weble.linkedhouse.customer.entity.constant.Role;
 import com.weble.linkedhouse.notification.dtos.NoticeAll;
+import com.weble.linkedhouse.review.dtos.response.CustomerReviewResponse;
 import com.weble.linkedhouse.review.dtos.response.HostReviewResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -51,6 +52,26 @@ public class AdminController {
         return ResponseEntity.ok().body(hostReviewResponse);
     }
 
+
+
+    @GetMapping("reviews/houses/all/{rentalId}")
+    public Page<CustomerReviewResponse> findAllByCustomerReview(
+            @PathVariable Long rentalId,
+            @PageableDefault(size = 10, sort = "createdAt", direction = DESC) Pageable pageable) {
+        return adminService.findAllByCustomerReview(rentalId, pageable);
+    }
+
+    @GetMapping("reviews/houses/{feedbackCustomerId]")
+    public ResponseEntity<CustomerReviewResponse> findByCustomerReviewId(@PathVariable Long feedbackCustomerId) {
+        CustomerReviewResponse customerReviewResponse = adminService.findByCustomerReviewId(feedbackCustomerId);
+        return ResponseEntity.ok().body(customerReviewResponse);
+    }
+
+    @DeleteMapping("/reviews/houses/{feedbackCustomerId}")
+    public ResponseEntity<String> deleteCustomerReview(@PathVariable Long feedbackCustomerId) {
+        adminService.deleteCustomerReview(feedbackCustomerId);
+        return ResponseEntity.ok().body("삭제 되었습니다.");
+    }
     @DeleteMapping("/reviews/hosts/{feedbackHostId}")
     public void deleteHostReviewId(@PathVariable Long feedbackHostId) {
         adminService.deleteHostReviewId(feedbackHostId);
@@ -74,4 +95,5 @@ public class AdminController {
         adminService.suspendUser(customerId);
         return ResponseEntity.ok("유저 이용정지가 완료되었습니다.");
     }
+
 }
