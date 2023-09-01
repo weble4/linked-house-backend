@@ -104,6 +104,7 @@ public class AdminService {
                 .orElseThrow(NotExistCustomer::new);
     }
 
+    @Transactional
     public void deleteCustomerReview(Long feedbackCustomerId) {
         feedbackCustomerRepository.getReferenceById(feedbackCustomerId);
         feedbackCustomerRepository.deleteById(feedbackCustomerId);

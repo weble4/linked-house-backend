@@ -45,6 +45,7 @@ public class SecurityConfig {
             "/api/customers/login",
             "/api/customers/signup",
             "/api/customers/activate-state",
+            "/api/customers/check-email",
             "/api/customers/reissue",
     };
 
