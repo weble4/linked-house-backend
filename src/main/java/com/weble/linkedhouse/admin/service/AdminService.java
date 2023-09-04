@@ -105,7 +105,7 @@ public class AdminService {
     }
 
     @Transactional
-    public void deleteCustomerReview(Long feedbackCustomerId) {
+    public void deleteCustomerReviewId(Long feedbackCustomerId) {
         feedbackCustomerRepository.getReferenceById(feedbackCustomerId);
         feedbackCustomerRepository.deleteById(feedbackCustomerId);
         }
