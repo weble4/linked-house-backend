@@ -1,26 +1,36 @@
 package com.weble.linkedhouse.security;
 
 
+import com.weble.linkedhouse.customer.service.CustomerService;
 import com.weble.linkedhouse.security.jwt.JwtAuthenticationFilter;
 import com.weble.linkedhouse.security.jwt.JwtTokenProvider;
+import com.weble.linkedhouse.security.jwt.token.RefreshTokenRepository;
 import com.weble.linkedhouse.util.RequestMatcherBuilder;
+import com.weble.linkedhouse.util.config.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
+import com.weble.linkedhouse.util.config.oauth.OAuth2SuccessHandler;
+import com.weble.linkedhouse.util.config.oauth.OAuth2UserCustomService;
 import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
@@ -32,6 +42,11 @@ import static org.springframework.boot.autoconfigure.security.servlet.PathReques
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
+
+    private final OAuth2UserCustomService oAuth2UserCustomService;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final CustomerService customerService;
+
 
     private final String[] docsUrl = {
             "/actuator/**",
@@ -65,15 +80,29 @@ public class SecurityConfig {
                 .sessionManagement(sessionConfig -> sessionConfig
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+                .oauth2Login()
+                .authorizationEndpoint()
+                .baseUri("/api/login/oauth/authorization")
+                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
+                .and()
+                .userInfoEndpoint()
+                .userService(oAuth2UserCustomService)
+                .and()
+                .successHandler(oAuth2SuccessHandler())
+                .and()
+
                 .addFilterBefore(tokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
     // 패스워드 인코더로 사용할 빈 등록
-    @Bean
+    /*
     public PasswordEncoder PasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+     */
+
 
     @Bean
     public Filter tokenFilter() {
@@ -89,6 +118,42 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
+    }
+
+    @Bean
+    public OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository() {
+        return new OAuth2AuthorizationRequestBasedOnCookieRepository();
+    }
+
+    @Bean
+    @Lazy
+    public OAuth2SuccessHandler oAuth2SuccessHandler() {
+        return new OAuth2SuccessHandler(jwtTokenProvider,
+                refreshTokenRepository,
+                oAuth2AuthorizationRequestBasedOnCookieRepository(),
+                customerService
+        );
+    }
+
+    @Bean
+    public JwtAuthenticationFilter tokenAuthenticationFilter() {
+        return new JwtAuthenticationFilter(jwtTokenProvider);
+    }
+
+    @Bean // Todo: 클라이언트 별로 나눌 enum 정의?
+    public ClientRegistrationRepository clientRegistrationRepository() {
+        // OAuth 2.0 클라이언트 등록 정보를 설정하세요.
+        ClientRegistration clientRegistration = ClientRegistration.withRegistrationId("your-registration-id")
+                .clientId("{kakao_client_id}")
+                .clientSecret("{kakao_client_secret}")
+                .redirectUri("/api/login/oauth/authorization")
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .scope("profile_nickname", "profile_image", "account_email")
+                .authorizationUri("https://kauth.kakao.com/oauth/authorize")
+                .tokenUri("https://kauth.kakao.com/oauth/token")
+                .build();
+
+        return new InMemoryClientRegistrationRepository(clientRegistration);
     }
 }
 

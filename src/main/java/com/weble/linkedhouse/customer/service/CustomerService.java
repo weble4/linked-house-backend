@@ -267,4 +267,9 @@ public class CustomerService {
         }
         return result;
     }
+
+    public Customer findByEmail(String email) {
+        return customerRepository.findByCustomerEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Unexpected User"));
+    }
 }
