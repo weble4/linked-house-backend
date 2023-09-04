@@ -5,12 +5,12 @@ import com.weble.linkedhouse.customer.dtos.ProfileDto;
 import com.weble.linkedhouse.customer.entity.constant.Banneduser;
 import com.weble.linkedhouse.customer.entity.constant.Role;
 import com.weble.linkedhouse.notification.dtos.NoticeAll;
+import com.weble.linkedhouse.review.dtos.response.CustomerReviewResponse;
 import com.weble.linkedhouse.review.dtos.response.HostReviewResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,9 +39,8 @@ public class AdminController {
     }
 
     @GetMapping("/reviews/hosts/all/{customerId}")
-    public Page<HostReviewResponse> findAllByHostReview(
-            @PathVariable Long customerId,
-            @PageableDefault(size = 10, sort = "createdAt", direction = DESC) Pageable pageable) {
+    public Page<HostReviewResponse> findAllByHostReview(@PathVariable Long customerId,
+                                                        @PageableDefault(size = 10, sort = "createdAt", direction = DESC) Pageable pageable) {
         return adminService.findAllByHostReview(customerId, pageable);
     }
 
@@ -49,6 +48,24 @@ public class AdminController {
     public ResponseEntity<HostReviewResponse> findByHostReviewId(@PathVariable Long feedbackHostId) {
         HostReviewResponse hostReviewResponse = adminService.findByHostReviewId(feedbackHostId);
         return ResponseEntity.ok().body(hostReviewResponse);
+    }
+
+    @GetMapping("/reviews/houses/all/{rentalId}")
+    public Page<CustomerReviewResponse> findAllByCustomerReview(@PathVariable Long rentalId,
+                                                                @PageableDefault(size = 10, sort = "createdAt", direction = DESC) Pageable pageable) {
+        return adminService.findAllByCustomerReview(rentalId, pageable);
+    }
+
+    @GetMapping("/reviews/houses/{feedbackCustomerId}")
+    public ResponseEntity<CustomerReviewResponse> findByCustomerReviewId(@PathVariable Long feedbackCustomerId) {
+        CustomerReviewResponse customerReviewResponse = adminService.findByCustomerReviewId(feedbackCustomerId);
+        return ResponseEntity.ok().body(customerReviewResponse);
+    }
+
+    @DeleteMapping("/reviews/houses/{feedbackCustomerId}")
+    public ResponseEntity<String> deleteCustomerReview(@PathVariable Long feedbackCustomerId) {
+        adminService.deleteCustomerReview(feedbackCustomerId);
+        return ResponseEntity.ok().body("삭제 되었습니다.");
     }
 
     @DeleteMapping("/reviews/hosts/{feedbackHostId}")
@@ -74,4 +91,5 @@ public class AdminController {
         adminService.suspendUser(customerId);
         return ResponseEntity.ok("유저 이용정지가 완료되었습니다.");
     }
+
 }

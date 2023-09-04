@@ -12,8 +12,9 @@ import com.weble.linkedhouse.exception.NotExistReview;
 import com.weble.linkedhouse.notification.dtos.NoticeAll;
 import com.weble.linkedhouse.notification.entity.Notification;
 import com.weble.linkedhouse.notification.repository.NotificationRepository;
+import com.weble.linkedhouse.review.dtos.response.CustomerReviewResponse;
 import com.weble.linkedhouse.review.dtos.response.HostReviewResponse;
-import com.weble.linkedhouse.review.entity.FeedbackHost;
+import com.weble.linkedhouse.review.repository.FeedbackCustomerRepository;
 import com.weble.linkedhouse.review.repository.FeedbackHostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,7 @@ public class AdminService {
     private final CustomerRepository customerRepository;
     private final FeedbackHostRepository feedbackHostRepository;
     private final BannedCustomerRepository bannedCustomerRepository;
+    private final FeedbackCustomerRepository feedbackCustomerRepository;
 
 
     @Transactional
@@ -90,4 +92,21 @@ public class AdminService {
         Page<ProfileDto> map = allCustomers.map(customer -> ProfileDto.from(customer.getCustomerProfile()));
     return map;
     }
+
+    public Page<CustomerReviewResponse> findAllByCustomerReview(Long rentalId, Pageable pageable) {
+        return feedbackCustomerRepository.findAllByCustomerCustomerId(rentalId, pageable)
+                .map(CustomerReviewResponse::from);
+    }
+
+    public CustomerReviewResponse findByCustomerReviewId(Long feedbackCustomerId) {
+        return feedbackCustomerRepository.findById(feedbackCustomerId)
+                .map(CustomerReviewResponse::from)
+                .orElseThrow(NotExistCustomer::new);
+    }
+
+    @Transactional
+    public void deleteCustomerReview(Long feedbackCustomerId) {
+        feedbackCustomerRepository.getReferenceById(feedbackCustomerId);
+        feedbackCustomerRepository.deleteById(feedbackCustomerId);
+        }
 }
