@@ -68,6 +68,10 @@ public class CustomerProfile extends AuditingFields {
         return new CustomerProfile(customer, nickname, gender, birthDay, phoneNum, imagePath);
     }
 
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     public void changePublicAt(PublicAt publicAt) {
         this.publicAt = publicAt;
     }
