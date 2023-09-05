@@ -9,8 +9,10 @@ import com.weble.linkedhouse.util.RequestMatcherBuilder;
 import com.weble.linkedhouse.util.config.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.weble.linkedhouse.util.config.oauth.OAuth2SuccessHandler;
 import com.weble.linkedhouse.util.config.oauth.OAuth2UserCustomService;
+import com.weble.linkedhouse.util.config.oauth.provider.OAuth2Provider;
 import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -31,6 +33,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
@@ -78,9 +81,11 @@ public class SecurityConfig {
                         .requestMatchers(mvc.matchers("/api/admin/*")).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
+
                 .sessionManagement(sessionConfig -> sessionConfig
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+
                 .oauth2Login()
                 .authorizationEndpoint()
                 .baseUri("/api/login/oauth/authorization")
@@ -95,15 +100,6 @@ public class SecurityConfig {
                 .addFilterBefore(tokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-
-    // 패스워드 인코더로 사용할 빈 등록
-    /*
-    public PasswordEncoder PasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-     */
-
 
     @Bean
     public Filter tokenFilter() {
@@ -141,20 +137,27 @@ public class SecurityConfig {
         return new JwtAuthenticationFilter(jwtTokenProvider);
     }
 
-    @Bean // Todo: 클라이언트 별로 나눌 enum 정의?
+    @Bean
     public ClientRegistrationRepository clientRegistrationRepository() {
-        // OAuth 2.0 클라이언트 등록 정보를 설정하세요.
-        ClientRegistration clientRegistration = ClientRegistration.withRegistrationId("your-registration-id")
-                .clientId("{kakao_client_id}")
-                .clientSecret("{kakao_client_secret}")
+        List<ClientRegistration> registrations = Arrays.asList(
+                createClientRegistration(OAuth2Provider.KAKAO),
+                createClientRegistration(OAuth2Provider.NAVER)
+        );
+
+        return new InMemoryClientRegistrationRepository(registrations);
+    }
+
+    private ClientRegistration createClientRegistration(OAuth2Provider provider) {
+        return ClientRegistration.withRegistrationId(provider.getRegistrationId())
+                .clientId("${" + provider.getRegistrationId() + "_client_id}")
+                .clientSecret("${" + provider.getRegistrationId() + "_client_secret}")
                 .redirectUri("/api/login/oauth/authorization")
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .scope("profile_nickname", "profile_image", "account_email")
-                .authorizationUri("https://kauth.kakao.com/oauth/authorize")
-                .tokenUri("https://kauth.kakao.com/oauth/token")
+                .authorizationUri(provider.getAuthorizationUri())
+                .tokenUri(provider.getTokenUri())
+                .userNameAttributeName(provider.getUserNameAttributeName())
                 .build();
-
-        return new InMemoryClientRegistrationRepository(clientRegistration);
     }
 }
 

@@ -38,8 +38,8 @@ spring:
     oauth2.client:
       registration:
         naver:
-          clientId: '{네이버 client-id}'
-          clientSecret: '{네이버 client-secret}'
+          clientId: '{naver_client_id}'
+          clientSecret: '{naver_client_secret}'
           clientAuthenticationMethod: post
           authorizationGrantType: authorization_code
           redirectUri: "{baseUrl}/{action}/oauth2/code/{registrationId}"

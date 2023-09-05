@@ -77,7 +77,11 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
 	// OAuth2
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	dependencies {
+		implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+		implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+	}
+
 }
 
 tasks.named('test') {
