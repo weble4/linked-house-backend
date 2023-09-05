@@ -151,7 +151,7 @@ public class SecurityConfig {
         return ClientRegistration.withRegistrationId(provider.getRegistrationId())
                 .clientId("${" + provider.getRegistrationId() + "_client_id}")
                 .clientSecret("${" + provider.getRegistrationId() + "_client_secret}")
-                .redirectUri("/api/login/oauth/authorization")
+                .redirectUri("/api/login/")
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .scope("profile_nickname", "profile_image", "account_email")
                 .authorizationUri(provider.getAuthorizationUri())
