@@ -64,7 +64,7 @@ public class AdminController {
 
     @DeleteMapping("/reviews/houses/{feedbackCustomerId}")
     public ResponseEntity<String> deleteCustomerReview(@PathVariable Long feedbackCustomerId) {
-        adminService.deleteCustomerReview(feedbackCustomerId);
+        adminService.deleteCustomerReviewId(feedbackCustomerId);
         return ResponseEntity.ok().body("삭제 되었습니다.");
     }
 

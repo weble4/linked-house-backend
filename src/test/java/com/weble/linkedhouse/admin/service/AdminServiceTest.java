@@ -1,14 +1,14 @@
 package com.weble.linkedhouse.admin.service;
 
-
 import com.weble.linkedhouse.customer.entity.Customer;
 import com.weble.linkedhouse.customer.entity.constant.Role;
 import com.weble.linkedhouse.customer.repository.CustomerRepository;
-import com.weble.linkedhouse.customer.repository.ProfileRepository;
-import com.weble.linkedhouse.exception.NotExistReview;
-import com.weble.linkedhouse.review.dtos.response.HostReviewResponse;
-import com.weble.linkedhouse.review.entity.FeedbackHost;
-import com.weble.linkedhouse.review.repository.FeedbackHostRepository;
+import com.weble.linkedhouse.house.entity.House;
+import com.weble.linkedhouse.house.entity.constant.AutoReservation;
+import com.weble.linkedhouse.house.repository.HouseRepository;
+import com.weble.linkedhouse.review.dtos.response.CustomerReviewResponse;
+import com.weble.linkedhouse.review.entity.FeedbackCustomer;
+import com.weble.linkedhouse.review.repository.FeedbackCustomerRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,109 +19,116 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-class AdminServiceTest {
+
+public class AdminServiceTest {
 
     @Autowired
     private AdminService adminService;
     @Autowired
-    private FeedbackHostRepository feedbackHostRepository;
+    private FeedbackCustomerRepository feedbackCustomerRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
-    private ProfileRepository profileRepository;
+    private HouseRepository houseRepository;
 
     @Test
     @Transactional
-    @DisplayName(value = "호스트 리뷰 전체 조회 테스트")
-    public void findAllByHostReviewTest() throws Exception {
+    @DisplayName(value = "숙소 리뷰 전체 조회 테스트")
+    public void findAllByCustomerReviewTest() throws Exception{
 
-        // given
         Customer customer = customerRepository.save(createUser());
+        House house = houseRepository.save(createHouse(customer));
         Long customerId = customer.getCustomerId();
 
-        for (int i = 0; i < 10; i++) {
-            FeedbackHost of = FeedbackHost.of(customer, customer, "제목", "내용", i, i);
-            feedbackHostRepository.save(of);
+        for(int i = 0; i < 10; i++){
+            FeedbackCustomer of = FeedbackCustomer.of(customer, house, "제목", "내용", i, i, i);
+            feedbackCustomerRepository.save(of);
         }
 
-        // when  // PageRequest.of
-        Page<HostReviewResponse> allByHostReview = adminService.findAllByHostReview(customerId, PageRequest.of(0, 9));
-        List<HostReviewResponse> hostReviewResponses = allByHostReview.get().toList();
+        Page<CustomerReviewResponse> allByCustomerReview = adminService.findAllByCustomerReview(customerId, PageRequest.of(0,9));
+        List<CustomerReviewResponse> customerReviewResponse = allByCustomerReview.get().toList();
 
-
-        // then
-        assertThat(hostReviewResponses.size()).isEqualTo(9);
-        assertThat(hostReviewResponses.get(1).getTitle()).isEqualTo("제목");
+        assertThat(customerReviewResponse.size()).isEqualTo(9);
+        assertThat(customerReviewResponse.get(1).getTitle()).isEqualTo("제목");
     }
 
     @Test
     @Transactional
-    @DisplayName(value = "호스트 리뷰 단일 조회 테스트")
-    public void findByHostReviewIdTest() throws Exception {
-
-        // given
+    @DisplayName(value = "숙소 리뷰 단일 조회 테스트")
+    public void findByCustomerReviewIdTest() throws Exception {
         String title = "1번제목";
         String content = "1번내용";
-        int attitude = 10;
-        int damageDegree = 10;
+        int scoreClean = 10;
+        int scoreCommunication = 10;
+        int scoreSatisfaction = 10;
 
         Customer customer = customerRepository.save(createUser());
-        Customer writer = customerRepository.save(createUser());
+        House house = houseRepository.save(createHouse(customer));
 
-        FeedbackHost hostReview = FeedbackHost.of(customer, writer, title, content, attitude, damageDegree);
-        FeedbackHost reviewTest = feedbackHostRepository.save(hostReview);
-        // H2 DB 에다가 위에 선언된 값들을 넣어줄 것(H2용 Entity 를 만들 것)
+        FeedbackCustomer customerReview = FeedbackCustomer.of(customer, house, title, content, scoreClean, scoreCommunication, scoreSatisfaction);
+        FeedbackCustomer reviewTest = feedbackCustomerRepository.save(customerReview);
 
-        // when
-        HostReviewResponse byHostReviewId = adminService.findByHostReviewId(reviewTest.getFeedbackHostId());
-        // adminService.findByHostReviewId 를 통해, 리포지토리에서 조회한 값이 null인 경우임.
-        // 그래서, byHostReviewId 에서 데이터를 추출해도 null 이므로, 값 자체가 조회되지 않음.
+        CustomerReviewResponse byCustomerReviewId = adminService.findByCustomerReviewId(reviewTest.getFeedbackCustomerId());
 
-        // then
-        assertEquals(damageDegree, byHostReviewId.getDamageDegree());
-        assertEquals(attitude, byHostReviewId.getAttitude());
-        assertEquals(title, byHostReviewId.getTitle());
-        assertEquals(content, byHostReviewId.getContent());
+        assertEquals(scoreSatisfaction, byCustomerReviewId.getScoreSatisfaction());
+        assertEquals(scoreCommunication, byCustomerReviewId.getScoreCommunication());
+        assertEquals(scoreClean, byCustomerReviewId.getScoreClean());
+
+        assertEquals(title, byCustomerReviewId.getTitle());
+        assertEquals(content, byCustomerReviewId.getContent());
+
     }
-
     @Test
     @Transactional
     @DisplayName(value = "호스트 리뷰 단일 삭제 테스트")
-    public void deleteHostReviewIdTest() throws Exception {
-        // given
+    public void deleteCustomerReviewIdTest() throws Exception{
         String title = "1번제목";
         String content = "1번내용";
-        int attitude = 10;
-        int damageDegree = 10;
+        int scoreClean = 10;
+        int scoreCommunication = 10;
+        int scoreSatisfaction = 10;
 
         Customer customer = customerRepository.save(createUser());
-        Customer writer = customerRepository.save(createUser());
+        House house = houseRepository.save(createHouse(customer));
 
-        FeedbackHost hostReview = FeedbackHost.of(customer, writer, title, content, attitude, damageDegree);
-        FeedbackHost reviewTest = feedbackHostRepository.save(hostReview);
+        FeedbackCustomer customerReview = FeedbackCustomer.of(customer, house, title, content, scoreClean, scoreCommunication, scoreSatisfaction);
+        FeedbackCustomer reviewTest = feedbackCustomerRepository.save(customerReview);
 
-        // when
-        adminService.deleteHostReviewId(reviewTest.getFeedbackHostId());
+        adminService.deleteCustomerReviewId(reviewTest.getFeedbackCustomerId());//리뷰 삭제
 
-        // then
-        assertThrows(NotExistReview.class, () -> adminService.findByHostReviewId(reviewTest.getFeedbackHostId()));
+        Optional<FeedbackCustomer> deletedReview = feedbackCustomerRepository.findById(reviewTest.getFeedbackCustomerId());
+
+        assertThat(deletedReview).isEmpty();//리뷰 됐는지 마지막 확인
     }
-
-        Customer createUser () {
-            return Customer.of(
-                    "sample@mail.com",
-                    passwordEncoder.encode("abc123"),
-                    Set.of(Role.ROLE_CUSTOMER)
-            );
-        }
+    Customer createUser () {
+        return Customer.of(
+                "sample@mail.com",
+                passwordEncoder.encode("abc123"),
+                Set.of(Role.ROLE_CUSTOMER)
+        );
     }
-
+    House createHouse(Customer customer) {
+        return House.of(
+                customer,
+                "description",
+                5,
+                1,
+                10000,
+                "서울",
+                "서울",
+                AutoReservation.AUTO,
+                3,
+                3,
+                3
+        );
+    }
+}
