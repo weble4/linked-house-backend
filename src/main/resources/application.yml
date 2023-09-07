@@ -76,6 +76,16 @@ springdoc:
   swagger-ui.path: /swagger-ui.html
   show-actuator: true
 
+cloud:
+  aws:
+    stack.auto: false
+    region.static: ap-northeast-2
+ncp:
+  accessKey: ${ncp_obj_access_key}
+  secretKey: ${ncp_obj_secret_key}
+  regionName: kr-standard
+  endpoint: https://kr.object.ncloudstorage.com
+  bucket: ${bucket}
 jwt:
   secret_key: ${secret_key}
 ---
@@ -151,3 +161,14 @@ springdoc:
 
 jwt:
   secret_key: ${secret_key}
+
+cloud:
+  aws:
+    stack.auto: false
+    region.static: ap-northeast-2
+ncp:
+  accessKey: ${ncp_obj_access_key}
+  secretKey: ${ncp_obj_secret_key}
+  regionName: kr-standard
+  endpoint: https://kr.object.ncloudstorage.com
+  bucket: ${bucket}

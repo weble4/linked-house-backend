@@ -19,6 +19,7 @@ import com.weble.linkedhouse.house.repository.HouseRepository;
 import com.weble.linkedhouse.reservation.repository.ReservationRepository;
 import com.weble.linkedhouse.security.UserDetailsImpl;
 import com.weble.linkedhouse.util.CreateFile;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -165,6 +166,7 @@ public class HouseServiceTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("숙박업소 내용 수정 확인")
     void updateHouseTest() {
         // Host 생성

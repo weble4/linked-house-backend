@@ -30,7 +30,7 @@ import com.weble.linkedhouse.security.jwt.token.RedisTokenRepository;
 import com.weble.linkedhouse.security.jwt.token.RefreshToken;
 import com.weble.linkedhouse.security.jwt.token.RefreshTokenRepository;
 import com.weble.linkedhouse.security.jwt.token.TokenDto;
-import com.weble.linkedhouse.util.CreateFile;
+import com.weble.linkedhouse.util.storage.ObjectStorage;
 import io.jsonwebtoken.JwtException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -59,6 +59,7 @@ public class CustomerService {
     private final JwtTokenProvider jwtTokenProvider;
     private final DynamicRepository dynamicRepository;
     private final BookMarkRepository bookMarkRepository;
+    private final ObjectStorage objectStorage;
 
     @Value("${spring.mail.username}")
     private String emailSender;
@@ -153,12 +154,20 @@ public class CustomerService {
     }
 
     @Transactional
-    public ProfileDto updateProfile(UserDetailsImpl userDetails, UpdateRequest updateRequest, MultipartFile image) {
+    public ProfileDto updateProfile(UserDetailsImpl userDetails, UpdateRequest updateRequest, MultipartFile file) {
 
         Customer customer = customerRepository.findByIdWithProfile(userDetails.getUserId())
                 .orElseThrow(NotExistCustomer::new);
 
-        String imagePath = checkImageAndGetPath(image, customer);
+        String imagePath = customer.getCustomerProfile().getImagePath();
+
+        if (fileValid(file)) {
+            if(isPathExistence(customer)) {
+                boolean isSuccess = objectStorage.deleteFile(customer.getCustomerProfile().getImagePath());
+                log.info("Delete isSuccess : {}", isSuccess);
+            }
+            imagePath = objectStorage.uploadFile(file);
+        }
 
         customer.getCustomerProfile().updateProfile(
                 updateRequest.getNickname(),
@@ -253,23 +262,16 @@ public class CustomerService {
         return origin + "_" + userId;
     }
 
-    private String checkImageAndGetPath(MultipartFile image, Customer customer) {
-        CreateFile createFile = new CreateFile();
-        String result;
-        if (image.isEmpty()) {
-            if (customer.getCustomerProfile().getImagePath().isEmpty()) {
-                result = null;
-            } else {
-                result = customer.getCustomerProfile().getImagePath();
-            }
-        } else {
-            result = createFile.saveImage(image, customer.getCustomerId());
-        }
-        return result;
-    }
-
     public Customer findByEmail(String email) {
         return customerRepository.findByCustomerEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Unexpected User"));
+    }
+
+    private boolean isPathExistence(Customer customer) {
+        return customer.getCustomerProfile().getImagePath() != null;
+    }
+
+    private boolean fileValid(MultipartFile file) {
+        return file != null;
     }
 }

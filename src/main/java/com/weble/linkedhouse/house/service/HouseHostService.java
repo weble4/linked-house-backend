@@ -12,7 +12,7 @@ import com.weble.linkedhouse.house.entity.HouseImage;
 import com.weble.linkedhouse.house.repository.HouseImageRepository;
 import com.weble.linkedhouse.house.repository.HouseRepository;
 import com.weble.linkedhouse.security.UserDetailsImpl;
-import com.weble.linkedhouse.util.CreateFile;
+import com.weble.linkedhouse.util.storage.ObjectStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +32,7 @@ public class HouseHostService {
     private final HouseRepository houseRepository;
     private final HouseImageRepository houseImageRepository;
     private final CustomerRepository customerRepository;
+    private final ObjectStorage objectStorage;
 
     public Page<HouseResponseDto> findMyRegistrationHouseList(UserDetailsImpl userDetails, Pageable pageable) {
 
@@ -56,10 +57,11 @@ public class HouseHostService {
 
         House save = houseRepository.save(request.toEntity(customer));
 
-        CreateFile createFile = new CreateFile();
-        List<String> imagePathList = createFile.saveHouseImage(images, customerId);
+        List<String> imagePathList = objectStorage.uploadListImage(images);
 
-        List<HouseImage> houseImages = houseImageList(imagePathList, save);
+        List<HouseImage> houseImages = imagePathList.stream()
+                .map(imagePath -> HouseImage.of(save, imagePath))
+                .collect(Collectors.toList());
         houseImageRepository.saveAll(houseImages);
     }
 
@@ -81,17 +83,18 @@ public class HouseHostService {
                 update.getBathRoom()
         );
 
-        CreateFile createFile = new CreateFile();
-        List<HouseImage> saveImagePath = house.getImagePath();
-        List<String> collect = saveImagePath.stream().map(HouseImage::getImagePath)
+        List<String> fileUrls = house.getImagePath()
+                .stream().map(HouseImage::getImagePath)
                 .collect(Collectors.toList());
-        saveImagePath.clear();
+        house.getImagePath().clear();
+
         houseImageRepository.deleteByHouseRentalId(house.getRentalId());
-        createFile.deleteImageFile(collect);
+        objectStorage.deleteListImages(fileUrls);
+
         List<HouseImage> newList = new ArrayList<>();
 
         if (images != null) {
-            List<String> imageList = createFile.saveHouseImage(images, house.getRentalId());
+            List<String> imageList = objectStorage.uploadListImage(images);
             for (String imagePath : imageList) {
                 HouseImage newImage = HouseImage.of(house, imagePath);
                 newList.add(newImage);
@@ -107,17 +110,5 @@ public class HouseHostService {
         House house = houseRepository.getReferenceById(rentalId);
         houseImageRepository.deleteByHouseRentalId(house.getRentalId());
         houseRepository.deleteById(house.getRentalId());
-    }
-
-
-    private List<HouseImage> houseImageList(List<String> imagePathList, House house) {
-
-        List<HouseImage> houseImages = new ArrayList<>();
-
-        for (String imagePath : imagePathList) {
-            HouseImage houseImage = HouseImage.of(house, imagePath);
-            houseImages.add(houseImage);
-        }
-        return houseImages;
     }
 }

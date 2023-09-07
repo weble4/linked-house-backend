@@ -45,7 +45,6 @@ public class CookieUtil {
     // 쿠키 역직렬화 통해 객체로 변환
     public static <T> T deserialize(Cookie cookie, Class<T> cls) {
         return cls.cast(
-                                    // 추후 삭제 예정인 메서드 (@Deprecated)
                 SerializationUtils.deserialize(
                         Base64.getUrlDecoder().decode(cookie.getValue())
                 )
