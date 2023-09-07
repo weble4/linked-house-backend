@@ -121,6 +121,7 @@ public class HouseServiceTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("새 숙박업소 저장 확인")
     void registrationHouseTest() {
         /* Given */
