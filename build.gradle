@@ -77,11 +77,13 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
 	// OAuth2
-	dependencies {
-		implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-		implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-	}
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 
+	// cloud aws & object storage
+	implementation group: 'io.awspring.cloud', name: 'spring-cloud-starter-aws', version: '2.4.4'
+	implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.488'
+	implementation 'javax.xml.bind:jaxb-api:2.3.0'
 }
 
 tasks.named('test') {
