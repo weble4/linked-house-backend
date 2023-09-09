@@ -71,8 +71,6 @@ spring:
           tokenUri: https://kauth.kakao.com/oauth/token
           userInfoUri: https://kapi.kakao.com/v2/user/me
           userNameAttribute: id
-  profiles:
-    include: oauth
 springdoc:
   api-docs.path: /api-docs
   swagger-ui.path: /swagger-ui.html
