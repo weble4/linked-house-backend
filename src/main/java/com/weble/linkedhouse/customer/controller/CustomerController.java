@@ -100,6 +100,7 @@ public class CustomerController {
     public ProfileDto updateProfile(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                     @RequestPart @Valid UpdateRequest updateRequest,
                                     @RequestPart MultipartFile image) {
+
         return customerService.updateProfile(userDetails, updateRequest, image);
     }
 

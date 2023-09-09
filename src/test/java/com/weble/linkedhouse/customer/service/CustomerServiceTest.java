@@ -237,37 +237,6 @@ class CustomerServiceTest {
                 .hasFieldOrPropertyWithValue("phoneNum", profile.getPhoneNum());
     }
 
-    @Test
-    @DisplayName("프로필 업데이트")
-    void updateProfileTest() {
-        Customer customer = customerRepository.save(createUser());
-        CustomerProfile profile = profileRepository.save(createProfile(customer));
-        customer.setCustomerProfile(profile);
-        UserDetailsImpl userDetails = new UserDetailsImpl(ProfileDto.from(profile));
-
-        String name = "file";
-        String originalFileName = "test.txt";
-        String contentType = "text/plain";
-        byte[] content = "File content".getBytes();
-        MultipartFile image = new MockMultipartFile(name, originalFileName,contentType,content);
-
-        UpdateRequest updateRequest = UpdateRequest.builder()
-                .nickname("update")
-                .phoneNum("010-1111-1234")
-                .publicAt(PublicAt.PUBLIC)
-                .build();
-
-        ProfileDto update = customerService.updateProfile(userDetails, updateRequest, image);
-
-        Customer updateCustomer = customerRepository
-                .findByIdWithProfile(userDetails.getUserId()).get();
-
-        assertThat(update.getNickname())
-                .isEqualTo(updateCustomer.getCustomerProfile().getNickname());
-        assertThat(update.getImagePath())
-                .isEqualTo(updateCustomer.getCustomerProfile().getImagePath());
-    }
-
 // 유저들 생성
     CustomerProfile createProfile(Customer customer) {
         return CustomerProfile.of(

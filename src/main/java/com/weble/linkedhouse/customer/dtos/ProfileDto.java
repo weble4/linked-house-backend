@@ -4,8 +4,10 @@ package com.weble.linkedhouse.customer.dtos;
 import com.weble.linkedhouse.customer.entity.CustomerProfile;
 import com.weble.linkedhouse.customer.entity.constant.PublicAt;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class ProfileDto {
 
     private CustomerDto customerDto;
