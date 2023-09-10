@@ -5,7 +5,7 @@ import lombok.Getter;
 public enum FilterKeyword {
     SEOUL("서울"),
     SEJONG("세종"),
-    INCHENO("인천"),
+    INCHEON("인천"),
     DAEJEON("대전"),
     GWANGJU("광주"),
     BUSAN("부산"),
