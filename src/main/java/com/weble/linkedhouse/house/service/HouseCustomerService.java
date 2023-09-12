@@ -23,7 +23,7 @@ public class HouseCustomerService {
     }
 
     public HouseResponseDto findHouse(Long rentalId) {
-        return houseRepository.findById(rentalId).map(HouseResponseDto::from)
+        return houseRepository.findByIdWithCustomer(rentalId).map(HouseResponseDto::from)
                 .orElseThrow(NotExistHouseException::new);
     }
 }
