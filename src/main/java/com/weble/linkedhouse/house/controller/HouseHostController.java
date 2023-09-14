@@ -3,6 +3,7 @@ package com.weble.linkedhouse.house.controller;
 import com.weble.linkedhouse.house.dto.request.HostHouseSaveRequest;
 import com.weble.linkedhouse.house.dto.request.UpdateHouseRequestDto;
 import com.weble.linkedhouse.house.dto.response.HouseResponseDto;
+import com.weble.linkedhouse.house.entity.constant.AutoReservation;
 import com.weble.linkedhouse.house.service.HouseHostService;
 import com.weble.linkedhouse.security.UserDetailsImpl;
 import jakarta.validation.Valid;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -68,6 +70,13 @@ public class HouseHostController {
                                                         ) {
         HouseResponseDto result = houseHostService.updateHouse(images, update);
         return ResponseEntity.ok().body(result);
+    }
+
+    @PatchMapping("/reservation/{rentalId}")
+    public ResponseEntity<String> updateReservationSetting(@PathVariable Long rentalId,
+                                                           @RequestBody UpdateHouseRequestDto update) {
+        houseHostService.updateReservation(update, rentalId);
+        return ResponseEntity.ok("update complete");
     }
 
     @DeleteMapping("/{rentalId}")

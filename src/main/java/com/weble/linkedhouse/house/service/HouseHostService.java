@@ -9,6 +9,7 @@ import com.weble.linkedhouse.house.dto.request.UpdateHouseRequestDto;
 import com.weble.linkedhouse.house.dto.response.HouseResponseDto;
 import com.weble.linkedhouse.house.entity.House;
 import com.weble.linkedhouse.house.entity.HouseImage;
+import com.weble.linkedhouse.house.entity.constant.AutoReservation;
 import com.weble.linkedhouse.house.repository.HouseImageRepository;
 import com.weble.linkedhouse.house.repository.HouseRepository;
 import com.weble.linkedhouse.security.UserDetailsImpl;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -103,6 +105,28 @@ public class HouseHostService {
             houseImageRepository.saveAll(newList);
         }
         return HouseResponseDto.from(house);
+    }
+
+    @Transactional
+    public void updateReservation(UpdateHouseRequestDto update, Long rentalId) {
+
+        if (update.getRentalId() != rentalId) {
+            throw new NotExistHouseException();
+        }
+
+        House house = houseRepository.findByIdWithCustomer(update.getRentalId())
+                .orElseThrow(NotExistHouseException::new);
+
+        house.updateHouse(
+                update.getDescription(),
+                update.getMaxCapacity(),
+                update.getMinCapacity(),
+                update.getPrice(),
+                update.getAutoReservation(),
+                update.getRoom(),
+                update.getBed(),
+                update.getBathRoom()
+        );
     }
 
     @Transactional
