@@ -111,4 +111,26 @@ public class HouseHostService {
         houseImageRepository.deleteByHouseRentalId(house.getRentalId());
         houseRepository.deleteById(house.getRentalId());
     }
+
+    @Transactional
+    public void updateReservation(UpdateHouseRequestDto update, Long rentalId) {
+
+        if (update.getRentalId() != rentalId) {
+            throw new NotExistHouseException();
+        }
+
+        House house = houseRepository.findByIdWithCustomer(update.getRentalId())
+                .orElseThrow(NotExistHouseException::new);
+
+        house.updateHouse(
+                update.getDescription(),
+                update.getMaxCapacity(),
+                update.getMinCapacity(),
+                update.getPrice(),
+                update.getAutoReservation(),
+                update.getRoom(),
+                update.getBed(),
+                update.getBathRoom()
+        );
+    }
 }
