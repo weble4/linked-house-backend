@@ -241,10 +241,10 @@ public class HouseServiceTest {
             houseRepository.save(house);
         }
 
-        FilterKeyword filterKeyword = FilterKeyword.SEOUL;
+        String location = "서울";
         SearchKeyword searchKeyword = new SearchKeyword(); // Setter, 생성자 없어서 테스트 불가
 
-        Page<HouseResponseDto> houses = houseCustomerService.findAllHouse(filterKeyword, searchKeyword, PageRequest.of(0, 10));
+        Page<HouseResponseDto> houses = houseCustomerService.findAllHouse(location, searchKeyword, PageRequest.of(0, 10));
 
         assertThat(houses.getTotalElements()).isEqualTo(11);
         assertThat(houses.getTotalPages()).isEqualTo(2);

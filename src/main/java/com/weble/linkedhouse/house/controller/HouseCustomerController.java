@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,11 +29,11 @@ public class HouseCustomerController {
 
     @GetMapping
     public Page<HouseResponseDto> findAllHouse(
-            @RequestParam(required = false) FilterKeyword filterKeyword,
+            @RequestParam(required = false) String location,
             @ModelAttribute SearchKeyword searchKeyword,
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        return houseCustomerService.findAllHouse(filterKeyword, searchKeyword, pageable);
+        return houseCustomerService.findAllHouse(location, searchKeyword, pageable);
     }
 
     @GetMapping("/{rentalId}")
