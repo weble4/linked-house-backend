@@ -142,7 +142,7 @@ spring:
             - profile_image
             - account_email
           clientName: Kakao
-      # Provider 설정
+      ## Provider 설정
       provider:
         naver:
           authorizationUri: https://nid.naver.com/oauth2.0/authorize
