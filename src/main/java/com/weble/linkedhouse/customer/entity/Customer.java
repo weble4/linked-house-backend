@@ -18,11 +18,17 @@ import jakarta.persistence.Index;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -32,8 +38,8 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(indexes = {
         @Index(columnList = "customer_email")
-})
-public class Customer extends AuditingFields {
+})                                          // For OAuth2
+public class Customer extends AuditingFields implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,6 +76,7 @@ public class Customer extends AuditingFields {
     @OneToOne(mappedBy = "customer")
     private CustomerProfile customerProfile;
 
+    @Builder
     private Customer(String customerEmail, String customerPw, Set<Role> role) {
         this.customerEmail = customerEmail;
         this.customerPw = customerPw;
@@ -82,6 +89,10 @@ public class Customer extends AuditingFields {
     public static Customer of(String customerEmail, String customerPw, Set<Role> role) {
         return new Customer(customerEmail, customerPw, role);
     }
+
+    public void updateName(String nickname) {
+        this.customerProfile.updateNickname(nickname);
+    };
 
     public void approveAuth(AuthState authState) {
         this.authState= authState;
@@ -120,5 +131,39 @@ public class Customer extends AuditingFields {
         return Objects.hash(getCustomerId());
     }
 
+    // UserDetails Override
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(Role.ROLE_CUSTOMER.getReason()));
+    }
 
+    @Override
+    public String getPassword() {
+        return customerPw;
+    }
+
+    @Override
+    public String getUsername() {
+        return customerProfile.getNickname();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

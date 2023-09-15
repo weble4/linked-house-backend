@@ -30,7 +30,7 @@ import com.weble.linkedhouse.security.jwt.token.RedisTokenRepository;
 import com.weble.linkedhouse.security.jwt.token.RefreshToken;
 import com.weble.linkedhouse.security.jwt.token.RefreshTokenRepository;
 import com.weble.linkedhouse.security.jwt.token.TokenDto;
-import com.weble.linkedhouse.util.CreateFile;
+import com.weble.linkedhouse.util.storage.ObjectStorage;
 import io.jsonwebtoken.JwtException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -59,6 +59,7 @@ public class CustomerService {
     private final JwtTokenProvider jwtTokenProvider;
     private final DynamicRepository dynamicRepository;
     private final BookMarkRepository bookMarkRepository;
+    private final ObjectStorage objectStorage;
 
     @Value("${spring.mail.username}")
     private String emailSender;
@@ -153,12 +154,20 @@ public class CustomerService {
     }
 
     @Transactional
-    public ProfileDto updateProfile(UserDetailsImpl userDetails, UpdateRequest updateRequest, MultipartFile image) {
+    public ProfileDto updateProfile(UserDetailsImpl userDetails, UpdateRequest updateRequest, MultipartFile file) {
 
         Customer customer = customerRepository.findByIdWithProfile(userDetails.getUserId())
                 .orElseThrow(NotExistCustomer::new);
 
-        String imagePath = checkImageAndGetPath(image, customer);
+        String imagePath = customer.getCustomerProfile().getImagePath();
+
+        if (fileValid(file)) {
+            if(isPathExistence(customer)) {
+                boolean isSuccess = objectStorage.deleteFile(customer.getCustomerProfile().getImagePath());
+                log.info("Delete isSuccess : {}", isSuccess);
+            }
+            imagePath = objectStorage.uploadFile(file);
+        }
 
         customer.getCustomerProfile().updateProfile(
                 updateRequest.getNickname(),
@@ -233,12 +242,12 @@ public class CustomerService {
             messageHelper.setText(" <h1>메일인증</h1></br>"
                             + customer.getCustomerEmail() + "님<br/>"
                             + "[이메일 인증 확인]을 눌러주세요."
-                            + "<a href='http://localhost:8080/customer/activate-state?customerId=" + customer.getCustomerId() + "'"
+                            + "<a href='http://localhost:3000/certified?customerId=" + customer.getCustomerId() + "'"
                             + "target='blenk'>이메일 인증 확인</a><br/>" +
                             "감사합니다.",
                     true);
-            //TODO : 여기 들어갈 주소는 나중에 프론트쪽으로 바꾸어 줘야됨.
-            // 유저 인증메일 체크 -> 프론트단에서 백으로 인증 업데이트 날림 -> 백에서 인증 업데이트 -> 프론트에서 다시 화면 띄어줌
+            //TODO : 서버 IP change,
+            //<a href='http://110.165.18.244/certified?customerId=" + customer.getCustomerId() + "'"
             javaMailsender.send(message);
         } catch (MessagingException e) {
             log.error("메시지 발송 오류", e);
@@ -253,18 +262,16 @@ public class CustomerService {
         return origin + "_" + userId;
     }
 
-    private String checkImageAndGetPath(MultipartFile image, Customer customer) {
-        CreateFile createFile = new CreateFile();
-        String result;
-        if (image.isEmpty()) {
-            if (customer.getCustomerProfile().getImagePath().isEmpty()) {
-                result = null;
-            } else {
-                result = customer.getCustomerProfile().getImagePath();
-            }
-        } else {
-            result = createFile.saveImage(image, customer.getCustomerId());
-        }
-        return result;
+    public Customer findByEmail(String email) {
+        return customerRepository.findByCustomerEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Unexpected User"));
+    }
+
+    private boolean isPathExistence(Customer customer) {
+        return customer.getCustomerProfile().getImagePath() != null;
+    }
+
+    private boolean fileValid(MultipartFile file) {
+        return file != null;
     }
 }

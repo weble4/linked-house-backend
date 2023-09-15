@@ -1,21 +1,30 @@
 package com.weble.linkedhouse.security;
 
 import com.weble.linkedhouse.customer.dtos.ProfileDto;
+import com.weble.linkedhouse.customer.entity.Customer;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Getter
-public class UserDetailsImpl implements UserDetails {
+public class UserDetailsImpl implements UserDetails, OAuth2User {
 
     private ProfileDto customer;
+    private Map<String, Object> attributes;
 
     public UserDetailsImpl(ProfileDto profile) {
         this.customer = profile;
+    }
+
+    public UserDetailsImpl(ProfileDto profile, Map<String , Object> attributes) {
+        this.customer = profile;
+        this.attributes = attributes;
     }
 
     public Long getUserId() {
@@ -55,5 +64,15 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String getName() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
     }
 }

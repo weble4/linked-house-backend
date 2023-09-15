@@ -5,5 +5,15 @@ spring:
     username: dummy
     password: dummypassword
 
+cloud:
+  aws:
+    stack.auto: false
+    region.static: ap-northeast-2
+ncp:
+  accessKey: dummpkey
+  secretKey: dummySecretKey
+  regionName: kr-standard
+  endpoint: https://dummyUrl
+  bucket: dummybucket
 jwt:
   secret_key: testKeyNotRealKeyJustTestKeyAndKeyIsNeedToLength

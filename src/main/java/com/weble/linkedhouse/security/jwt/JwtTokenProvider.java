@@ -34,14 +34,12 @@ public class JwtTokenProvider {
 
     public TokenDto generateToken(String customerEmail) {
 
-        String tokenPrefix = "Bearer";
-
         Claims claims = Jwts.claims().setSubject(customerEmail);
         claims.put("customerEmail", customerEmail);
 
         Date now = new Date();
 
-        String accessToken = tokenPrefix + Jwts.builder()
+        String accessToken = Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + accessTokenValidTime))
