@@ -29,11 +29,14 @@ public class HouseCustomerController {
 
     @GetMapping
     public Page<HouseResponseDto> findAllHouse(
-            @RequestParam(required = false) FilterKeyword location,
-            @ModelAttribute SearchKeyword searchKeyword,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) Integer minPrice,
+            @RequestParam(required = false) Integer maxPrice,
+            @RequestParam(required = false) Integer room,
+            @RequestParam(required = false) Integer bed,
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        return houseCustomerService.findAllHouse(location, searchKeyword, pageable);
+        return houseCustomerService.findAllHouse(location, minPrice, maxPrice, room, bed, pageable);
     }
 
     @GetMapping("/{rentalId}")
