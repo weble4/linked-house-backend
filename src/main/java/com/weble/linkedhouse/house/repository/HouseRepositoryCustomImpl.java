@@ -41,7 +41,7 @@ public class HouseRepositoryCustomImpl implements HouseRepositoryCustom {
     }
 
     @Override
-    public Page<House> findAllHouse(String filterKeyword, SearchKeyword searchKeyword, Pageable pageable) {
+    public Page<House> findAllHouse(FilterKeyword filterKeyword, SearchKeyword searchKeyword, Pageable pageable) {
         List<House> content = queryFactory
                 .selectFrom(house)
                 .leftJoin(house.imagePath, houseImage).fetchJoin()
@@ -62,9 +62,9 @@ public class HouseRepositoryCustomImpl implements HouseRepositoryCustom {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
-    private BooleanExpression locationFilterEq(String filterKeyword) {
+    private BooleanExpression locationFilterEq(FilterKeyword filterKeyword) {
         if (filterKeyword == null) return null;
-        return house.location.eq(filterKeyword);
+        return house.location.eq(filterKeyword.getDescription());
     }
 
     private BooleanExpression searchKeywordEq(SearchKeyword searchKeyword) {

@@ -9,7 +9,7 @@ public enum FilterKeyword {
     DAEJEON("대전"),
     GWANGJU("광주"),
     BUSAN("부산"),
-    DEAGU("대구"),
+    DAEGU("대구"),
     ULSAN("울산"),
     GYENGGIDO("경기도"),
     GANGWONDO("강원도"),

@@ -18,7 +18,7 @@ public class HouseCustomerService {
 
     private final HouseRepository houseRepository;
 
-    public Page<HouseResponseDto> findAllHouse(String location, SearchKeyword searchKeyword, Pageable pageable) {
+    public Page<HouseResponseDto> findAllHouse(FilterKeyword location, SearchKeyword searchKeyword, Pageable pageable) {
        return houseRepository.findAllHouse(location, searchKeyword, pageable).map(HouseResponseDto::from);
     }
 

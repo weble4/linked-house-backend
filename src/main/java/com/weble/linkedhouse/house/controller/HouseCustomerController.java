@@ -29,7 +29,7 @@ public class HouseCustomerController {
 
     @GetMapping
     public Page<HouseResponseDto> findAllHouse(
-            @RequestParam(required = false) String location,
+            @RequestParam(required = false) FilterKeyword location,
             @ModelAttribute SearchKeyword searchKeyword,
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
 

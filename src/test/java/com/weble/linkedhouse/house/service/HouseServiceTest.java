@@ -241,7 +241,7 @@ public class HouseServiceTest {
             houseRepository.save(house);
         }
 
-        String location = "서울";
+        FilterKeyword location = FilterKeyword.SEOUL;
         SearchKeyword searchKeyword = new SearchKeyword(); // Setter, 생성자 없어서 테스트 불가
 
         Page<HouseResponseDto> houses = houseCustomerService.findAllHouse(location, searchKeyword, PageRequest.of(0, 10));

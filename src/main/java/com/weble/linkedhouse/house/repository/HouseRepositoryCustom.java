@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface HouseRepositoryCustom {
 
-    Page<House> findAllHouse(String location, SearchKeyword searchKeyword, Pageable pageable);
+    Page<House> findAllHouse(FilterKeyword location, SearchKeyword searchKeyword, Pageable pageable);
 
     Optional<House> findByIdWithCustomer(Long RentalId);
 }
