@@ -41,12 +41,12 @@ public class HouseRepositoryCustomImpl implements HouseRepositoryCustom {
     }
 
     @Override
-    public Page<House> findAllHouse(FilterKeyword filterKeyword, SearchKeyword searchKeyword, Pageable pageable) {
+    public Page<House> findAllHouse(String location, Integer minPrice, Integer maxPrice, Integer room, Integer bed, Pageable pageable) {
         List<House> content = queryFactory
                 .selectFrom(house)
                 .leftJoin(house.imagePath, houseImage).fetchJoin()
-                .where(locationFilterEq(filterKeyword),
-                        searchKeywordEq(searchKeyword)
+                .where(locationFilterEq(location),
+                        searchKeywordEq(minPrice, maxPrice, room, bed)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -55,41 +55,37 @@ public class HouseRepositoryCustomImpl implements HouseRepositoryCustom {
         JPAQuery<Long> countQuery = queryFactory
                 .select(house.count())
                 .from(house)
-                .where(locationFilterEq(filterKeyword),
-                        searchKeywordEq(searchKeyword)
+                .where(locationFilterEq(location),
+                        searchKeywordEq(minPrice, maxPrice, room, bed)
                 );
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
-    private BooleanExpression locationFilterEq(FilterKeyword filterKeyword) {
+    private BooleanExpression locationFilterEq(String filterKeyword) {
         if (filterKeyword == null) return null;
-        return house.location.eq(filterKeyword.getDescription());
+        return house.location.eq(filterKeyword);
     }
 
-    private BooleanExpression searchKeywordEq(SearchKeyword searchKeyword) {
-        if (searchKeyword == null) {
-            return null;
-        }
-
+    private BooleanExpression searchKeywordEq(Integer minPrice, Integer maxPrice, Integer room, Integer bed) {
         BooleanExpression expression = null;
 
-        if (searchKeyword.getMinPrice() != null) {
-            expression = house.price.goe(searchKeyword.getMinPrice());
+        if (minPrice != null) {
+            expression = house.price.goe(minPrice);
         }
 
-        if (searchKeyword.getMaxPrice() != null) {
-            BooleanExpression maxPriceExpression = house.price.loe(searchKeyword.getMaxPrice());
+        if (maxPrice != null) {
+            BooleanExpression maxPriceExpression = house.price.loe(maxPrice);
             expression = (expression != null) ? expression.and(maxPriceExpression) : maxPriceExpression;
         }
 
-        if (searchKeyword.getBed() != null) {
-            BooleanExpression bedExpression = house.bed.goe(searchKeyword.getBed());
+        if (bed != null) {
+            BooleanExpression bedExpression = house.bed.goe(bed);
             expression = (expression != null) ? expression.and(bedExpression) : bedExpression;
         }
 
-        if (searchKeyword.getRoom() != null) {
-            BooleanExpression roomExpression = house.room.goe(searchKeyword.getRoom());
+        if (room != null) {
+            BooleanExpression roomExpression = house.room.goe(room);
             expression = (expression != null) ? expression.and(roomExpression) : roomExpression;
         }
 
