@@ -110,7 +110,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("http://110.165.18.244:3000","http://localhost:3000"));
+        configuration.setAllowedOriginPatterns(List.of("http://110.165.18.244","http://localhost:3000"));
         configuration.addAllowedMethod("*"); // Allow all HTTP methods
         configuration.addAllowedHeader("*"); // Allow all headers
         configuration.setExposedHeaders(List.of("*"));
