@@ -68,7 +68,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, RequestMatcherBuilder mvc) throws Exception {
         return http
                 .httpBasic().disable()
-                .cors().configurationSource(corsFilter()).and()
+                .cors().configurationSource(corsConfigurationSource()).and()
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions().sameOrigin())    // H2 콘솔 사용을 위한 설정
                 .authorizeHttpRequests(requests -> requests
@@ -104,15 +104,24 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsConfigurationSource corsFilter() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://110.165.18.244","http://localhsot:3000"));
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        config.setAllowCredentials(true); // Allow cookies, if needed
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedOrigin("http://localhost:8080");
+        configuration.addAllowedOrigin("https://localhost:8080");
+        configuration.addAllowedOrigin("http://110.165.18.244");
+        configuration.addAllowedOrigin("http://110.165.18.244");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+        configuration.addExposedHeader("Authorization");
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
+        source.registerCorsConfiguration("/**",configuration);
         return source;
+
     }
 
     @Bean
