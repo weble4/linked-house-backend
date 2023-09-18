@@ -106,9 +106,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://110.165.18.244"); // 프론트엔드 서버의 IP 주소
+        config.setAllowedOrigins(List.of("http://110.165.18.244","http://localhsot:3000"));
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
+        config.setAllowCredentials(true); // Allow cookies, if needed
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
