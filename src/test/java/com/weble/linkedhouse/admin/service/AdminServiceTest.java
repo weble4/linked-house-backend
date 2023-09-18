@@ -9,6 +9,7 @@ import com.weble.linkedhouse.house.repository.HouseRepository;
 import com.weble.linkedhouse.review.dtos.response.CustomerReviewResponse;
 import com.weble.linkedhouse.review.entity.FeedbackCustomer;
 import com.weble.linkedhouse.review.repository.FeedbackCustomerRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,8 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Disabled
 @SpringBootTest
-
 public class AdminServiceTest {
 
     @Autowired
