@@ -74,7 +74,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers(mvc.matchers(permitUrl)).permitAll()
                         .requestMatchers(mvc.matchers(docsUrl)).permitAll()
-                        .requestMatchers(toStaticResources().atCommonLocations(), toH2Console()).permitAll()
+                        .requestMatchers(toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers(mvc.matchers("/api/admin/*")).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
