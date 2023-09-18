@@ -106,13 +106,14 @@ public class SecurityConfig {
     public Filter tokenFilter() {
         return new JwtAuthenticationFilter(jwtTokenProvider);
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://110.165.18.244","http://localhost:3000"));
-        configuration.setAllowedOriginPatterns(List.of("http://110.165.18.244","http://localhost:3000"));
-        configuration.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","HEAD","CONNECT","OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOriginPatterns(List.of("http://localhost:3000"));
+        configuration.addAllowedMethod("*"); // Allow all HTTP methods
+        configuration.addAllowedHeader("*"); // Allow all headers
         configuration.setExposedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
