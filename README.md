@@ -4,9 +4,9 @@
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fweble4%2Flinked-house-backend&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 
 ### 프로젝트 개요
-Weble4 팀의 프로젝트 linked-house backend는 airbnb 모델을 벤치마킹하여, 숙박 공유 사이트를 만드는 것을 목표로 합니다.
-백엔드에서는 Rest API를 통해 안정적으로 데이터를 주고받는 서버를 구축하고, 향후 웹 뿐만 아니라 모바일까지의 확장성을 
-염두해 Rest API 형식으로 설계하였습니다.
+Weble4 팀의 프로젝트 linked-house backend는 숙박 공유 사이트의 백엔드 만드는 것을 목표로 합니다.
+Rest API를 통해 안정적으로 데이터를 주고받는 서버를 구축하여 클라이언트와의 통신을 지원합니다.
+향후의 확장성을 염두해 Rest API 형식으로 설계하였습니다.
 * * *
 
 ### **📅** 프로젝트 기간

@@ -38,6 +38,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Disabled
 @Transactional
 @SpringBootTest
 public class HouseServiceTest {

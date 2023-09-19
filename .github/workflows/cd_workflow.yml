@@ -1,12 +1,10 @@
 name: Auto deploy NCP
-
 on:
   push:
     branches: "main"
 
 jobs:
   push_to_registry:
-    ## NCP OS : Ubuntu 20.04
     runs-on: ubuntu-20.04
 
     steps:

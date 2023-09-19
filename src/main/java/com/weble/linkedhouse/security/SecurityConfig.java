@@ -12,7 +12,6 @@ import com.weble.linkedhouse.util.config.oauth.OAuth2UserCustomService;
 import com.weble.linkedhouse.util.config.oauth.provider.OAuth2Provider;
 import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -20,8 +19,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
@@ -32,7 +29,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -78,7 +74,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers(mvc.matchers(permitUrl)).permitAll()
                         .requestMatchers(mvc.matchers(docsUrl)).permitAll()
-                        .requestMatchers(toStaticResources().atCommonLocations(), toH2Console()).permitAll()
+                        .requestMatchers(toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers(mvc.matchers("/api/admin/*")).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
@@ -106,18 +102,26 @@ public class SecurityConfig {
     public Filter tokenFilter() {
         return new JwtAuthenticationFilter(jwtTokenProvider);
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // configuration.setAllowedOrigins();
-        configuration.setAllowedOriginPatterns(List.of("http://localhost:3000"));
-        configuration.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","HEAD","CONNECT","OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setExposedHeaders(List.of("*"));
+
+        configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedOrigin("https://localhost:3000");
+        configuration.addAllowedOrigin("http://localhost");
+        configuration.addAllowedOrigin("https://localhost");
+        configuration.addAllowedOrigin("http://110.165.18.244");
+        configuration.addAllowedOrigin("https://110.165.18.244");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
+        configuration.addExposedHeader("Authorization");
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**",configuration);
         return source;
+
     }
 
     @Bean

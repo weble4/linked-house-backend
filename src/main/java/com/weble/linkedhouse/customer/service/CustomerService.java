@@ -242,12 +242,10 @@ public class CustomerService {
             messageHelper.setText(" <h1>메일인증</h1></br>"
                             + customer.getCustomerEmail() + "님<br/>"
                             + "[이메일 인증 확인]을 눌러주세요."
-                            + "<a href='http://localhost:3000/certified?customerId=" + customer.getCustomerId() + "'"
+                            + "<a href='http://110.165.18.244/certified?customerId=" + customer.getCustomerId() + "'"
                             + "target='blenk'>이메일 인증 확인</a><br/>" +
                             "감사합니다.",
                     true);
-            //TODO : 서버 IP change,
-            //<a href='http://110.165.18.244/certified?customerId=" + customer.getCustomerId() + "'"
             javaMailsender.send(message);
         } catch (MessagingException e) {
             log.error("메시지 발송 오류", e);
