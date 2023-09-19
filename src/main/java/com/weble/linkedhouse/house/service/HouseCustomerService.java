@@ -25,7 +25,6 @@ public class HouseCustomerService {
 
     public Page<HouseResponseDto> findAllHouse(String location, Integer minPrice, Integer maxPrice, Integer room, Integer bed, Pageable pageable) {
         Logger logger = LoggerFactory.getLogger(LinkedHouseApplication.class);
-        logger.info("API 로깅");
         return houseRepository.findAllHouse(location, minPrice, maxPrice, room, bed, pageable).map(HouseResponseDto::from);
     }
 
