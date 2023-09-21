@@ -62,6 +62,7 @@ public class SecurityConfig {
             "/api/customers/check-email",
             "/api/customers/reissue",
             "/api/houses/**",
+            "/api/reviews/**"
     };
 
     @Bean
