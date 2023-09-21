@@ -111,8 +111,14 @@ public class SecurityConfig {
         configuration.addAllowedOrigin("https://localhost:3000");
         configuration.addAllowedOrigin("http://localhost");
         configuration.addAllowedOrigin("https://localhost");
+        configuration.addAllowedOrigin("http://10.0.1.6");
+        configuration.addAllowedOrigin("https://10.0.1.6");
+        configuration.addAllowedOrigin("http://10.0.1.6:3000");
+        configuration.addAllowedOrigin("https://10.0.1.6:3000");
         configuration.addAllowedOrigin("http://110.165.18.244");
         configuration.addAllowedOrigin("https://110.165.18.244");
+        configuration.addAllowedOrigin("http://110.165.18.244:3000");
+        configuration.addAllowedOrigin("https://110.165.18.244:3000");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
