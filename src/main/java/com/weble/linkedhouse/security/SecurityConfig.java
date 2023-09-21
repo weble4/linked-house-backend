@@ -78,11 +78,9 @@ public class SecurityConfig {
                         .requestMatchers(mvc.matchers("/api/admin/*")).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-
                 .sessionManagement(sessionConfig -> sessionConfig
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-
                 .oauth2Login()
                 .authorizationEndpoint()
                 .baseUri("/api/login/oauth/authorization")
@@ -113,12 +111,8 @@ public class SecurityConfig {
         configuration.addAllowedOrigin("https://localhost");
         configuration.addAllowedOrigin("http://10.0.1.6");
         configuration.addAllowedOrigin("https://10.0.1.6");
-        configuration.addAllowedOrigin("http://10.0.1.6:3000");
-        configuration.addAllowedOrigin("https://10.0.1.6:3000");
         configuration.addAllowedOrigin("http://110.165.18.244");
         configuration.addAllowedOrigin("https://110.165.18.244");
-        configuration.addAllowedOrigin("http://110.165.18.244:3000");
-        configuration.addAllowedOrigin("https://110.165.18.244:3000");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);

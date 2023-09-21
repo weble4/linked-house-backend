@@ -13,6 +13,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -31,6 +32,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/host/houses")
+@CrossOrigin(origins = "http://localhost:3000" )
 public class HouseHostController {
 
     private final HouseHostService houseHostService;

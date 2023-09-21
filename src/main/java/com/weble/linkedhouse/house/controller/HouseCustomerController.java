@@ -1,7 +1,5 @@
 package com.weble.linkedhouse.house.controller;
 
-import com.weble.linkedhouse.house.dto.FilterKeyword;
-import com.weble.linkedhouse.house.dto.SearchKeyword;
 import com.weble.linkedhouse.house.dto.response.HouseResponseDto;
 import com.weble.linkedhouse.house.service.HouseCustomerService;
 import lombok.RequiredArgsConstructor;
@@ -10,12 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/houses")
+@CrossOrigin(origins = "http://localhost:3000" )
 public class HouseCustomerController {
 
     private final HouseCustomerService houseCustomerService;
