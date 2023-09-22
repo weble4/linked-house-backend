@@ -2,6 +2,7 @@ package com.weble.linkedhouse.reservation.service;
 
 import com.weble.linkedhouse.customer.entity.Customer;
 import com.weble.linkedhouse.customer.repository.CustomerRepository;
+import com.weble.linkedhouse.exception.AlreadyPermitReservationException;
 import com.weble.linkedhouse.exception.NotExistHouseException;
 import com.weble.linkedhouse.exception.NotExistReservation;
 import com.weble.linkedhouse.house.entity.House;
@@ -72,7 +73,12 @@ public class ReservationService {
     public void permissionReservation(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(NotExistReservation::new);
-        reservation.permission();
+        if (reservation.getReservationState() != ReservationState.PERMISSION) {
+            reservation.permission();
+            reservationRepository.save(reservation);
+        } else {
+            throw new AlreadyPermitReservationException();
+        }
     }
 
     private ReservationState validReservationState(AutoReservation autoReservation) {

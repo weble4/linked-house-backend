@@ -20,7 +20,8 @@ public enum ErrorMessage {
     NOT_FOUND_PAYMENT("존재 하지 않는 결제입니다."),
     NOT_FOUND_REVIEW("존재하지 않는 리뷰입니다."),
     NOT_FOUND_RESERVATION("존재하지 않는 예약입니다."),
-    CAN_NOT_REPORT("다른 사람에 대한 리뷰는 신고할 수 없습니다.");
+    CAN_NOT_REPORT("다른 사람에 대한 리뷰는 신고할 수 없습니다."),
+    ALREADY_PERMIT_RESERVATION("이미 허가된 예약입니다");
 
    @Getter
    private final String message;
