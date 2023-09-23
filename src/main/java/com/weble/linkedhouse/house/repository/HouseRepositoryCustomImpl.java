@@ -45,6 +45,7 @@ public class HouseRepositoryCustomImpl implements HouseRepositoryCustom {
         List<House> content = queryFactory
                 .selectFrom(house)
                 .leftJoin(house.imagePath, houseImage).fetchJoin()
+                .leftJoin(customer.role).fetchJoin()
                 .where(locationFilterEq(location),
                         searchKeywordEq(minPrice, maxPrice, room, bed)
                 )
