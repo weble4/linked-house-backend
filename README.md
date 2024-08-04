@@ -69,17 +69,17 @@ Rest API를 통해 안정적으로 데이터를 주고받는 서버를 구축하
 
 ### Git Commit 전략 & 워크플로우 및 컨벤션
 
-[워크플로우 및 깃 커밋 전략 링크](https://www.notion.so/754a694747884d369ee42da947ae089b?pvs=4)  
+[워크플로우 및 깃 커밋 전략 링크](https://drive.google.com/file/d/1TUeQ6C006s3wgy6Rkkuq26g0kODSsln_/view?usp=sharing)  
 
-[컨벤션 정리 링크](https://www.notion.so/f645a6ae98ae46d08fdcaa8c4a10dacf?pvs=4)
+[컨벤션 정리 링크](https://drive.google.com/file/d/1eOo6uOa01F0ZvcmgLMiGfxb4PGKxLh0l/view?usp=sharing)
 
 * * *
 
 ### 백엔드 기능
 
-[API 설계 보러 가기](https://www.notion.so/ac03553cb84c440094aef63933d1e277?v=60034cdb041543cfb107d9b6a7a5c120&pvs=4)
+[API 설계 보러 가기](https://drive.google.com/file/d/1F39qFjpXvOeruN8FjxDehIKulmPVRdpy/view?usp=sharing)
 
-[주요 구현 기술](https://www.notion.so/2f29c7648cd049f6aced89b8f6698cf3?pvs=4)
+[주요 구현 기술](https://drive.google.com/file/d/13ewvn-RyL1EciMuZyDEOJe0mmOHd9IAo/view?usp=sharing)
 
 - CRUD 기능 구현
   - 리뷰 게시판을 통한 CRUD 기능 구현
