@@ -126,7 +126,7 @@ Rest API를 통해 안정적으로 데이터를 주고받는 서버를 구축하
 
 팀원 개개인이 기능 구현을 하며 겪은 Trouble Shooting 정리
 
-[보러가기](https://www.notion.so/Trouble-Shooting-eb252aeeb0fa4498993ce97d22a4a34b?pvs=4)
+[보러가기](https://drive.google.com/file/d/1F2GEYjnAx5Z4dg3xD95LdTxeEEKNlxEu/view?usp=sharing)
 
 * * *
 
