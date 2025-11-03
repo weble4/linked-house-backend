@@ -1,8 +1,6 @@
 # Linked-House
 *Backend Repository*
 
-[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fweble4%2Flinked-house-backend&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
-
 ### 프로젝트 개요
 Weble4 팀의 프로젝트 linked-house backend는 숙박 공유 사이트의 백엔드 만드는 것을 목표로 합니다.
 Rest API를 통해 안정적으로 데이터를 주고받는 서버를 구축하여 클라이언트와의 통신을 지원합니다.
@@ -69,17 +67,10 @@ Rest API를 통해 안정적으로 데이터를 주고받는 서버를 구축하
 
 ### Git Commit 전략 & 워크플로우 및 컨벤션
 
-[워크플로우 및 깃 커밋 전략 링크](https://drive.google.com/file/d/1TUeQ6C006s3wgy6Rkkuq26g0kODSsln_/view?usp=sharing)  
-
-[컨벤션 정리 링크](https://drive.google.com/file/d/1eOo6uOa01F0ZvcmgLMiGfxb4PGKxLh0l/view?usp=sharing)
 
 * * *
 
 ### 백엔드 기능
-
-[API 설계 보러 가기](https://drive.google.com/file/d/1F39qFjpXvOeruN8FjxDehIKulmPVRdpy/view?usp=sharing)
-
-[주요 구현 기술](https://drive.google.com/file/d/13ewvn-RyL1EciMuZyDEOJe0mmOHd9IAo/view?usp=sharing)
 
 - CRUD 기능 구현
   - 리뷰 게시판을 통한 CRUD 기능 구현
@@ -120,13 +111,6 @@ Rest API를 통해 안정적으로 데이터를 주고받는 서버를 구축하
 - Spring data JPA + Querydsl 활용
   - Spring 에서 제공하는 Page 기능 적극 활용
   - Querydsl을 활용하여 동적 SQL을 통한 검색 기능 작성
-
-* * *
-### Trouble Shooting
-
-팀원 개개인이 기능 구현을 하며 겪은 Trouble Shooting 정리
-
-[보러가기](https://drive.google.com/file/d/1F2GEYjnAx5Z4dg3xD95LdTxeEEKNlxEu/view?usp=sharing)
 
 * * *
 
